@@ -17,11 +17,11 @@ const saveMappings = async (mappings: Array<Mapping>) => {
     Bun.YAML.stringify(
       {
         mappings: mappings.toSorted(compareMapping).map((m) => ({
+          mode: m.mode,
           fromName: m.fromName,
           fromPrice: m.fromPrice,
           toName: m.toName,
           toCategory: m.toCategory,
-          mode: m.mode,
           exclude: m.exclude,
         })),
       },
