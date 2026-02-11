@@ -16,6 +16,7 @@ export type Category = (typeof Categories)[number]
 
 export type Transaction = {
   date: `${number}/${number}`
+  originalDate: Date
   name: string
   amount: string // with a coma as decimal separator
   category: Category

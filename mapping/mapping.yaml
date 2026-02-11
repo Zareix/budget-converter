@@ -1,285 +1,255 @@
-# yaml-language-server: $schema=./mapping.schema.json
-- mode: exact-name
-  fromName: Okayama
-  toName: Sushis
-  toCategory: restaurant
-
-- mode: exact-name
-  fromName: The Coffee
-  toName: The Coffee
-  toCategory: café
-
-- mode: exact-name
-  fromName: 5013 SOGI QUINZE 5013   PARIS
-  toName: Franprix
-  toCategory: courses
-
-- mode: exact-name
-  fromName: Action
-  toName: Action
-  toCategory: shopping
-
-- mode: exact-name
-  fromName: Steam
-  toName: Steam
-  toCategory: divertissement
-
-- mode: exact-name
-  fromName: Maison Leparq
-  toName: Boulangerie
-  toCategory: café
-
-- mode: exact-name
-  fromName: Amandine & Pauline
-  toName: Boulangerie
-  toCategory: café
-
-- mode: exact-name
-  fromName: Uber
-  toName: Uber
-  toCategory: transport
-
-- mode: exact-name
-  fromName: Streetaly
-  toName: Streetaly
-  toCategory: café
-
-- mode: exact-name
-  fromName: CAJOU            75 PAR PARIS
-  toName: Cajou
-  toCategory: café
-
-- mode: exact-name
-  fromName: COSY                    PARIS LA DEFENS
-  toName: Cosy
-  toCategory: café
-
-- mode: exact-name
-  fromName: GiFi
-  toName: GiFi
-  toCategory: maison
-
-- mode: exact-name
-  fromName: Mcdonald's
-  toName: Mcdonald's
-  toCategory: restaurant
-
-- mode: exact-name
-  fromName: PARIS -LOURMEL PARIS    PARIS
-  toName: Carrefour
-  toCategory: courses
-
-- mode: exact-name
-  fromName: 5028 SOGI LOURMEL 5028  PARIS
-  toName: Franprix
-  toCategory: courses
-
-- mode: exact-name
-  fromName: Le Pot Commun
-  toName: Le Pot Commun
-  toCategory: cadeaux
-
-- mode: exact-name
-  fromName: Poisson Lourmel
-  toName: Poissonnerie Lourmel
-  toCategory: courses
-
-- mode: exact-name-price
-  fromName: Sodexo
-  fromPrice: 20,00
-  toName: Recharge cafet SG
-  toCategory: café
-
-- mode: exact-name-price
-  fromName: APPLE.COM/BILL          HOLLYHILL
-  fromPrice: 9,99
-  toName: Apple iCloud
-  toCategory: divertissement
-  exclude: true
-
-- mode: default
-  fromName: MONOPRIX
-  toName: Monoprix
-  toCategory: courses
-
-- mode: default
-  fromName: DELIVEROO
-  toName: Deliveroo
-  toCategory: restaurant
-
-- mode: default
-  fromName: UBER EATS
-  toName: Uber Eats
-  toCategory: restaurant
-
-- mode: default
-  fromName: UBER TRIP
-  toName: Uber
-  toCategory: transport
-
-- mode: default
-  fromName: Uberpayment
-  toName: Uber
-  toCategory: transport
-
-- mode: default
-  fromName: AMAZON
-  toName: Amazon
-  toCategory: shopping
-
-- mode: default
-  fromName: STEAM GAMES
-  toName: Steam
-  toCategory: divertissement
-
-- mode: default
-  fromName: AIR CORSICA
-  toName: Air Corsica
-  toCategory: voyage
-
-- mode: default
-  fromName: YOUTUBEPREMIUM
-  toName: Youtube Premium
-  toCategory: divertissement
-  exclude: true
-
-- mode: default
-  fromName: Bolt Operations Ou
-  toName: Bolt
-  toCategory: transport
-
-- mode: default
-  fromName: PARIS PARIS             PARIS
-  toName: Carrefour
-  toCategory: courses
-
-- mode: default
-  fromName: K MART
-  toName: K Mart
-  toCategory: courses
-
-- mode: default
-  fromName: Monop
-  toName: Monop
-  toCategory: courses
-
-- mode: default
-  fromName: Lidl
-  toName: Lidl
-  toCategory: courses
-
-- mode: default
-  fromName: Claudia Paris
-  toName: Claudia
-  toCategory: bar
-
-- mode: default
-  fromName: CAFE LOMI
-  toName: Café Lomi
-  toCategory: courses
-
-- mode: default
-  fromName: MCDONALDS
-  toName: McDonald's
-  toCategory: restaurant
-
-- mode: default
-  fromName: STARBUCKS
-  toName: Starbucks
-  toCategory: café
-
-- mode: default
-  fromName: Twitchinter
-  toName: Twitch
-  toCategory: divertissement
-
-- mode: default
-  fromName: The Coffee Grenel
-  toName: The Coffee Grenel
-  toCategory: café
-
-- mode: default
-  fromName: Auchan
-  toName: Auchan
-  toCategory: courses
-
-- mode: default
-  fromName: REPAIREDEBACCHUS
-  toName: Repaire de Bacchus
-  toCategory: shopping
-
-- mode: default
-  fromName: Airbnb
-  toName: Airbnb
-  toCategory: voyage
-
-- mode: default
-  fromName: Openai
-  toName: OpenAI
-  toCategory: divertissement
-
-- mode: default
-  fromName: Addy.io
-  toName: Addy.io
-  toCategory: divertissement
-  exclude: true
-
-- mode: default
-  fromName: Terresdecaf
-  toName: Terres de café
-  toCategory: café
-
-- mode: default
-  fromName: Pret A Manger
-  toName: Pret A Manger
-  toCategory: café
-
-- mode: default
-  fromName: Histoire De
-  toName: Histoire De
-  toCategory: bar
-
-- mode: default
-  fromName: Oppa Cantine
-  toName: Oppa Cantine
-  toCategory: restaurant
-
-- mode: default
-  fromName: Fratellini
-  toName: Fratellini
-  toCategory: restaurant
-
-- mode: default
-  fromName: APPLE.COM/BILL
-  toName: Apple
-  toCategory: divertissement
-
-- mode: default
-  fromName: Manteigaria
-  toName: Manteigaria
-  toCategory: café
-
-- mode: default
-  fromName: La Cantine Lourm
-  toName: La Cantine
-  toCategory: restaurant
-
-- mode: default
-  fromName: Fnac
-  toName: Fnac
-  toCategory: shopping
-
-- mode: default
-  fromName: La Poste
-  toName: La Poste
-  toCategory: autres
-
-- mode: default
-  fromName: Sephora
-  toName: Sephora
-  toCategory: shopping
-
-- mode: default
-  fromName: Uniqlo
-  toName: Uniqlo
-  toCategory: shopping
+[
+  {
+    mode: default,
+    fromName: Addy.io,
+    toName: Addy.io,
+    toCategory: divertissement,
+    exclude: true,
+  },
+  {
+    mode: default,
+    fromName: AIR CORSICA,
+    toName: Air Corsica,
+    toCategory: voyage,
+  },
+  { mode: default, fromName: Airbnb, toName: Airbnb, toCategory: voyage },
+  { mode: default, fromName: AMAZON, toName: Amazon, toCategory: shopping },
+  {
+    mode: default,
+    fromName: APPLE.COM/BILL,
+    toName: Apple,
+    toCategory: divertissement,
+  },
+  { mode: default, fromName: Auchan, toName: Auchan, toCategory: courses },
+  {
+    mode: default,
+    fromName: Bolt Operations Ou,
+    toName: Bolt,
+    toCategory: transport,
+  },
+  {
+    mode: default,
+    fromName: CAFE LOMI,
+    toName: Café Lomi,
+    toCategory: courses,
+  },
+  { mode: default, fromName: Claudia Paris, toName: Claudia, toCategory: bar },
+  {
+    mode: default,
+    fromName: DELIVEROO,
+    toName: Deliveroo,
+    toCategory: restaurant,
+  },
+  { mode: default, fromName: Fnac, toName: Fnac, toCategory: shopping },
+  {
+    mode: default,
+    fromName: Fratellini,
+    toName: Fratellini,
+    toCategory: restaurant,
+  },
+  {
+    mode: default,
+    fromName: Histoire De,
+    toName: Histoire De,
+    toCategory: bar,
+  },
+  { mode: default, fromName: K MART, toName: K Mart, toCategory: courses },
+  {
+    mode: default,
+    fromName: La Cantine Lourm,
+    toName: La Cantine,
+    toCategory: restaurant,
+  },
+  { mode: default, fromName: La Poste, toName: La Poste, toCategory: autres },
+  { mode: default, fromName: Lidl, toName: Lidl, toCategory: courses },
+  {
+    mode: default,
+    fromName: Manteigaria,
+    toName: Manteigaria,
+    toCategory: café,
+  },
+  {
+    mode: default,
+    fromName: MCDONALDS,
+    toName: "McDonald's",
+    toCategory: restaurant,
+  },
+  { mode: default, fromName: Monop, toName: Monop, toCategory: courses },
+  { mode: default, fromName: MONOPRIX, toName: Monoprix, toCategory: courses },
+  {
+    mode: default,
+    fromName: Openai,
+    toName: OpenAI,
+    toCategory: divertissement,
+  },
+  {
+    mode: default,
+    fromName: Oppa Cantine,
+    toName: Oppa Cantine,
+    toCategory: restaurant,
+  },
+  {
+    mode: default,
+    fromName: PARIS PARIS             PARIS,
+    toName: Carrefour,
+    toCategory: courses,
+  },
+  {
+    mode: default,
+    fromName: Pret A Manger,
+    toName: Pret A Manger,
+    toCategory: café,
+  },
+  {
+    mode: default,
+    fromName: REPAIREDEBACCHUS,
+    toName: Repaire de Bacchus,
+    toCategory: shopping,
+  },
+  { mode: default, fromName: Sephora, toName: Sephora, toCategory: shopping },
+  { mode: default, fromName: STARBUCKS, toName: Starbucks, toCategory: café },
+  {
+    mode: default,
+    fromName: STEAM GAMES,
+    toName: Steam,
+    toCategory: divertissement,
+  },
+  {
+    mode: default,
+    fromName: Terresdecaf,
+    toName: Terres de café,
+    toCategory: café,
+  },
+  {
+    mode: default,
+    fromName: The Coffee Grenel,
+    toName: The Coffee Grenel,
+    toCategory: café,
+  },
+  {
+    mode: default,
+    fromName: Twitchinter,
+    toName: Twitch,
+    toCategory: divertissement,
+  },
+  {
+    mode: default,
+    fromName: UBER EATS,
+    toName: Uber Eats,
+    toCategory: restaurant,
+  },
+  { mode: default, fromName: UBER TRIP, toName: Uber, toCategory: transport },
+  { mode: default, fromName: Uberpayment, toName: Uber, toCategory: transport },
+  { mode: default, fromName: Uniqlo, toName: Uniqlo, toCategory: shopping },
+  {
+    mode: default,
+    fromName: YOUTUBEPREMIUM,
+    toName: Youtube Premium,
+    toCategory: divertissement,
+    exclude: true,
+  },
+  {
+    mode: exact-name,
+    fromName: 5013 SOGI QUINZE 5013   PARIS,
+    toName: Franprix,
+    toCategory: courses,
+  },
+  {
+    mode: exact-name,
+    fromName: 5028 SOGI LOURMEL 5028  PARIS,
+    toName: Franprix,
+    toCategory: courses,
+  },
+  { mode: exact-name, fromName: Action, toName: Action, toCategory: shopping },
+  {
+    mode: exact-name,
+    fromName: Amandine & Pauline,
+    toName: Boulangerie,
+    toCategory: café,
+  },
+  {
+    mode: exact-name,
+    fromName: CAJOU            75 PAR PARIS,
+    toName: Cajou,
+    toCategory: café,
+  },
+  {
+    mode: exact-name,
+    fromName: COSY                    PARIS LA DEFENS,
+    toName: Cosy,
+    toCategory: café,
+  },
+  { mode: exact-name, fromName: GiFi, toName: GiFi, toCategory: maison },
+  {
+    mode: exact-name,
+    fromName: Le Pot Commun,
+    toName: Le Pot Commun,
+    toCategory: cadeaux,
+  },
+  {
+    mode: exact-name,
+    fromName: Maison Leparq,
+    toName: Boulangerie,
+    toCategory: café,
+  },
+  {
+    mode: exact-name,
+    fromName: "Mcdonald's",
+    toName: "Mcdonald's",
+    toCategory: restaurant,
+  },
+  {
+    mode: exact-name,
+    fromName: Okayama,
+    toName: Sushis,
+    toCategory: restaurant,
+  },
+  {
+    mode: exact-name,
+    fromName: PARIS -LOURMEL PARIS    PARIS,
+    toName: Carrefour,
+    toCategory: courses,
+  },
+  {
+    mode: exact-name,
+    fromName: Poisson Lourmel,
+    toName: Poissonnerie Lourmel,
+    toCategory: courses,
+  },
+  {
+    mode: exact-name,
+    fromName: Steam,
+    toName: Steam,
+    toCategory: divertissement,
+  },
+  {
+    mode: exact-name,
+    fromName: Streetaly,
+    toName: Streetaly,
+    toCategory: café,
+  },
+  {
+    mode: exact-name,
+    fromName: The Coffee,
+    toName: The Coffee,
+    toCategory: café,
+  },
+  { mode: exact-name, fromName: Uber, toName: Uber, toCategory: transport },
+  {
+    '99': null,
+    mode: exact-name-price,
+    fromName: APPLE.COM/BILL          HOLLYHILL,
+    fromPrice: 9,
+    toName: Apple iCloud,
+    toCategory: divertissement,
+    exclude: true,
+  },
+  {
+    '0': null,
+    mode: exact-name-price,
+    fromName: Sodexo,
+    fromPrice: 20,
+    toName: Recharge cafet SG,
+    toCategory: café,
+  },
+]

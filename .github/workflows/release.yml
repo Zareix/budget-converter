@@ -1,0 +1,37 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  version:
+    name: Get version
+    uses: zareix/gh-actions/.github/workflows/get-version.yml@main
+    with:
+      type: node
+
+  docker:
+    name: Docker
+    needs: version
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    uses: zareix/gh-actions/.github/workflows/docker.yml@main
+    with:
+      tag: ${{ needs.version.outputs.version }}
+      push-image: true
+      platforms: linux/amd64,linux/arm64
+
+  release:
+    name: Create release
+    needs:
+      - version
+      - docker
+    permissions:
+      contents: write
+    uses: zareix/gh-actions/.github/workflows/release.yml@main
+    with:
+      tag: ${{ needs.version.outputs.version }}

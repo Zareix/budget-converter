@@ -60,6 +60,7 @@ export const parseToTransactions = async ({
 
       return {
         date: formattedDate,
+        originalDate: date,
         amount: record.Montant,
         payementMethod: 'Carte AMEX',
         name,
@@ -67,4 +68,5 @@ export const parseToTransactions = async ({
       } satisfies Transaction
     })
     .filter(Boolean)
+    .toSorted((a, b) => a.originalDate.getTime() - b.originalDate.getTime())
 }

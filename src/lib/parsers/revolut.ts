@@ -55,6 +55,7 @@ export const parseToTransactions = async ({
 
       return {
         date: formattedDate,
+        originalDate: date,
         name,
         amount,
         payementMethod: 'Carte Revolut',
@@ -62,4 +63,5 @@ export const parseToTransactions = async ({
       } satisfies Transaction
     })
     .filter(Boolean)
+    .toSorted((a, b) => a.originalDate.getTime() - b.originalDate.getTime())
 }

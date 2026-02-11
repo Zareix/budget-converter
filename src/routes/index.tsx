@@ -1,7 +1,6 @@
-import { stringify } from 'csv-stringify/browser/esm/sync'
 import { useForm } from '@tanstack/react-form'
 import { useMutation } from '@tanstack/react-query'
-import { createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import * as v from 'valibot'
 
@@ -32,6 +31,7 @@ import {
 } from '@/components/ui/select'
 import { parseFileWithProvider } from '@/lib/server/functions'
 import { PROVIDERS } from '@/lib/parsers'
+import { Results } from '@/components/results'
 
 export const Route = createFileRoute('/')({ component: Home })
 
@@ -98,34 +98,6 @@ function Home() {
     },
   })
 
-  const handleCopyAsCSV = () => {
-    const data = parseFileWithProviderMutation.data
-    if (!data || data.length === 0) return
-
-    try {
-      const allRecords = data.sort((a, b) => {
-        const dateA = new Date(a.date.split('/').reverse().join('-'))
-        const dateB = new Date(b.date.split('/').reverse().join('-'))
-        return dateA.getTime() - dateB.getTime()
-      })
-      const csv = stringify(allRecords, {
-        delimiter: ';',
-        columns: ['date', 'name', 'amount', 'category', 'payementMethod'],
-      })
-
-      navigator.clipboard.writeText(csv)
-      toast.success('Copied to clipboard!', {
-        description: 'CSV data has been copied to your clipboard.',
-        position: 'bottom-right',
-      })
-    } catch (error) {
-      toast.error('Failed to copy', {
-        description: 'Could not copy CSV to clipboard.',
-        position: 'bottom-right',
-      })
-    }
-  }
-
   const resetForm = () => {
     form.reset()
     const inputFile = document.getElementById('file-upload')
@@ -136,7 +108,7 @@ function Home() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 flex-col gap-6">
+    <div className="min-h-screen flex items-center justify-center p-4 gap-6">
       <Card className="w-full max-w-lg">
         <CardHeader>
           <CardTitle>Budget Converter</CardTitle>
@@ -262,59 +234,16 @@ function Home() {
                 ? 'Processing...'
                 : 'Convert'}
             </Button>
+            <Button type="button" variant="link" className="ml-auto">
+              <Link to="/mapping">Mapping</Link>
+            </Button>
           </Field>
         </CardFooter>
       </Card>
 
-      {parseFileWithProviderMutation.data &&
-        parseFileWithProviderMutation.data.length > 0 && (
-          <Card className="w-full max-w-2xl">
-            <CardHeader>
-              <CardTitle>Parsed Results</CardTitle>
-              <CardDescription>
-                {parseFileWithProviderMutation.data.length} transaction
-                {parseFileWithProviderMutation.data.length !== 1
-                  ? 's'
-                  : ''}{' '}
-                processed
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="overflow-x-auto overflow-y-auto max-h-96">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b">
-                      {Object.keys(parseFileWithProviderMutation.data[0]).map(
-                        (header) => (
-                          <th
-                            key={header}
-                            className="text-left p-2 font-medium capitalize"
-                          >
-                            {header}
-                          </th>
-                        ),
-                      )}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {parseFileWithProviderMutation.data.map((row, idx) => (
-                      <tr key={idx} className="border-b hover:bg-gray-50">
-                        {Object.values(row).map((value, cellIdx) => (
-                          <td key={cellIdx} className="p-2">
-                            {value}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button onClick={handleCopyAsCSV}>Copy as CSV</Button>
-            </CardFooter>
-          </Card>
-        )}
+      {parseFileWithProviderMutation.data && (
+        <Results transactions={parseFileWithProviderMutation.data} />
+      )}
     </div>
   )
 }

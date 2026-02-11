@@ -1,21 +1,19 @@
-import type { Transaction } from '@/lib/parsers'
-import type { Split } from '@/lib/utils'
+import type { Mapping } from '@/lib/mapping/constant'
 import { Categories } from '@/lib/parsers'
 
-type Mapping = {
-  mode: 'default' | 'exact-name' | 'exact-name-price'
-  fromName: string
-  toName: string
-  toCategory: Lowercase<
-    Split<Split<Transaction['category'], ' '>[1], '/'>[number]
-  >
-  fromPrice?: string
-  exclude?: boolean
+const compareMapping = (a: Mapping, b: Mapping) => {
+  if (a.mode === b.mode) {
+    return a.fromName.localeCompare(b.fromName)
+  }
+  return a.mode.localeCompare(b.mode)
 }
+
+const getMappingFileName = () =>
+  process.env.MAPPING_FILE ?? './mapping/mapping.yaml'
 
 export const getMapping = async () => {
   return (await Bun.YAML.parse(
-    await Bun.file(process.env.MAPPING_FILE ?? './mapping/mapping.yaml').text(),
+    await Bun.file(getMappingFileName()).text(),
   )) as Array<Mapping>
 }
 
@@ -46,4 +44,22 @@ export const findInMapping = (
           '💬 Autres',
       }
     : null
+}
+
+export const addMapping = async (mapping: Mapping) => {
+  const currentMapping = await getMapping()
+  currentMapping.push(mapping)
+  currentMapping.sort(compareMapping)
+  await Bun.write(getMappingFileName(), Bun.YAML.stringify(currentMapping))
+}
+
+export const deleteMapping = async ({
+  fromName,
+  mode,
+}: Pick<Mapping, 'fromName' | 'mode'>) => {
+  const currentMapping = await getMapping()
+  const newMapping = currentMapping
+    .filter((m) => !(m.fromName === fromName && m.mode === mode))
+    .toSorted(compareMapping)
+  await Bun.write(getMappingFileName(), Bun.YAML.stringify(newMapping))
 }

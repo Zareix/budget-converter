@@ -1,0 +1,29 @@
+# Ignore node_modules, as they will be installed in the Docker image
+node_modules
+
+# Ignore build artifacts and output directories
+output
+.output
+tmp
+temp
+build
+bin
+budget-converter
+mapping
+
+# Ignore Git files
+.git
+.gitignore
+
+# Ignore Docker files
+Dockerfile
+.dockerignore
+
+# Ignore documentation
+README.md
+
+.cta.sjon
+biome.json
+components.json
+.zed
+.tanstack
