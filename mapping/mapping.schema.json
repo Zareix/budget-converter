@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Mapping",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["mode", "fromName", "toName", "toCategory"],
+    "properties": {
+      "mode": {
+        "type": "string",
+        "enum": ["default", "exact-name", "exact-name-price"]
+      },
+      "fromName": {
+        "type": "string"
+      },
+      "fromPrice": {
+        "type": "number"
+      },
+      "toName": {
+        "type": "string"
+      },
+      "toCategory": {
+        "type": "string",
+        "enum": [
+          "courses",
+          "restaurant",
+          "transport",
+          "divertissement",
+          "shopping",
+          "voyage",
+          "santé",
+          "maison",
+          "cadeaux",
+          "dons",
+          "autres",
+          "bar",
+          "café"
+        ]
+      },
+      "exclude": {
+        "type": "boolean",
+        "description": "If true, this mapping should be excluded"
+      }
+    },
+    "additionalProperties": false
+  }
+}
