@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link, createFileRoute } from '@tanstack/react-router'
 import * as v from 'valibot'
-import { SearchIcon } from 'lucide-react'
 import { getMapping } from '@/lib/server/functions'
 import {
   Table,
@@ -26,7 +25,6 @@ import { MODES } from '@/lib/mapping/constant'
 import { DeleteMappingButton } from '@/components/mapping/delete'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 
 export const Route = createFileRoute('/mapping')({
   component: MappingRouteComponent,

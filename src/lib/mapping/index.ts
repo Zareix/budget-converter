@@ -11,11 +11,32 @@ const compareMapping = (a: Mapping, b: Mapping) => {
 const getMappingFileName = () =>
   process.env.MAPPING_FILE ?? './mapping/mapping.yaml'
 
-export const getMapping = async () => {
-  return (await Bun.YAML.parse(
-    await Bun.file(getMappingFileName()).text(),
-  )) as Array<Mapping>
+const saveMappings = async (mappings: Array<Mapping>) => {
+  await Bun.write(
+    getMappingFileName(),
+    Bun.YAML.stringify(
+      {
+        mappings: mappings.toSorted(compareMapping).map((m) => ({
+          fromName: m.fromName,
+          fromPrice: m.fromPrice,
+          toName: m.toName,
+          toCategory: m.toCategory,
+          mode: m.mode,
+          exclude: m.exclude,
+        })),
+      },
+      null,
+      2,
+    ),
+  )
 }
+
+export const getMapping = async () =>
+  (
+    (await Bun.YAML.parse(await Bun.file(getMappingFileName()).text())) as {
+      mappings: Array<Mapping>
+    }
+  ).mappings
 
 export const findInMapping = (
   mapping: Awaited<ReturnType<typeof getMapping>>,
@@ -50,16 +71,16 @@ export const addMapping = async (mapping: Mapping) => {
   const currentMapping = await getMapping()
   currentMapping.push(mapping)
   currentMapping.sort(compareMapping)
-  await Bun.write(getMappingFileName(), Bun.YAML.stringify(currentMapping))
+  await saveMappings(currentMapping)
 }
 
 export const deleteMapping = async ({
   fromName,
   mode,
 }: Pick<Mapping, 'fromName' | 'mode'>) => {
-  const currentMapping = await getMapping()
-  const newMapping = currentMapping
+  const currentMappings = await getMapping()
+  const newMappings = currentMappings
     .filter((m) => !(m.fromName === fromName && m.mode === mode))
     .toSorted(compareMapping)
-  await Bun.write(getMappingFileName(), Bun.YAML.stringify(newMapping))
+  await saveMappings(newMappings)
 }
