@@ -107,6 +107,15 @@ function Home() {
     parseFileWithProviderMutation.reset()
   }
 
+  const autodetectProvider = (fileName: string) => {
+    const lowerCaseName = fileName.toLowerCase()
+    if (lowerCaseName === 'activity.csv') {
+      form.setFieldValue('provider', 'amex')
+    } else if (lowerCaseName.startsWith('account-statement')) {
+      form.setFieldValue('provider', 'revolut')
+    }
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center p-4 gap-6">
       <Card className="w-full max-w-lg">
@@ -190,6 +199,7 @@ function Home() {
                           const file = e.target.files?.[0]
                           if (file) {
                             field.handleChange(file)
+                            autodetectProvider(file.name)
                           }
                         }}
                         onBlur={field.handleBlur}
