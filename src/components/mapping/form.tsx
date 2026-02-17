@@ -24,6 +24,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox'
 import { MODES } from '@/lib/mapping/constant'
 import { addMapping, editMapping } from '@/lib/server/functions'
+import { toShortCategoryName } from '@/lib/utils'
 
 const mappingFormSchema = v.variant('mode', [
   v.object({
@@ -56,10 +57,7 @@ const mappingFormSchema = v.variant('mode', [
       v.string('To category is required'),
       v.minLength(1, 'To category cannot be empty'),
     ),
-    fromPrice: v.pipe(
-      v.string('From price is required for exact name + price mode'),
-      v.minLength(1, 'From price cannot be empty for exact name + price mode'),
-    ),
+    fromPrice: v.number(),
     exclude: v.boolean(),
   }),
 ])
@@ -120,7 +118,7 @@ export const CreateMappingForm = ({ onFinish, previousValues }: Props) => {
       fromName: previousValues?.fromName ?? '',
       toName: previousValues?.toName ?? '',
       toCategory: previousValues?.toCategory ?? '',
-      fromPrice: previousValues?.fromPrice ?? '',
+      fromPrice: previousValues?.fromPrice ?? 0,
       exclude: previousValues?.exclude ?? false,
     } as v.InferInput<typeof mappingFormSchema>,
     onSubmit: ({ value }) => {
@@ -131,14 +129,6 @@ export const CreateMappingForm = ({ onFinish, previousValues }: Props) => {
       }
     },
   })
-
-  const getCategoryShortName = (fullName: string): string => {
-    const parts = fullName.split(' ')
-    if (parts.length > 1) {
-      return parts[1].toLowerCase()
-    }
-    return fullName.toLowerCase()
-  }
 
   return (
     <form
@@ -259,7 +249,7 @@ export const CreateMappingForm = ({ onFinish, previousValues }: Props) => {
                     }
                   }}
                   items={Categories.map((category) => ({
-                    value: getCategoryShortName(category),
+                    value: toShortCategoryName(category),
                     label: category,
                   }))}
                 >
@@ -270,7 +260,7 @@ export const CreateMappingForm = ({ onFinish, previousValues }: Props) => {
                     {Categories.map((category) => (
                       <SelectItem
                         key={category}
-                        value={getCategoryShortName(category)}
+                        value={toShortCategoryName(category)}
                       >
                         {category}
                       </SelectItem>
@@ -305,7 +295,12 @@ export const CreateMappingForm = ({ onFinish, previousValues }: Props) => {
                         id="from-price"
                         name={field.name}
                         value={field.state.value}
-                        onChange={(e) => field.handleChange(e.target.value)}
+                        type="number"
+                        inputMode="decimal"
+                        step={0.01}
+                        onChange={(e) =>
+                          field.handleChange(Number.parseFloat(e.target.value))
+                        }
                         onBlur={field.handleBlur}
                         aria-invalid={isInvalid}
                         placeholder="e.g., 19.99"

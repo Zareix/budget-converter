@@ -19,13 +19,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Categories } from '@/lib/parsers'
 import { CreateMappingButton } from '@/components/mapping'
 import { MODES } from '@/lib/mapping/constant'
 import { DeleteMappingButton } from '@/components/mapping/delete'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { EditMappingButton } from '@/components/mapping/edit'
+import { toCategoryFullName } from '@/lib/utils'
 
 export const Route = createFileRoute('/mapping')({
   component: MappingRouteComponent,
@@ -64,12 +64,6 @@ function MappingRouteComponent() {
           ? mappingQuery.error.message
           : 'Unknown error'}
       </div>
-    )
-  }
-
-  const getCategoryFullName = (category: string) => {
-    return (
-      Categories.find((c) => c.toLowerCase().includes(category)) ?? '💬 Autres'
     )
   }
 
@@ -112,7 +106,7 @@ function MappingRouteComponent() {
                     <TableCell>{mapping.fromName}</TableCell>
                     <TableCell>{mapping.toName}</TableCell>
                     <TableCell>
-                      {getCategoryFullName(mapping.toCategory)}
+                      {toCategoryFullName(mapping.toCategory)}
                     </TableCell>
                     <TableCell>{mapping.fromPrice ?? '-'}</TableCell>
                     <TableCell>{mapping.exclude ? 'Yes' : 'No'}</TableCell>

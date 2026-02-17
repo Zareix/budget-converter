@@ -1,16 +1,22 @@
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import type { ClassValue } from 'clsx'
+import { Categories } from '@/lib/parsers'
 
 export function cn(...inputs: Array<ClassValue>) {
   return twMerge(clsx(inputs))
 }
 
-// eslint-disable-next-line
-export type Split<S extends string, D extends string> = string extends S
-  ? Array<string>
-  : S extends ''
-    ? []
-    : S extends `${infer T}${D}${infer U}`
-      ? [T, ...Split<U, D>]
-      : [S]
+export const toShortCategoryName = (fullName: string): string => {
+  const parts = fullName.split(' ')
+  if (parts.length > 1) {
+    return parts[1].toLowerCase()
+  }
+  return fullName.toLowerCase()
+}
+
+export const toCategoryFullName = (category: string) => {
+  return (
+    Categories.find((c) => c.toLowerCase().includes(category)) ?? '💬 Autres'
+  )
+}

@@ -50,9 +50,7 @@ export const findInMapping = (
       case 'exact-name':
         return name === m.fromName
       case 'exact-name-price':
-        return (
-          name === m.fromName && price === Number.parseFloat(m.fromPrice ?? '0')
-        )
+        return name === m.fromName && price === m.fromPrice
       default:
         return false
     }

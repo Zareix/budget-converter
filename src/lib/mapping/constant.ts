@@ -1,6 +1,3 @@
-import type { Transaction } from '@/lib/parsers'
-import type { Split } from '@/lib/utils'
-
 export const MODES = [
   { value: 'default', label: 'Default (Contains)' },
   { value: 'exact-name', label: 'Exact Name' },
@@ -12,9 +9,7 @@ export type Mapping = {
   mode: Mode
   fromName: string
   toName: string
-  toCategory: Lowercase<
-    Split<Split<Transaction['category'], ' '>[1], '/'>[number]
-  >
-  fromPrice?: string
+  toCategory: string
+  fromPrice?: number
   exclude?: boolean
 }

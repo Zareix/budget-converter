@@ -48,15 +48,13 @@ export const addMapping = createServerFn({
         fromName: v.string('From name is required'),
         toName: v.string('To name is required'),
         toCategory: v.string('Category is required'),
-        fromPrice: v.string(
-          'From price is required for exact name + price mode',
-        ),
+        fromPrice: v.number(),
         exclude: v.optional(v.boolean()),
       }),
     ]),
   )
   .handler(({ data }) => {
-    return mapping.addMapping(data as Parameters<typeof mapping.addMapping>[0])
+    return mapping.addMapping(data)
   })
 
 export const editMapping = createServerFn({
@@ -77,9 +75,7 @@ export const editMapping = createServerFn({
           fromName: v.string('From name is required'),
           toName: v.string('To name is required'),
           toCategory: v.string('Category is required'),
-          fromPrice: v.string(
-            'From price is required for exact name + price mode',
-          ),
+          fromPrice: v.number(),
           exclude: v.optional(v.boolean()),
         }),
       ]),
@@ -96,18 +92,14 @@ export const editMapping = createServerFn({
           fromName: v.string('From name is required'),
           toName: v.string('To name is required'),
           toCategory: v.string('Category is required'),
-          fromPrice: v.string(
-            'From price is required for exact name + price mode',
-          ),
+          fromPrice: v.number(),
           exclude: v.optional(v.boolean()),
         }),
       ]),
     }),
   )
   .handler(({ data }) => {
-    return mapping.editMapping(
-      data as Parameters<typeof mapping.editMapping>[0],
-    )
+    return mapping.editMapping(data)
   })
 
 export const deleteMapping = createServerFn({
