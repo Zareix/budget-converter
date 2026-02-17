@@ -25,6 +25,7 @@ import { MODES } from '@/lib/mapping/constant'
 import { DeleteMappingButton } from '@/components/mapping/delete'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { EditMappingButton } from '@/components/mapping/edit'
 
 export const Route = createFileRoute('/mapping')({
   component: MappingRouteComponent,
@@ -116,6 +117,7 @@ function MappingRouteComponent() {
                     <TableCell>{mapping.fromPrice ?? '-'}</TableCell>
                     <TableCell>{mapping.exclude ? 'Yes' : 'No'}</TableCell>
                     <TableCell>
+                      <EditMappingButton mapping={mapping} />
                       <DeleteMappingButton mapping={mapping} />
                     </TableCell>
                   </TableRow>

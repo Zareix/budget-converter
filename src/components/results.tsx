@@ -12,6 +12,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
 type Props = {
   transactions: Array<Transaction>
@@ -91,10 +99,10 @@ export const Results = ({ transactions }: Props) => {
       </CardHeader>
       <CardContent>
         <div className="overflow-x-auto overflow-y-auto max-h-96">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b">
-                <th className="text-left p-2 font-medium w-10">
+          <Table className="w-full text-sm">
+            <TableHeader>
+              <TableRow className="border-b">
+                <TableHead className="text-left p-2 font-medium w-10">
                   <Checkbox
                     checked={selectedIndices.size === transactions.length}
                     onCheckedChange={toggleSelectAll}
@@ -108,40 +116,43 @@ export const Results = ({ transactions }: Props) => {
                   >
                     <span className="sr-only">Select all</span>
                   </Checkbox>
-                </th>
-                <th className="text-left p-2 font-medium capitalize">Date</th>
-                <th className="text-left p-2 font-medium capitalize">Name</th>
-                <th className="text-left p-2 font-medium capitalize">Amount</th>
-                <th className="text-left p-2 font-medium capitalize">
+                </TableHead>
+                <TableHead className="text-left p-2 font-medium capitalize">
+                  Date
+                </TableHead>
+                <TableHead className="text-left p-2 font-medium capitalize">
+                  Name
+                </TableHead>
+                <TableHead className="text-left p-2 font-medium capitalize">
+                  Amount
+                </TableHead>
+                <TableHead className="text-left p-2 font-medium capitalize">
                   Category
-                </th>
-                <th className="text-left p-2 font-medium capitalize">
+                </TableHead>
+                <TableHead className="text-left p-2 font-medium capitalize">
                   Payment Method
-                </th>
-              </tr>
-            </thead>
-            <tbody>
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {transactions.map((row, idx) => (
-                <tr
-                  key={idx}
-                  className={`border-b hover:bg-gray-50 ${selectedIndices.has(idx) ? 'bg-blue-50' : ''}`}
-                >
-                  <td className="p-2">
+                <TableRow key={idx}>
+                  <TableCell className="p-2">
                     <Checkbox
                       checked={selectedIndices.has(idx)}
                       onCheckedChange={() => toggleSelectOne(idx)}
                       aria-label={`Select transaction ${idx + 1}`}
                     />
-                  </td>
-                  <td className="p-2">{row.date}</td>
-                  <td className="p-2">{row.name}</td>
-                  <td className="p-2">{row.amount}</td>
-                  <td className="p-2">{row.category}</td>
-                  <td className="p-2">{row.payementMethod}</td>
-                </tr>
+                  </TableCell>
+                  <TableCell className="p-2">{row.date}</TableCell>
+                  <TableCell className="p-2">{row.name}</TableCell>
+                  <TableCell className="p-2">{row.amount}</TableCell>
+                  <TableCell className="p-2">{row.category}</TableCell>
+                  <TableCell className="p-2">{row.payementMethod}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       </CardContent>
       <CardFooter>

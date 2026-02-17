@@ -41,7 +41,7 @@ export const addMapping = createServerFn({
         fromName: v.string('From name is required'),
         toName: v.string('To name is required'),
         toCategory: v.string('Category is required'),
-        exclude: v.boolean(),
+        exclude: v.optional(v.boolean()),
       }),
       v.object({
         mode: v.literal('exact-name-price'),
@@ -51,12 +51,63 @@ export const addMapping = createServerFn({
         fromPrice: v.string(
           'From price is required for exact name + price mode',
         ),
-        exclude: v.boolean(),
+        exclude: v.optional(v.boolean()),
       }),
     ]),
   )
   .handler(({ data }) => {
     return mapping.addMapping(data as Parameters<typeof mapping.addMapping>[0])
+  })
+
+export const editMapping = createServerFn({
+  method: 'POST',
+})
+  .inputValidator(
+    v.object({
+      previous: v.variant('mode', [
+        v.object({
+          mode: v.picklist(['default', 'exact-name']),
+          fromName: v.string('From name is required'),
+          toName: v.string('To name is required'),
+          toCategory: v.string('Category is required'),
+          exclude: v.optional(v.boolean()),
+        }),
+        v.object({
+          mode: v.literal('exact-name-price'),
+          fromName: v.string('From name is required'),
+          toName: v.string('To name is required'),
+          toCategory: v.string('Category is required'),
+          fromPrice: v.string(
+            'From price is required for exact name + price mode',
+          ),
+          exclude: v.optional(v.boolean()),
+        }),
+      ]),
+      new: v.variant('mode', [
+        v.object({
+          mode: v.picklist(['default', 'exact-name']),
+          fromName: v.string('From name is required'),
+          toName: v.string('To name is required'),
+          toCategory: v.string('Category is required'),
+          exclude: v.optional(v.boolean()),
+        }),
+        v.object({
+          mode: v.literal('exact-name-price'),
+          fromName: v.string('From name is required'),
+          toName: v.string('To name is required'),
+          toCategory: v.string('Category is required'),
+          fromPrice: v.string(
+            'From price is required for exact name + price mode',
+          ),
+          exclude: v.optional(v.boolean()),
+        }),
+      ]),
+    }),
+  )
+  .handler(({ data }) => {
+    return mapping.editMapping(
+      data as Parameters<typeof mapping.editMapping>[0],
+    )
   })
 
 export const deleteMapping = createServerFn({

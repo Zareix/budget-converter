@@ -41,17 +41,18 @@ export const getMapping = async () =>
 export const findInMapping = (
   mapping: Awaited<ReturnType<typeof getMapping>>,
   name: string,
-  price: string,
+  price: number,
 ) => {
-  const lowerName = name.toLowerCase()
   const mapped = mapping.find((m) => {
     switch (m.mode) {
       case 'default':
-        return lowerName.includes(m.fromName.toLowerCase())
+        return name.toLowerCase().includes(m.fromName.toLowerCase())
       case 'exact-name':
         return name === m.fromName
       case 'exact-name-price':
-        return name === m.fromName && price === m.fromPrice
+        return (
+          name === m.fromName && price === Number.parseFloat(m.fromPrice ?? '0')
+        )
       default:
         return false
     }
@@ -72,6 +73,31 @@ export const addMapping = async (mapping: Mapping) => {
   currentMapping.push(mapping)
   currentMapping.sort(compareMapping)
   await saveMappings(currentMapping)
+}
+
+export const editMapping = async ({
+  previous,
+  new: newMapping,
+}: {
+  previous: Mapping
+  new: Mapping
+}) => {
+  const currentMappings = await getMapping()
+  const newMappings = currentMappings
+    .filter(
+      (m) =>
+        !(
+          m.mode === previous.mode &&
+          m.fromName === previous.fromName &&
+          m.fromPrice === previous.fromPrice &&
+          m.toName === previous.toName &&
+          m.toCategory === previous.toCategory &&
+          m.exclude === previous.exclude
+        ),
+    )
+    .concat(newMapping)
+    .toSorted(compareMapping)
+  await saveMappings(newMappings)
 }
 
 export const deleteMapping = async ({

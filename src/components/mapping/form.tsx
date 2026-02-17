@@ -3,6 +3,7 @@ import { toast } from 'sonner'
 
 import * as v from 'valibot'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import type { Mapping } from '@/lib/mapping/constant'
 import { Categories } from '@/lib/parsers'
 import { Button } from '@/components/ui/button'
 import {
@@ -22,7 +23,7 @@ import {
 } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
 import { MODES } from '@/lib/mapping/constant'
-import { addMapping } from '@/lib/server/functions'
+import { addMapping, editMapping } from '@/lib/server/functions'
 
 const mappingFormSchema = v.variant('mode', [
   v.object({
@@ -55,16 +56,20 @@ const mappingFormSchema = v.variant('mode', [
       v.string('To category is required'),
       v.minLength(1, 'To category cannot be empty'),
     ),
-    fromPrice: v.string('From price is required for exact name + price mode'),
+    fromPrice: v.pipe(
+      v.string('From price is required for exact name + price mode'),
+      v.minLength(1, 'From price cannot be empty for exact name + price mode'),
+    ),
     exclude: v.boolean(),
   }),
 ])
 
 type Props = {
+  previousValues?: Mapping
   onFinish?: () => void
 }
 
-export const CreateMappingForm = ({ onFinish }: Props) => {
+export const CreateMappingForm = ({ onFinish, previousValues }: Props) => {
   const queryClient = useQueryClient()
   const addMappingMutation = useMutation({
     mutationKey: ['addMapping'],
@@ -82,21 +87,48 @@ export const CreateMappingForm = ({ onFinish }: Props) => {
       )
     },
   })
+  const editMappingMutation = useMutation({
+    mutationKey: ['editMapping'],
+    mutationFn: async (data: v.InferInput<typeof mappingFormSchema>) =>
+      editMapping({
+        data: {
+          previous: previousValues as Parameters<
+            typeof editMapping
+          >[0]['data']['previous'],
+          new: data,
+        },
+      }),
+    onSuccess: () => {
+      toast.success('Mapping edited successfully')
+      queryClient.invalidateQueries({ queryKey: ['mapping'] })
+      form.reset()
+      onFinish?.()
+    },
+    onError: (error) => {
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to edit mapping',
+      )
+    },
+  })
 
   const form = useForm({
     validators: {
       onSubmit: mappingFormSchema,
     },
     defaultValues: {
-      mode: 'default',
-      fromName: '',
-      toName: '',
-      toCategory: '',
-      fromPrice: '',
-      exclude: false,
+      mode: previousValues?.mode ?? 'default',
+      fromName: previousValues?.fromName ?? '',
+      toName: previousValues?.toName ?? '',
+      toCategory: previousValues?.toCategory ?? '',
+      fromPrice: previousValues?.fromPrice ?? '',
+      exclude: previousValues?.exclude ?? false,
     } as v.InferInput<typeof mappingFormSchema>,
     onSubmit: ({ value }) => {
-      addMappingMutation.mutate(value)
+      if (previousValues) {
+        editMappingMutation.mutate(value)
+      } else {
+        addMappingMutation.mutate(value)
+      }
     },
   })
 
@@ -226,6 +258,10 @@ export const CreateMappingForm = ({ onFinish }: Props) => {
                       field.handleChange(value)
                     }
                   }}
+                  items={Categories.map((category) => ({
+                    value: getCategoryShortName(category),
+                    label: category,
+                  }))}
                 >
                   <SelectTrigger id="category-select" aria-invalid={isInvalid}>
                     <SelectValue placeholder="Select a category" />
@@ -278,9 +314,7 @@ export const CreateMappingForm = ({ onFinish }: Props) => {
                         Required when using exact name + price mode
                       </FieldDescription>
                       {isInvalid && (
-                        <FieldError>
-                          {field.state.meta.errors.join(', ')}
-                        </FieldError>
+                        <FieldError errors={field.state.meta.errors} />
                       )}
                     </Field>
                   )
@@ -325,7 +359,11 @@ export const CreateMappingForm = ({ onFinish }: Props) => {
             Reset
           </Button>
           <Button type="submit" disabled={addMappingMutation.isPending}>
-            {addMappingMutation.isPending ? 'Creating...' : 'Create Mapping'}
+            {addMappingMutation.isPending
+              ? 'Saving...'
+              : previousValues
+                ? 'Save Changes'
+                : 'Create Mapping'}
           </Button>
         </div>
       </FieldGroup>

@@ -30,7 +30,10 @@ export const parseToTransactions = async ({
     columns: true,
     skip_empty_lines: true,
   })
-    .filter((record) => record.Type === 'Paiement par carte')
+    .filter(
+      (record) =>
+        record.Type === 'Paiement par carte' && record.État === 'TERMINÉ',
+    )
     .map((record) => {
       const date = new Date(record['Date de début'])
       const formattedDate: `${number}/${number}` = `${date.getDate()}/${
@@ -40,9 +43,13 @@ export const parseToTransactions = async ({
         .toFixed(2)
         .replace('.', ',')
 
-      let name: string | Array<string> = record.Description
+      let name: string = record.Description
       let category: Category = '💬 Autres'
-      const mapped = findInMapping(mapping, name, amount)
+      const mapped = findInMapping(
+        mapping,
+        name,
+        Number.parseFloat(amount.replace(',', '.')),
+      )
       if (mapped) {
         if (mapped.exclude) {
           return null
