@@ -1,11 +1,17 @@
 import type { Mapping } from '@/lib/mapping/constant'
 import { Categories } from '@/lib/parsers'
 
+const MODE_ORDER: Array<Mapping['mode']> = [
+  'exact-name-price',
+  'exact-name',
+  'default',
+]
+
 const compareMapping = (a: Mapping, b: Mapping) => {
   if (a.mode === b.mode) {
     return a.fromName.localeCompare(b.fromName)
   }
-  return a.mode.localeCompare(b.mode)
+  return MODE_ORDER.indexOf(a.mode) - MODE_ORDER.indexOf(b.mode)
 }
 
 const getMappingFileName = () =>

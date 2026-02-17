@@ -2,12 +2,12 @@
   "name": "budget-converter",
   "private": true,
   "type": "module",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "scripts": {
     "dev": "bun run --bun vite dev --port 3000",
     "build": "bun run --bun vite build",
     "preview": "vite preview",
-    "lint": "eslint",
+    "lint": "tsc --noEmit -p . && eslint",
     "format": "prettier",
     "check": "prettier --write . && eslint --fix"
   },

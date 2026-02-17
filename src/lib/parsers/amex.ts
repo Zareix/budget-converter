@@ -38,7 +38,11 @@ export const parseToTransactions = async ({
 
       let name: string | Array<string> = record.Description
       let category: Category = '💬 Autres'
-      const mapped = findInMapping(mapping, name, record.Montant)
+      const mapped = findInMapping(
+        mapping,
+        name,
+        Number.parseFloat(record.Montant.replace(',', '.')),
+      )
       if (mapped) {
         if (mapped.exclude) {
           return null
