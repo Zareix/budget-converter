@@ -20,3 +20,14 @@ export const toCategoryFullName = (category: string) => {
     Categories.find((c) => c.toLowerCase().includes(category)) ?? '💬 Autres'
   )
 }
+
+export const firstNonNullNorEmpty = <T>(
+  ...values: Array<T | null | undefined | ''>
+): T | null => {
+  for (const value of values) {
+    if (value !== null && value !== undefined && value !== '') {
+      return value
+    }
+  }
+  return null
+}

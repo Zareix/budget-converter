@@ -50,23 +50,14 @@ export const parseToTransactions = async ({
         name = mapped.name
         category = mapped.category
       } else {
-        name = name.split(' ')
-        name.pop()
-        name = name
-          .join(' ')
-          .trim()
-          .replace(/ ?\* ?/g, ' - ')
-          .toLowerCase()
-          .split(' ')
-          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(' ')
+        name = name.trim()
       }
 
       return {
         date: formattedDate,
         originalDate: date,
         amount: record.Montant,
-        payementMethod: 'Carte AMEX',
+        paymentMethod: 'Carte AMEX',
         name,
         category,
       } satisfies Transaction

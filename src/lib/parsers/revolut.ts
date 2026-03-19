@@ -65,7 +65,7 @@ export const parseToTransactions = async ({
         originalDate: date,
         name,
         amount,
-        payementMethod: 'Carte Revolut',
+        paymentMethod: 'Carte Revolut',
         category,
       } satisfies Transaction
     })

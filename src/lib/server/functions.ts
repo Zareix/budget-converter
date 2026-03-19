@@ -1,28 +1,43 @@
 import { createServerFn } from '@tanstack/react-start'
 import * as v from 'valibot'
 import { PROVIDERS } from '@/lib/parsers'
+import * as lunchflow from '@/lib/fetcher/lunchflow'
 import * as amexParser from '@/lib/parsers/amex'
 import * as revolutParser from '@/lib/parsers/revolut'
 import * as mapping from '@/lib/mapping'
+import { FETCHERS } from '@/lib/fetcher'
 
-export const parseFileWithProvider = createServerFn({
+export const listAccounts = createServerFn().handler(lunchflow.listAccounts)
+
+export const fetchTransactions = createServerFn({
   method: 'POST',
 })
   .inputValidator(
-    v.object({
-      fileContent: v.string(),
-      provider: v.picklist(PROVIDERS),
-    }),
+    v.variant('mode', [
+      v.object({
+        mode: v.literal('parser'),
+        fileContent: v.string(),
+        provider: v.picklist(PROVIDERS),
+      }),
+      v.object({
+        mode: v.literal('fetcher'),
+        fetcher: v.picklist(FETCHERS),
+        accountIds: v.array(v.number()),
+      }),
+    ]),
   )
-  .handler(async ({ data: { fileContent, provider } }) => {
-    switch (provider) {
+  .handler(async ({ data }) => {
+    if (data.mode === 'fetcher') {
+      return await lunchflow.fetchTransactions(data)
+    }
+    switch (data.provider) {
       case 'amex':
         return await amexParser.parseToTransactions({
-          fileContent,
+          fileContent: data.fileContent,
         })
       case 'revolut':
         return await revolutParser.parseToTransactions({
-          fileContent,
+          fileContent: data.fileContent,
         })
       default:
         throw new Error('Unsupported provider')
@@ -53,9 +68,7 @@ export const addMapping = createServerFn({
       }),
     ]),
   )
-  .handler(({ data }) => {
-    return mapping.addMapping(data)
-  })
+  .handler(({ data }) => mapping.addMapping(data))
 
 export const editMapping = createServerFn({
   method: 'POST',
@@ -98,9 +111,7 @@ export const editMapping = createServerFn({
       ]),
     }),
   )
-  .handler(({ data }) => {
-    return mapping.editMapping(data)
-  })
+  .handler(({ data }) => mapping.editMapping(data))
 
 export const deleteMapping = createServerFn({
   method: 'POST',

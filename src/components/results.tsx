@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { stringify } from 'csv-stringify/browser/esm/sync'
+import { useQuery } from '@tanstack/react-query'
 import type { Transaction } from '@/lib/parsers'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -71,7 +72,7 @@ export const Results = ({ transactions }: Props) => {
       })
       const csv = stringify(allRecords, {
         delimiter: ';',
-        columns: ['date', 'name', 'amount', 'category', 'payementMethod'],
+        columns: ['date', 'name', 'amount', 'category', 'paymentMethod'],
       })
 
       navigator.clipboard.writeText(csv)
@@ -85,6 +86,10 @@ export const Results = ({ transactions }: Props) => {
         position: 'bottom-right',
       })
     }
+  }
+
+  if (transactions.length === 0) {
+    return null
   }
 
   return (
@@ -148,7 +153,7 @@ export const Results = ({ transactions }: Props) => {
                   <TableCell className="p-2">{row.name}</TableCell>
                   <TableCell className="p-2">{row.amount}</TableCell>
                   <TableCell className="p-2">{row.category}</TableCell>
-                  <TableCell className="p-2">{row.payementMethod}</TableCell>
+                  <TableCell className="p-2">{row.paymentMethod}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
