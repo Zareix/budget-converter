@@ -21,6 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { CreateMappingButton } from '@/components/mapping'
 
 type Props = {
   transactions: Array<Transaction>
@@ -137,6 +138,9 @@ export const Results = ({ transactions }: Props) => {
                 <TableHead className="text-left p-2 font-medium capitalize">
                   Payment Method
                 </TableHead>
+                <TableHead className="text-left p-2 font-medium capitalize">
+                  Action
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -154,6 +158,17 @@ export const Results = ({ transactions }: Props) => {
                   <TableCell className="p-2">{row.amount}</TableCell>
                   <TableCell className="p-2">{row.category}</TableCell>
                   <TableCell className="p-2">{row.paymentMethod}</TableCell>
+                  <TableCell className="p-2">
+                    <CreateMappingButton
+                      defaultValues={{
+                        fromName: row.name,
+                        toName: row.name,
+                        fromPrice: Number.parseFloat(
+                          row.amount.replace(',', '.'),
+                        ),
+                      }}
+                    />
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

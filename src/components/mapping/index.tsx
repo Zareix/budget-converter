@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import type { Mapping } from '@/lib/mapping/constant'
 import { CreateMappingForm } from '@/components/mapping/form'
 import { Button } from '@/components/ui/button'
 import {
@@ -10,7 +11,11 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
-export const CreateMappingButton = () => {
+type Props = {
+  defaultValues?: Partial<Mapping>
+}
+
+export const CreateMappingButton = ({ defaultValues }: Props) => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -25,7 +30,10 @@ export const CreateMappingButton = () => {
             Fill in the details to create a new mapping.
           </DialogDescription>
         </DialogHeader>
-        <CreateMappingForm onFinish={() => setIsOpen(false)} />
+        <CreateMappingForm
+          onFinish={() => setIsOpen(false)}
+          defaultValues={defaultValues}
+        />
       </DialogContent>
     </Dialog>
   )

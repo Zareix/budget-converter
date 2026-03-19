@@ -64,10 +64,15 @@ const mappingFormSchema = v.variant('mode', [
 
 type Props = {
   previousValues?: Mapping
+  defaultValues?: Partial<Mapping>
   onFinish?: () => void
 }
 
-export const CreateMappingForm = ({ onFinish, previousValues }: Props) => {
+export const CreateMappingForm = ({
+  onFinish,
+  previousValues,
+  defaultValues,
+}: Props) => {
   const queryClient = useQueryClient()
   const addMappingMutation = useMutation({
     mutationKey: ['addMapping'],
@@ -114,12 +119,12 @@ export const CreateMappingForm = ({ onFinish, previousValues }: Props) => {
       onSubmit: mappingFormSchema,
     },
     defaultValues: {
-      mode: previousValues?.mode ?? 'default',
-      fromName: previousValues?.fromName ?? '',
-      toName: previousValues?.toName ?? '',
-      toCategory: previousValues?.toCategory ?? '',
-      fromPrice: previousValues?.fromPrice ?? 0,
-      exclude: previousValues?.exclude ?? false,
+      mode: defaultValues?.mode ?? previousValues?.mode ?? 'default',
+      fromName: defaultValues?.fromName ?? previousValues?.fromName ?? '',
+      toName: defaultValues?.toName ?? previousValues?.toName ?? '',
+      toCategory: defaultValues?.toCategory ?? previousValues?.toCategory ?? '',
+      fromPrice: defaultValues?.fromPrice ?? previousValues?.fromPrice ?? 0,
+      exclude: defaultValues?.exclude ?? previousValues?.exclude ?? false,
     } as v.InferInput<typeof mappingFormSchema>,
     onSubmit: ({ value }) => {
       if (previousValues) {
