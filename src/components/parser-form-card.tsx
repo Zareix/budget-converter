@@ -5,6 +5,7 @@ import { toast } from 'sonner'
 import * as v from 'valibot'
 
 import type { Provider } from '@/lib/parsers'
+import { useTransactions } from '@/context/transactions-context'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -40,13 +41,8 @@ const formSchema = v.object({
   ),
 })
 
-export const ParserFormCard = ({
-  setTransactions,
-  reset,
-}: {
-  setTransactions: (transactions: Array<any>) => void
-  reset?: () => void
-}) => {
+export const ParserFormCard = () => {
+  const { setTransactions, resetTransactions } = useTransactions()
   const parseFileWithProviderMutation = useMutation({
     mutationKey: ['parseFileWithProvider'],
     mutationFn: (data: { fileContent: string; provider: Provider }) =>
@@ -113,7 +109,7 @@ export const ParserFormCard = ({
     if (inputFile) {
       ;(inputFile as HTMLInputElement).value = ''
     }
-    reset?.()
+    resetTransactions()
     parseFileWithProviderMutation.reset()
   }
 

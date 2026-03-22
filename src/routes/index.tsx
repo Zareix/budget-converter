@@ -1,6 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
-import type { Transaction } from '@/lib/parsers'
+import { TransactionsProvider } from '@/context/transactions-context'
 import { Results } from '@/components/results'
 import { FetcherFormCard } from '@/components/fetcher-form-card'
 import { ParserFormCard } from '@/components/parser-form-card'
@@ -12,21 +11,24 @@ export const Route = createFileRoute('/')({
 })
 
 function Home() {
-  const fetchers = Route.useLoaderData()
-  const [transactions, setTransactions] = useState<Array<Transaction>>([])
+  return (
+    <TransactionsProvider>
+      <HomeContent />
+    </TransactionsProvider>
+  )
+}
 
-  const reset = () => setTransactions([])
+function HomeContent() {
+  const fetchers = Route.useLoaderData()
 
   return (
     <div className="min-h-screen flex items-center justify-center gap-6 px-4">
       <div className="flex flex-col gap-4 w-full max-w-sm">
-        <ParserFormCard setTransactions={setTransactions} reset={reset} />
-        {fetchers.length > 0 && (
-          <FetcherFormCard setTransactions={setTransactions} reset={reset} />
-        )}
+        <ParserFormCard />
+        {fetchers.length > 0 && <FetcherFormCard />}
       </div>
 
-      <Results transactions={transactions} />
+      <Results />
     </div>
   )
 }

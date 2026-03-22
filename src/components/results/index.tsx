@@ -1,6 +1,7 @@
 import { toast } from 'sonner'
 import { stringify } from 'csv-stringify/browser/esm/sync'
 import type { Transaction } from '@/lib/parsers'
+import { useTransactions } from '@/context/transactions-context'
 import {
   Card,
   CardDescription,
@@ -10,11 +11,8 @@ import {
 import { DataTable } from '@/components/results/data-table'
 import { columns } from '@/components/results/columns'
 
-type Props = {
-  transactions: Array<Transaction>
-}
-
-export const Results = ({ transactions }: Props) => {
+export const Results = () => {
+  const { transactions, resetTransactions } = useTransactions()
   const handleCopyAsCSV = (selectedTransactions: Array<Transaction>) => {
     if (selectedTransactions.length === 0) {
       toast.error('No transactions selected', {
@@ -65,6 +63,7 @@ export const Results = ({ transactions }: Props) => {
         columns={columns}
         data={transactions}
         handleCopyAsCSV={handleCopyAsCSV}
+        reset={resetTransactions}
       />
     </Card>
   )

@@ -37,6 +37,7 @@ interface DataTableProps<TData, TValue> {
   columns: Array<ColumnDef<TData, TValue>>
   data: Array<TData>
   handleCopyAsCSV: (data: Array<TData>) => void
+  reset: () => void
 }
 
 const months: Array<{ value: number; label: string }> = [
@@ -59,6 +60,7 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   handleCopyAsCSV,
+  reset,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [rowSelection, setRowSelection] = React.useState({})
@@ -179,7 +181,10 @@ export function DataTable<TData, TValue>({
           </Table>
         </div>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex gap-2">
+        <Button type="button" variant="outline" onClick={reset}>
+          Reset
+        </Button>
         <Button
           onClick={() =>
             handleCopyAsCSV(

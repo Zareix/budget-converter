@@ -23,6 +23,7 @@ import {
   FieldLabel,
   FieldSet,
 } from '@/components/ui/field'
+import { useTransactions } from '@/context/transactions-context'
 
 type FetchTransactionsInput = {
   accountIds: Array<number>
@@ -32,13 +33,8 @@ const formSchema = v.object({
   selectedAccountIds: v.array(v.number()),
 })
 
-export function FetcherFormCard({
-  setTransactions,
-  reset,
-}: {
-  setTransactions: (transactions: Array<any>) => void
-  reset?: () => void
-}) {
+export function FetcherFormCard() {
+  const { setTransactions, resetTransactions } = useTransactions()
   const listAccountsQuery = useQuery({
     queryKey: ['fetcher', 'listAccounts'],
     queryFn: async () => listAccounts(),
@@ -84,7 +80,7 @@ export function FetcherFormCard({
 
   const resetForm = () => {
     form.reset()
-    reset?.()
+    resetTransactions()
   }
 
   const accounts = listAccountsQuery.data ?? []
