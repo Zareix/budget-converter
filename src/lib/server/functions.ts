@@ -1,11 +1,20 @@
 import { createServerFn } from '@tanstack/react-start'
 import * as v from 'valibot'
+import type { Fetcher } from '@/lib/fetcher'
 import { PROVIDERS } from '@/lib/parsers'
 import * as lunchflow from '@/lib/fetcher/lunchflow'
 import * as amexParser from '@/lib/parsers/amex'
 import * as revolutParser from '@/lib/parsers/revolut'
 import * as mapping from '@/lib/mapping'
 import { FETCHERS } from '@/lib/fetcher'
+
+export const getActiveFetchers = createServerFn().handler(() => {
+  const activeFetchers: Array<Fetcher> = []
+  if (lunchflow.isActive()) {
+    activeFetchers.push('lunchflow')
+  }
+  return activeFetchers
+})
 
 export const listAccounts = createServerFn().handler(lunchflow.listAccounts)
 

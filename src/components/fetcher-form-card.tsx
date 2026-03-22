@@ -166,9 +166,17 @@ export function FetcherFormCard({
                             htmlFor={`form-${account.id}`}
                             className="font-normal"
                           >
-                            <div className="font-medium">{account.name}</div>
-                            <div className="text-muted-foreground">
-                              {account.institutionName}
+                            {account.institutionLogo && (
+                              <img
+                                src={account.institutionLogo}
+                                className="size-7"
+                              />
+                            )}
+                            <div className="flex flex-col">
+                              <div className="font-medium">{account.name}</div>
+                              <div className="text-muted-foreground">
+                                {account.institutionName}
+                              </div>
                             </div>
                           </FieldLabel>
                         </Field>

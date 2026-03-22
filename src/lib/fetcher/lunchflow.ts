@@ -44,9 +44,11 @@ export type ListAccountTransactionsResponse = {
   }>
 }
 
+export const isActive = () => !!process.env.LUNCH_FLOW_API_KEY
+
 export const listAccounts = async () => {
   if (!process.env.LUNCH_FLOW_API_KEY) {
-    throw new Error('LUNCH_FLOW_API_KEY is not set')
+    return []
   }
   const res = await fetch('https://www.lunchflow.app/api/v1/accounts', {
     headers: {

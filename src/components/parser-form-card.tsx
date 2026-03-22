@@ -127,7 +127,7 @@ export const ParserFormCard = ({
   }
 
   return (
-    <Card className="">
+    <Card>
       <CardHeader>
         <CardTitle>Budget Converter</CardTitle>
         <CardDescription>
