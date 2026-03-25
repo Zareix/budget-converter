@@ -3,6 +3,7 @@ import * as v from 'valibot'
 import type { Fetcher } from '@/lib/fetcher'
 import { PROVIDERS } from '@/lib/parsers'
 import * as lunchflow from '@/lib/fetcher/lunchflow'
+import * as tricount from '@/lib/fetcher/tricount'
 import * as amexParser from '@/lib/parsers/amex'
 import * as revolutParser from '@/lib/parsers/revolut'
 import * as mapping from '@/lib/mapping'
@@ -16,7 +17,13 @@ export const getActiveFetchers = createServerFn().handler(() => {
   return activeFetchers
 })
 
-export const listAccounts = createServerFn().handler(lunchflow.listAccounts)
+export const listAccounts = createServerFn().handler(async () => {
+  const accounts = await Promise.all([
+    lunchflow.listAccounts(),
+    tricount.listAccounts(),
+  ])
+  return accounts.flat()
+})
 
 export const fetchTransactions = createServerFn({
   method: 'POST',
@@ -30,14 +37,29 @@ export const fetchTransactions = createServerFn({
       }),
       v.object({
         mode: v.literal('fetcher'),
-        fetcher: v.picklist(FETCHERS),
-        accountIds: v.array(v.number()),
+        accounts: v.array(
+          v.object({
+            id: v.string(),
+            fetcher: v.picklist(FETCHERS),
+          }),
+        ),
       }),
     ]),
   )
   .handler(async ({ data }) => {
     if (data.mode === 'fetcher') {
-      return await lunchflow.fetchTransactions(data)
+      return (
+        await Promise.all(
+          data.accounts.map(async (account) => {
+            switch (account.fetcher) {
+              case 'tricount':
+                return tricount.fetchTransactions(account.id)
+              case 'lunchflow':
+                return lunchflow.fetchTransactions(account.id)
+            }
+          }),
+        )
+      ).flat()
     }
     switch (data.provider) {
       case 'amex':

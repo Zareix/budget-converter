@@ -31,3 +31,7 @@ export const firstNonNullNorEmpty = <T>(
   }
   return null
 }
+
+export const getFormattedDate = (date: Date): `${number}/${number}` => {
+  return `${date.getDate()}/${date.getMonth() + 1}`
+}

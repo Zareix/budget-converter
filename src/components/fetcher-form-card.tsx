@@ -5,6 +5,7 @@ import { toast } from 'sonner'
 import * as v from 'valibot'
 
 import { Link } from '@tanstack/react-router'
+import type { Fetcher } from '@/lib/fetcher'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -24,13 +25,22 @@ import {
   FieldSet,
 } from '@/components/ui/field'
 import { useTransactions } from '@/context/transactions-context'
+import { FETCHERS } from '@/lib/fetcher'
 
 type FetchTransactionsInput = {
-  accountIds: Array<number>
+  accounts: Array<{
+    id: string
+    fetcher: Fetcher
+  }>
 }
 
 const formSchema = v.object({
-  selectedAccountIds: v.array(v.number()),
+  selectedAccounts: v.array(
+    v.object({
+      id: v.string(),
+      fetcher: v.picklist(FETCHERS),
+    }),
+  ),
 })
 
 export function FetcherFormCard() {
@@ -46,8 +56,7 @@ export function FetcherFormCard() {
       fetchTransactions({
         data: {
           mode: 'fetcher',
-          fetcher: 'lunchflow',
-          accountIds: input.accountIds,
+          accounts: input.accounts,
         },
       }),
     onSuccess: (data) => {
@@ -66,14 +75,17 @@ export function FetcherFormCard() {
 
   const form = useForm({
     defaultValues: {
-      selectedAccountIds: [] as Array<number>,
+      selectedAccounts: [] as Array<{
+        id: string
+        fetcher: Fetcher
+      }>,
     },
     validators: {
       onSubmit: formSchema,
     },
     onSubmit: ({ value }) => {
       fetchTransactionsMutation.mutate({
-        accountIds: value.selectedAccountIds,
+        accounts: value.selectedAccounts,
       })
     },
   })
@@ -89,8 +101,11 @@ export function FetcherFormCard() {
     if (!accounts.length) return
 
     form.setFieldValue(
-      'selectedAccountIds',
-      accounts.map((account) => account.id),
+      'selectedAccounts',
+      accounts.map((account) => ({
+        id: account.id,
+        fetcher: account.fetcher,
+      })),
     )
   }, [accounts, form])
 
@@ -126,7 +141,7 @@ export function FetcherFormCard() {
             className="space-y-4"
           >
             <form.Field
-              name="selectedAccountIds"
+              name="selectedAccounts"
               mode="array"
               children={(field) => {
                 const isInvalid =
@@ -136,21 +151,30 @@ export function FetcherFormCard() {
                     <FieldGroup data-slot="checkbox-group">
                       {accounts.map((account) => (
                         <Field
-                          key={account.id}
+                          key={account.fetcher + account.id}
                           orientation="horizontal"
                           data-invalid={isInvalid}
                         >
                           <Checkbox
-                            id={`form-${account.id}`}
+                            id={`form-${account.fetcher}-${account.id}`}
                             name={field.name}
                             aria-invalid={isInvalid}
-                            checked={field.state.value.includes(account.id)}
+                            checked={field.state.value.some(
+                              (value) =>
+                                value.id === account.id &&
+                                value.fetcher === account.fetcher,
+                            )}
                             onCheckedChange={(checked) => {
                               if (checked) {
-                                field.pushValue(account.id)
+                                field.pushValue({
+                                  id: account.id,
+                                  fetcher: account.fetcher,
+                                })
                               } else {
-                                const index = field.state.value.indexOf(
-                                  account.id,
+                                const index = field.state.value.findIndex(
+                                  (value) =>
+                                    value.id === account.id &&
+                                    value.fetcher === account.fetcher,
                                 )
                                 if (index > -1) {
                                   field.removeValue(index)
@@ -159,7 +183,7 @@ export function FetcherFormCard() {
                             }}
                           />
                           <FieldLabel
-                            htmlFor={`form-${account.id}`}
+                            htmlFor={`form-${account.fetcher}-${account.id}`}
                             className="font-normal"
                           >
                             {account.institutionLogo && (

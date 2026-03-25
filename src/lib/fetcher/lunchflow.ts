@@ -1,7 +1,8 @@
 import type { Category, Transaction } from '@/lib/parsers'
+import type { Account } from '@/lib/fetcher'
 import { isPaymentMethod } from '@/lib/parsers'
 import { findInMapping, getMapping } from '@/lib/mapping'
-import { firstNonNullNorEmpty } from '@/lib/utils'
+import { firstNonNullNorEmpty, getFormattedDate } from '@/lib/utils'
 
 export type ListAccountResponse = {
   accounts: Array<{
@@ -46,7 +47,7 @@ export type ListAccountTransactionsResponse = {
 
 export const isActive = () => !!process.env.LUNCH_FLOW_API_KEY
 
-export const listAccounts = async () => {
+export const listAccounts = async (): Promise<Array<Account>> => {
   if (!process.env.LUNCH_FLOW_API_KEY) {
     return []
   }
@@ -62,12 +63,16 @@ export const listAccounts = async () => {
   }
 
   const result = (await res.json()) as ListAccountResponse
-  return result.accounts.map((account) => ({
-    id: account.id,
-    name: account.name,
-    institutionName: account.institution_name,
-    institutionLogo: account.institution_logo,
-  }))
+  return result.accounts.map(
+    (account) =>
+      ({
+        id: account.id.toString(),
+        name: account.name,
+        institutionName: account.institution_name,
+        institutionLogo: account.institution_logo,
+        fetcher: 'lunchflow',
+      }) satisfies Account,
+  )
 }
 
 const fetchTransactionsForAccount = async ({
@@ -120,9 +125,7 @@ const fetchTransactionsForAccount = async ({
     })
     .map((record) => {
       const date = new Date(record.date)
-      const formattedDate: `${number}/${number}` = `${date.getDate()}/${
-        date.getMonth() + 1
-      }`
+      const formattedDate = getFormattedDate(date)
       const amount = (record.amount * -1).toFixed(2).replace('.', ',')
 
       let name: string =
@@ -162,19 +165,12 @@ const fetchTransactionsForAccount = async ({
     .filter(Boolean)
 }
 
-export const fetchTransactions = async ({
-  accountIds,
-}: {
-  accountIds: Array<number>
-}): Promise<Array<Transaction>> => {
+export const fetchTransactions = async (
+  accountId: Account['id'],
+): Promise<Array<Transaction>> => {
   const accounts = await listAccounts()
-  const transactionsArrays = await Promise.all(
-    accountIds.map((accountId) =>
-      fetchTransactionsForAccount({
-        accountId,
-        accounts,
-      }),
-    ),
-  )
-  return transactionsArrays.flat()
+  return fetchTransactionsForAccount({
+    accountId: Number.parseInt(accountId, 10),
+    accounts,
+  })
 }
