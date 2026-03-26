@@ -355,7 +355,7 @@ export const listAccounts = async (): Promise<Array<Account>> => {
         institutionLogo:
           'https://play-lh.googleusercontent.com/O284MSRmvHs4jfH4hqbn2771WJxkZptZm9qVVUW1GMSO2B9pj3yJTClYrOw72WDRuDQ=w480-h960',
         id: key,
-        name: name,
+        name: `${name}${process.env.TRICOUNT_FILTERED_USER_NAME ? ` (${process.env.TRICOUNT_FILTERED_USER_NAME})` : ''}`,
       }
     }) ?? []
   )

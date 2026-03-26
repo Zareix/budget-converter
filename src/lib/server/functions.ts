@@ -50,31 +50,36 @@ export const fetchTransactions = createServerFn({
     ]),
   )
   .handler(async ({ data }) => {
-    if (data.mode === 'fetcher') {
-      return (
-        await Promise.all(
-          data.accounts.map(async (account) => {
-            switch (account.fetcher) {
-              case 'tricount':
-                return tricount.fetchTransactions(account.id)
-              case 'lunchflow':
-                return lunchflow.fetchTransactions(account.id)
-            }
-          }),
-        )
-      ).flat()
-    }
-    switch (data.provider) {
-      case 'amex':
-        return await amexParser.parseToTransactions({
-          fileContent: data.fileContent,
-        })
-      case 'revolut':
-        return await revolutParser.parseToTransactions({
-          fileContent: data.fileContent,
-        })
-      default:
-        throw new Error('Unsupported provider')
+    try {
+      if (data.mode === 'fetcher') {
+        return (
+          await Promise.all(
+            data.accounts.map(async (account) => {
+              switch (account.fetcher) {
+                case 'tricount':
+                  return tricount.fetchTransactions(account.id)
+                case 'lunchflow':
+                  return lunchflow.fetchTransactions(account.id)
+              }
+            }),
+          )
+        ).flat()
+      }
+      switch (data.provider) {
+        case 'amex':
+          return await amexParser.parseToTransactions({
+            fileContent: data.fileContent,
+          })
+        case 'revolut':
+          return await revolutParser.parseToTransactions({
+            fileContent: data.fileContent,
+          })
+        default:
+          throw new Error('Unsupported provider')
+      }
+    } catch (error) {
+      console.log('Error in fetchTransactions:', error)
+      throw new Error('An error occurred while processing the request')
     }
   })
 

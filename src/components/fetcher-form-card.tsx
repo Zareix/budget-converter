@@ -61,6 +61,12 @@ export function FetcherFormCard() {
       }),
     onSuccess: (data) => {
       setTransactions(data)
+      if (data.length === 0) {
+        toast.warning('No transactions found for the selected accounts.', {
+          position: 'bottom-right',
+        })
+        return
+      }
       toast.success('Transactions fetched successfully!', {
         position: 'bottom-right',
       })

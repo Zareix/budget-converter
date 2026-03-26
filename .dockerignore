@@ -13,7 +13,6 @@ mapping
 
 # Ignore Git files
 .git
-.gitignore
 
 # Ignore Docker files
 Dockerfile
