@@ -79,7 +79,7 @@ const fetchTransactionsForAccount = async ({
   accountId,
   accounts,
 }: {
-  accountId: number
+  accountId: string
   accounts: Array<
     Pick<Awaited<ReturnType<typeof listAccounts>>[number], 'id' | 'name'>
   >
@@ -170,7 +170,7 @@ export const fetchTransactions = async (
 ): Promise<Array<Transaction>> => {
   const accounts = await listAccounts()
   return fetchTransactionsForAccount({
-    accountId: Number.parseInt(accountId, 10),
+    accountId: accountId,
     accounts,
   })
 }

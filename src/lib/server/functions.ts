@@ -14,6 +14,9 @@ export const getActiveFetchers = createServerFn().handler(() => {
   if (lunchflow.isActive()) {
     activeFetchers.push('lunchflow')
   }
+  if (tricount.isActive()) {
+    activeFetchers.push('tricount')
+  }
   return activeFetchers
 })
 

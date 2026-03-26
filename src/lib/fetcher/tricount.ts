@@ -258,7 +258,6 @@ let global_session: {
   userId: number
   headers: Record<string, string>
 } | null = null
-let global_accounts: Array<Account> | null = null
 
 const getTricountSession = async (): Promise<{
   authToken: string
@@ -345,28 +344,24 @@ const getTricountRegistryData = async (tricountKey: string) => {
   }
 }
 
-const getTricountAccounts = async (): Promise<Array<Account>> => {
-  const results = await Promise.all(
-    process.env.TRICOUNT_KEYS?.split(',').map((key) =>
-      getTricountRegistryData(key.trim()),
-    ) ?? [],
+// eslint-disable-next-line @typescript-eslint/require-await
+export const listAccounts = async (): Promise<Array<Account>> => {
+  return (
+    process.env.TRICOUNT_KEYS?.split(',').map((k) => {
+      const [key, name] = k.split(':')
+      return {
+        fetcher: 'tricount',
+        institutionName: 'Tricount',
+        institutionLogo:
+          'https://play-lh.googleusercontent.com/O284MSRmvHs4jfH4hqbn2771WJxkZptZm9qVVUW1GMSO2B9pj3yJTClYrOw72WDRuDQ=w480-h960',
+        id: key,
+        name: name,
+      }
+    }) ?? []
   )
-  return results.flat().map((r) => ({
-    fetcher: 'tricount',
-    institutionName: 'Tricount',
-    id: r.key,
-    name: r.name,
-  }))
 }
 
-export const listAccounts = async (): Promise<Array<Account>> => {
-  if (!global_accounts) {
-    console.log('Fetching Tricount accounts')
-    global_accounts = await getTricountAccounts()
-    console.log(`Fetched ${global_accounts.length} Tricount accounts`)
-  }
-  return global_accounts
-}
+export const isActive = () => !!process.env.TRICOUNT_KEYS
 
 export const fetchTransactions = async (
   accountId: Account['id'],
