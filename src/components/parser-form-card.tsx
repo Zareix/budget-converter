@@ -248,7 +248,7 @@ export const ParserFormCard = () => {
               : 'Parse'}
           </Button>
           <Button type="button" variant="link" className="ml-auto">
-            <Link to="/mapping">Mapping</Link>
+            <Link to="/settings">Settings</Link>
           </Button>
         </Field>
       </CardFooter>

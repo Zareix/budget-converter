@@ -1,7 +1,7 @@
 import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react'
 import type { ColumnDef } from '@tanstack/react-table'
 import type { Transaction } from '@/lib/parsers'
-import { CreateMappingButton } from '@/components/mapping'
+import { CreateMappingButton } from '@/components/mapping/create'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 

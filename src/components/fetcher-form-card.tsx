@@ -238,7 +238,7 @@ export function FetcherFormCard() {
             {fetchTransactionsMutation.isPending ? 'Processing...' : 'Fetch'}
           </Button>
           <Button type="button" variant="link" className="ml-auto">
-            <Link to="/mapping">Mapping</Link>
+            <Link to="/settings">Settings</Link>
           </Button>
         </Field>
       </CardFooter>
