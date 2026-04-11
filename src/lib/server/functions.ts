@@ -1,9 +1,11 @@
 import { createServerFn } from '@tanstack/react-start'
 import * as v from 'valibot'
+import { LogOut } from 'lucide-react'
 import type { Fetcher } from '@/lib/fetcher'
 import { PROVIDERS } from '@/lib/parsers'
 import * as lunchflow from '@/lib/fetcher/lunchflow'
 import * as tricount from '@/lib/fetcher/tricount'
+import * as enableBanking from '@/lib/fetcher/enable-banking'
 import * as amexParser from '@/lib/parsers/amex'
 import * as revolutParser from '@/lib/parsers/revolut'
 import * as mapping from '@/lib/mapping'
@@ -24,6 +26,7 @@ export const listAccounts = createServerFn().handler(async () => {
   const accounts = await Promise.all([
     lunchflow.listAccounts(),
     tricount.listAccounts(),
+    enableBanking.listAccounts(),
   ])
   return accounts.flat()
 })
@@ -60,6 +63,8 @@ export const fetchTransactions = createServerFn({
                   return tricount.fetchTransactions(account.id)
                 case 'lunchflow':
                   return lunchflow.fetchTransactions(account.id)
+                case 'enable-banking':
+                  return enableBanking.fetchTransactions(account.id)
               }
             }),
           )
@@ -162,3 +167,16 @@ export const deleteMapping = createServerFn({
     }),
   )
   .handler(({ data }) => mapping.deleteMapping(data))
+
+export const ebGetRedirectUrl = createServerFn()
+  .inputValidator(
+    v.object({
+      name: v.string(),
+      country: v.string(),
+      logo: v.string(),
+      maximumConsentValidity: v.number(),
+    }),
+  )
+  .handler(({ data }) => enableBanking.getRedirectUrl(data))
+
+export const ebListBanks = createServerFn().handler(enableBanking.getBanks)

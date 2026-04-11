@@ -195,7 +195,7 @@ export function FetcherFormCard() {
                             {account.institutionLogo && (
                               <img
                                 src={account.institutionLogo}
-                                className="size-7"
+                                className="size-7 object-contain"
                               />
                             )}
                             <div className="flex flex-col">

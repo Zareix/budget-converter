@@ -3,6 +3,7 @@ import type { Account } from '@/lib/fetcher'
 import type { Transaction } from '@/lib/parsers'
 import { PAYMENT_METHODS } from '@/lib/parsers'
 import { getFormattedDate } from '@/lib/utils'
+import { env } from '@/env'
 
 type TricountSessionResponse = {
   Response: Array<{
@@ -347,7 +348,7 @@ const getTricountRegistryData = async (tricountKey: string) => {
 // eslint-disable-next-line @typescript-eslint/require-await
 export const listAccounts = async (): Promise<Array<Account>> => {
   return (
-    process.env.TRICOUNT_KEYS?.split(',').map((k) => {
+    env.TRICOUNT_KEYS?.split(',').map((k) => {
       const [key, name] = k.split(':')
       return {
         fetcher: 'tricount',
@@ -355,13 +356,13 @@ export const listAccounts = async (): Promise<Array<Account>> => {
         institutionLogo:
           'https://play-lh.googleusercontent.com/O284MSRmvHs4jfH4hqbn2771WJxkZptZm9qVVUW1GMSO2B9pj3yJTClYrOw72WDRuDQ=w480-h960',
         id: key,
-        name: `${name}${process.env.TRICOUNT_FILTERED_USER_NAME ? ` (${process.env.TRICOUNT_FILTERED_USER_NAME})` : ''}`,
+        name: `${name}${env.TRICOUNT_FILTERED_USER_NAME ? ` (${env.TRICOUNT_FILTERED_USER_NAME})` : ''}`,
       }
     }) ?? []
   )
 }
 
-export const isActive = () => !!process.env.TRICOUNT_KEYS
+export const isActive = () => !!env.TRICOUNT_KEYS
 
 export const fetchTransactions = async (
   accountId: Account['id'],
@@ -376,7 +377,7 @@ export const fetchTransactions = async (
   }
 
   const now = new Date()
-  const filteredUserName = process.env.TRICOUNT_FILTERED_USER_NAME
+  const filteredUserName = env.TRICOUNT_FILTERED_USER_NAME
   return data.entries
     .filter((entry) => {
       if (!filteredUserName) {

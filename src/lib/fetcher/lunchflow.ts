@@ -3,6 +3,7 @@ import type { Account } from '@/lib/fetcher'
 import { isPaymentMethod } from '@/lib/parsers'
 import { findInMapping, getMapping } from '@/lib/mapping'
 import { firstNonNullNorEmpty, getFormattedDate } from '@/lib/utils'
+import { env } from '@/env'
 
 export type ListAccountResponse = {
   accounts: Array<{
@@ -45,16 +46,16 @@ export type ListAccountTransactionsResponse = {
   }>
 }
 
-export const isActive = () => !!process.env.LUNCH_FLOW_API_KEY
+export const isActive = () => !!env.LUNCH_FLOW_API_KEY
 
 export const listAccounts = async (): Promise<Array<Account>> => {
-  if (!process.env.LUNCH_FLOW_API_KEY) {
+  if (!env.LUNCH_FLOW_API_KEY) {
     return []
   }
   const res = await fetch('https://www.lunchflow.app/api/v1/accounts', {
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': process.env.LUNCH_FLOW_API_KEY,
+      'x-api-key': env.LUNCH_FLOW_API_KEY,
     },
   })
 
@@ -84,7 +85,7 @@ const fetchTransactionsForAccount = async ({
     Pick<Awaited<ReturnType<typeof listAccounts>>[number], 'id' | 'name'>
   >
 }): Promise<Array<Transaction>> => {
-  if (!process.env.LUNCH_FLOW_API_KEY) {
+  if (!env.LUNCH_FLOW_API_KEY) {
     throw new Error('LUNCH_FLOW_API_KEY is not set')
   }
 
@@ -99,7 +100,7 @@ const fetchTransactionsForAccount = async ({
     {
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.LUNCH_FLOW_API_KEY,
+        'x-api-key': env.LUNCH_FLOW_API_KEY,
       },
     },
   )

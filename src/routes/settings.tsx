@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import * as v from 'valibot'
 import { Mappings } from '@/components/mapping'
+import { EnableBankingSettings } from '@/components/settings/enable-banking'
 
 export const Route = createFileRoute('/settings')({
   component: SettingsRouteComponent,
@@ -11,8 +12,10 @@ export const Route = createFileRoute('/settings')({
 
 function SettingsRouteComponent() {
   return (
-    <div className="min-h-screen flex items-center justify-center gap-6 px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center gap-6 px-4">
       <Mappings />
+
+      <EnableBankingSettings />
     </div>
   )
 }

@@ -68,61 +68,59 @@ export const Mappings = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center flex-col p-4 gap-6">
-      <Card className="w-full max-w-4xl">
-        <CardHeader className="flex items-center justify-between">
-          <CardTitle>Mappings</CardTitle>
-          <Input
-            type="text"
-            placeholder="Search mappings..."
-            className="w-full max-w-60"
-            value={q ?? ''}
-            onChange={(e) => navigate({ search: { q: e.target.value } })}
-          />
-        </CardHeader>
-        <CardContent>
-          <ScrollArea className="w-full h-96">
-            <Table>
-              <TableCaption>A list of all mappings configured</TableCaption>
-              <TableHeader className="sticky top-0">
-                <TableRow>
-                  <TableHead>Mode</TableHead>
-                  <TableHead>From Name</TableHead>
-                  <TableHead>To Name</TableHead>
-                  <TableHead>To Category</TableHead>
-                  <TableHead>From Price</TableHead>
-                  <TableHead>Exclude</TableHead>
-                  <TableHead>Actions</TableHead>
+    <Card className="w-full max-w-4xl">
+      <CardHeader className="flex items-center justify-between">
+        <CardTitle>Mappings</CardTitle>
+        <Input
+          type="text"
+          placeholder="Search mappings..."
+          className="w-full max-w-60"
+          value={q ?? ''}
+          onChange={(e) => navigate({ search: { q: e.target.value } })}
+        />
+      </CardHeader>
+      <CardContent>
+        <ScrollArea className="w-full h-96">
+          <Table>
+            <TableCaption>A list of all mappings configured</TableCaption>
+            <TableHeader className="sticky top-0">
+              <TableRow>
+                <TableHead>Mode</TableHead>
+                <TableHead>From Name</TableHead>
+                <TableHead>To Name</TableHead>
+                <TableHead>To Category</TableHead>
+                <TableHead>From Price</TableHead>
+                <TableHead>Exclude</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {mappingQuery.data.map((mapping, idx) => (
+                <TableRow key={idx}>
+                  <TableCell>{getMappingModeName(mapping.mode)}</TableCell>
+                  <TableCell>{mapping.fromName}</TableCell>
+                  <TableCell>{mapping.toName}</TableCell>
+                  <TableCell>
+                    {toCategoryFullName(mapping.toCategory)}
+                  </TableCell>
+                  <TableCell>{mapping.fromPrice ?? '-'}</TableCell>
+                  <TableCell>{mapping.exclude ? 'Yes' : 'No'}</TableCell>
+                  <TableCell>
+                    <EditMappingButton mapping={mapping} />
+                    <DeleteMappingButton mapping={mapping} />
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {mappingQuery.data.map((mapping, idx) => (
-                  <TableRow key={idx}>
-                    <TableCell>{getMappingModeName(mapping.mode)}</TableCell>
-                    <TableCell>{mapping.fromName}</TableCell>
-                    <TableCell>{mapping.toName}</TableCell>
-                    <TableCell>
-                      {toCategoryFullName(mapping.toCategory)}
-                    </TableCell>
-                    <TableCell>{mapping.fromPrice ?? '-'}</TableCell>
-                    <TableCell>{mapping.exclude ? 'Yes' : 'No'}</TableCell>
-                    <TableCell>
-                      <EditMappingButton mapping={mapping} />
-                      <DeleteMappingButton mapping={mapping} />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </ScrollArea>
-        </CardContent>
-        <CardFooter>
-          <CreateMappingButton />
-          <Button type="button" variant="link" className="ml-auto">
-            <Link to="/">Home</Link>
-          </Button>
-        </CardFooter>
-      </Card>
-    </div>
+              ))}
+            </TableBody>
+          </Table>
+        </ScrollArea>
+      </CardContent>
+      <CardFooter>
+        <CreateMappingButton />
+        <Button type="button" variant="link" className="ml-auto">
+          <Link to="/">Home</Link>
+        </Button>
+      </CardFooter>
+    </Card>
   )
 }

@@ -1,4 +1,4 @@
-export const FETCHERS = ['lunchflow', 'tricount'] as const
+export const FETCHERS = ['lunchflow', 'tricount', 'enable-banking'] as const
 export type Fetcher = (typeof FETCHERS)[number]
 
 export type Account = {

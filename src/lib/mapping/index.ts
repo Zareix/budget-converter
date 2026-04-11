@@ -1,5 +1,7 @@
+import { join } from 'node:path'
 import type { Mapping } from '@/lib/mapping/constant'
 import { Categories } from '@/lib/parsers'
+import { env } from '@/env'
 
 const MODE_ORDER: Array<Mapping['mode']> = [
   'exact-name-price',
@@ -14,8 +16,7 @@ const compareMapping = (a: Mapping, b: Mapping) => {
   return MODE_ORDER.indexOf(a.mode) - MODE_ORDER.indexOf(b.mode)
 }
 
-const getMappingFileName = () =>
-  process.env.MAPPING_FILE ?? './mapping/mapping.yaml'
+const getMappingFileName = () => join(env.APP_DIR, 'mapping.yaml')
 
 const saveMappings = async (mappings: Array<Mapping>) => {
   await Bun.write(

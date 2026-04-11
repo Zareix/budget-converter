@@ -1,4 +1,4 @@
-FROM oven/bun:1.3.11 AS builder
+FROM oven/bun:1.3.12 AS builder
 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ ENV NODE_ENV=production
 RUN bun run build
 
 
-FROM oven/bun:1.3.11-distroless AS runner
+FROM oven/bun:1.3.12-distroless AS runner
 
 WORKDIR /app
 
@@ -20,9 +20,9 @@ COPY --from=builder /app/.output ./.output
 
 ENV NODE_ENV=production
 ENV PORT=3000
-ENV MAPPING_FILE=/app/mapping.yaml
+ENV APP_DIR=/app/data
 
-VOLUME ${MAPPING_FILE}
+VOLUME ${APP_DIR}
 
 EXPOSE 3000
 
