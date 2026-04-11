@@ -1,4 +1,3 @@
-import { mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import jwa from 'jwa'
 import type { Account } from '@/lib/fetcher'
@@ -46,7 +45,7 @@ export type EbTransactionsResponse = {
       organisation_id: null
       private_id: null
       contact_details: null
-    }
+    } | null
     creditor_account: null
     creditor_agent: null
     debtor: null
@@ -240,7 +239,6 @@ export const completeAuthorization = async (code: string) => {
       b.name === sessionData.aspsp.name &&
       b.country === sessionData.aspsp.country,
   )
-  console.log(bank)
   if (!bank) {
     throw new Error(`Bank ${sessionData.aspsp.name} not found in banks list`)
   }
@@ -295,6 +293,9 @@ export const fetchTransactions = async (
     (await listAccounts()).find((acc) => acc.id === accountId)?.name,
   )
   if (!paymentMethod) {
+    console.error(
+      `Payment method for account ${accountId} not found, skipping it`,
+    )
     return []
   }
 
@@ -316,6 +317,9 @@ export const fetchTransactions = async (
   }
   const result =
     (await accountTransactionsResponse.json()) as EbTransactionsResponse
+  console.log(
+    `Fetched ${result.transactions.length} transactions for account ${accountId}`,
+  )
 
   const mapping = await getMapping()
   const now = new Date()
@@ -337,6 +341,16 @@ export const fetchTransactions = async (
           date.getFullYear() === now.getFullYear())
       )
     })
+    .filter((record) => {
+      if (paymentMethod !== 'Carte SG') {
+        return true
+      }
+      const name = firstNonNullNorEmpty(
+        record.creditor?.name,
+        record.remittance_information[0],
+      )!
+      return name.startsWith('CARTE ')
+    })
     .map((record) => {
       const date = new Date(
         firstNonNullNorEmpty(record.transaction_date, record.booking_date)!,
@@ -346,7 +360,13 @@ export const fetchTransactions = async (
         .toFixed(2)
         .replace('.', ',')
 
-      let name: string = record.creditor.name.split('   ')[0]
+      let name: string = firstNonNullNorEmpty(
+        record.creditor?.name,
+        record.remittance_information[0],
+      )!.split('   ')[0]
+      if (paymentMethod === 'Carte SG') {
+        name = name.substring(17)
+      }
       const description =
         record.remittance_information.length > 1
           ? record.remittance_information[0]

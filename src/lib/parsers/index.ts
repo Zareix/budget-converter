@@ -43,7 +43,10 @@ export const toPaymentMethod = (
   if (value.toLowerCase().includes('revolut')) {
     return 'Carte Revolut'
   }
-  if (value.toLowerCase().includes('sg')) {
+  if (
+    value.toLowerCase().includes('sg') ||
+    value.toLowerCase().replaceAll('é', 'e').includes('societe generale')
+  ) {
     return 'Carte SG'
   }
 
