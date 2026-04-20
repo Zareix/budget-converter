@@ -254,20 +254,13 @@ type TricountDataResponse = {
   }
 }
 
-let global_session: {
+type TricountSession = {
   authToken: string
   userId: number
   headers: Record<string, string>
-} | null = null
+}
 
-const getTricountSession = async (): Promise<{
-  authToken: string
-  userId: number
-  headers: Record<string, string>
-}> => {
-  if (global_session) {
-    return global_session
-  }
+const getTricountSession = async (): Promise<TricountSession> => {
   const appId = crypto.randomUUID()
 
   const { publicKey } = crypto.generateKeyPairSync('rsa', {
@@ -313,7 +306,7 @@ const getTricountSession = async (): Promise<{
     throw new Error('Failed to retrieve user id from Tricount response')
   }
 
-  global_session = {
+  return {
     authToken,
     userId,
     headers: {
@@ -321,7 +314,6 @@ const getTricountSession = async (): Promise<{
       'X-Bunq-Client-Authentication': authToken,
     },
   }
-  return global_session
 }
 
 const getTricountRegistryData = async (tricountKey: string) => {
