@@ -300,8 +300,10 @@ export const fetchTransactions = async (
   }
 
   const jwt = await getJWT()
+  const oneMonthAgo = new Date()
+  oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
   const accountTransactionsResponse = await fetch(
-    `${BASE_URL}/accounts/${accountId}/transactions`,
+    `${BASE_URL}/accounts/${accountId}/transactions?strategy=longest`,
     {
       headers: {
         Authorization: `Bearer ${jwt}`,
