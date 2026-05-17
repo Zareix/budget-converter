@@ -1,4 +1,4 @@
-FROM oven/bun:1.3.12 AS builder
+FROM oven/bun:1.3.14 AS builder
 
 WORKDIR /app
 
@@ -12,17 +12,16 @@ ENV NODE_ENV=production
 RUN bun run build
 
 
-FROM oven/bun:1.3.12-distroless AS runner
+FROM oven/bun:1.3.14-distroless AS runner
 
 WORKDIR /app
 
 COPY --from=builder /app/.output ./.output
+COPY --from=builder /app/drizzle ./drizzle
 
 ENV NODE_ENV=production
 ENV PORT=3000
-ENV APP_DIR=/app/data
-
-VOLUME ${APP_DIR}
+ENV DATABASE_PATH=/app/data/db.sqlite
 
 EXPOSE 3000
 

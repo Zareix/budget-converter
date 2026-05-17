@@ -2,14 +2,15 @@
   "name": "budget-converter",
   "private": true,
   "type": "module",
-  "version": "1.6.3",
+  "version": "1.7.0",
   "scripts": {
     "dev": "bun run --bun vite dev --port 3000",
     "build": "bun run --bun vite build",
     "preview": "bun run --bun vite preview",
     "lint": "tsc --noEmit -p . && eslint",
     "format": "prettier",
-    "check": "prettier --write . && eslint --fix"
+    "check": "prettier --write . && eslint --fix",
+    "db:generate": "bunx drizzle-kit generate"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
@@ -29,6 +30,8 @@
     "clsx": "^2.1.1",
     "csv-parse": "^6.2.1",
     "csv-stringify": "^6.7.0",
+    "drizzle-kit": "^0.31.10",
+    "drizzle-orm": "^0.45.2",
     "jwa": "^2.0.1",
     "lucide-react": "^1.8.0",
     "nitro": "latest",

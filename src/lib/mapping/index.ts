@@ -1,7 +1,8 @@
-import { join } from 'node:path'
+import { eq } from 'drizzle-orm'
 import type { Mapping } from '@/lib/mapping/constant'
+import { db } from '@/lib/db'
+import { mappings } from '@/lib/db/schema'
 import { Categories } from '@/lib/parsers'
-import { env } from '@/env'
 
 const MODE_ORDER: Array<Mapping['mode']> = [
   'exact-name-price',
@@ -16,34 +17,22 @@ const compareMapping = (a: Mapping, b: Mapping) => {
   return MODE_ORDER.indexOf(a.mode) - MODE_ORDER.indexOf(b.mode)
 }
 
-const getMappingFileName = () => join(env.APP_DIR, 'mapping.yaml')
-
-const saveMappings = async (mappings: Array<Mapping>) => {
-  await Bun.write(
-    getMappingFileName(),
-    Bun.YAML.stringify(
-      {
-        mappings: mappings.toSorted(compareMapping).map((m) => ({
-          mode: m.mode,
-          fromName: m.fromName,
-          fromPrice: m.fromPrice,
-          toName: m.toName,
-          toCategory: m.toCategory,
-          exclude: m.exclude,
-        })),
-      },
-      null,
-      2,
-    ),
-  )
+export const getMapping = async (): Promise<Array<Mapping>> => {
+  const rows = await db.select().from(mappings)
+  return rows
+    .map(
+      (row): Mapping => ({
+        id: row.id,
+        mode: row.mode,
+        fromName: row.fromName,
+        toName: row.toName,
+        toCategory: row.toCategory,
+        ...(row.fromPrice !== null && { fromPrice: row.fromPrice }),
+        ...(row.exclude && { exclude: row.exclude }),
+      }),
+    )
+    .toSorted(compareMapping)
 }
-
-export const getMapping = async () =>
-  (
-    (await Bun.YAML.parse(await Bun.file(getMappingFileName()).text())) as {
-      mappings: Array<Mapping>
-    }
-  ).mappings
 
 export const findInMapping = (
   mapping: Awaited<ReturnType<typeof getMapping>>,
@@ -74,44 +63,50 @@ export const findInMapping = (
 }
 
 export const addMapping = async (mapping: Mapping) => {
-  const currentMapping = await getMapping()
-  currentMapping.push(mapping)
-  currentMapping.sort(compareMapping)
-  await saveMappings(currentMapping)
+  await db.insert(mappings).values({
+    mode: mapping.mode,
+    fromName: mapping.fromName,
+    toName: mapping.toName,
+    toCategory: mapping.toCategory,
+    fromPrice: mapping.fromPrice ?? null,
+    exclude: mapping.exclude ?? false,
+  })
 }
 
 export const editMapping = async ({
-  previous,
+  id,
   new: newMapping,
 }: {
-  previous: Mapping
+  id: number
   new: Mapping
 }) => {
-  const currentMappings = await getMapping()
-  const newMappings = currentMappings
-    .filter(
-      (m) =>
-        !(
-          m.mode === previous.mode &&
-          m.fromName === previous.fromName &&
-          m.fromPrice === previous.fromPrice &&
-          m.toName === previous.toName &&
-          m.toCategory === previous.toCategory &&
-          m.exclude === previous.exclude
-        ),
-    )
-    .concat(newMapping)
-    .toSorted(compareMapping)
-  await saveMappings(newMappings)
+  await db
+    .update(mappings)
+    .set({
+      mode: newMapping.mode,
+      fromName: newMapping.fromName,
+      toName: newMapping.toName,
+      toCategory: newMapping.toCategory,
+      fromPrice: newMapping.fromPrice ?? null,
+      exclude: newMapping.exclude ?? false,
+    })
+    .where(eq(mappings.id, id))
 }
 
-export const deleteMapping = async ({
-  fromName,
-  mode,
-}: Pick<Mapping, 'fromName' | 'mode'>) => {
-  const currentMappings = await getMapping()
-  const newMappings = currentMappings
-    .filter((m) => !(m.fromName === fromName && m.mode === mode))
-    .toSorted(compareMapping)
-  await saveMappings(newMappings)
+export const deleteMapping = async ({ id }: { id: number }) => {
+  await db.delete(mappings).where(eq(mappings.id, id))
+}
+
+export const bulkAddMappings = async (items: Array<Mapping>) => {
+  if (items.length === 0) return
+  await db.insert(mappings).values(
+    items.map((m) => ({
+      mode: m.mode,
+      fromName: m.fromName,
+      toName: m.toName,
+      toCategory: m.toCategory,
+      fromPrice: m.fromPrice ?? null,
+      exclude: m.exclude ?? false,
+    })),
+  )
 }

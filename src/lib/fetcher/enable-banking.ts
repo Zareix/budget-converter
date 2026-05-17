@@ -1,7 +1,9 @@
-import { join } from 'node:path'
 import jwa from 'jwa'
+import { lt } from 'drizzle-orm'
 import type { Account } from '@/lib/fetcher'
 import type { Category, Transaction } from '@/lib/parsers'
+import { db } from '@/lib/db'
+import { ebAccounts } from '@/lib/db/schema'
 import { toPaymentMethod } from '@/lib/parsers'
 import { getMapping } from '@/lib/server/functions'
 import { firstNonNullNorEmpty, getFormattedDate } from '@/lib/utils'
@@ -9,16 +11,6 @@ import { findInMapping } from '@/lib/mapping'
 import { env } from '@/env'
 
 const BASE_URL = 'https://api.enablebanking.com'
-
-type Storage = {
-  accounts: Array<{
-    id: string
-    name: string
-    institutionName: string
-    institutionLogo?: string | null
-    validUntil: string
-  }>
-}
 
 export type EbTransactionsResponse = {
   transactions: Array<{
@@ -107,8 +99,9 @@ const getJWTBody = (exp: number) => {
   })
 }
 
-const signWithKey = async (data: any) => {
-  const key = await Bun.file(join(env.APP_DIR, 'eb.pem')).text()
+const signWithKey = (data: string) => {
+  const key = env.EB_PRIVATE_KEY?.replace(/\\n/g, '\n')
+  if (!key) throw new Error('EB_PRIVATE_KEY is not set')
   return jwa('RS256').sign(data, key)
 }
 
@@ -117,25 +110,6 @@ const getJWT = async (exp = 3600) => {
   const jwtBody = getJWTBody(exp)
   const jwtSignature = await signWithKey(`${jwtHeaders}.${jwtBody}`)
   return `${jwtHeaders}.${jwtBody}.${jwtSignature}`
-}
-
-const getStorageFilePath = () => join(env.APP_DIR, 'eb.json')
-
-const readStorage = async (): Promise<Storage> => {
-  const storage = (await Bun.file(getStorageFilePath())
-    .json()
-    .catch(() => null)) as Storage | null
-  if (!storage) {
-    await writeStorage({
-      accounts: [],
-    })
-    return readStorage()
-  }
-  return storage
-}
-
-const writeStorage = async (data: Storage) => {
-  await Bun.write(getStorageFilePath(), JSON.stringify(data, null, 2))
 }
 
 export const getBanks = async () => {
@@ -242,48 +216,56 @@ export const completeAuthorization = async (code: string) => {
   if (!bank) {
     throw new Error(`Bank ${sessionData.aspsp.name} not found in banks list`)
   }
-  const storage = await readStorage()
-  for (const accountId of sessionData.accounts) {
-    if (storage.accounts.find((a) => a.id === accountId)) {
-      console.log(`Account ${accountId} already exists in storage, skipping it`)
-      continue
-    }
-    storage.accounts.push({
-      id: accountId,
-      name: sessionData.aspsp.name,
-      institutionName: `${sessionData.aspsp.name} (${sessionData.aspsp.country})`,
-      institutionLogo: bank.logo,
-      validUntil: sessionData.access.valid_until,
-    })
-  }
-  await writeStorage({
-    accounts: storage.accounts,
-  })
+  await db
+    .insert(ebAccounts)
+    .values(
+      sessionData.accounts.map((accountId) => ({
+        id: accountId,
+        name: sessionData.aspsp.name,
+        institutionName: `${sessionData.aspsp.name} (${sessionData.aspsp.country})`,
+        institutionLogo: bank.logo,
+        validUntil: sessionData.access.valid_until,
+      })),
+    )
+    .onConflictDoNothing()
 }
 
 export const listAccounts = async (): Promise<Array<Account>> => {
-  const storage = await readStorage()
-  let hasExpiredAccount = false
-  for (const account of storage.accounts) {
-    if (new Date(account.validUntil) < new Date()) {
-      console.log(`Account ${account.id} has expired, removing it from storage`)
-      const updatedStorage = {
-        accounts: storage.accounts.filter((a) => a.id !== account.id),
-      }
-      await writeStorage(updatedStorage)
-      hasExpiredAccount = true
-    }
-  }
-  if (hasExpiredAccount) {
-    return await listAccounts()
-  }
-  return storage.accounts.map((account) => ({
+  await db
+    .delete(ebAccounts)
+    .where(lt(ebAccounts.validUntil, new Date().toISOString()))
+  const accounts = await db.select().from(ebAccounts)
+  return accounts.map((account) => ({
     id: account.id,
     name: account.name,
     institutionName: account.institutionName,
     institutionLogo: account.institutionLogo,
     fetcher: 'enable-banking' as const,
   }))
+}
+
+export const bulkAddAccounts = async (
+  items: Array<{
+    id: string
+    name: string
+    institutionName: string
+    institutionLogo?: string | null
+    validUntil: string
+  }>,
+) => {
+  if (items.length === 0) return
+  await db
+    .insert(ebAccounts)
+    .values(
+      items.map((a) => ({
+        id: a.id,
+        name: a.name,
+        institutionName: a.institutionName,
+        institutionLogo: a.institutionLogo ?? null,
+        validUntil: a.validUntil,
+      })),
+    )
+    .onConflictDoNothing()
 }
 
 export const fetchTransactions = async (

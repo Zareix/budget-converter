@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { Link, useNavigate, useSearch } from '@tanstack/react-router'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import { getMapping } from '@/lib/server/functions'
 import {
   Table,
@@ -19,9 +19,9 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { CreateMappingButton } from '@/components/mapping/create'
+import { ImportMappingButton } from '@/components/mapping/import'
 import { MODES } from '@/lib/mapping/constant'
 import { DeleteMappingButton } from '@/components/mapping/delete'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { EditMappingButton } from '@/components/mapping/edit'
 import { toCategoryFullName } from '@/lib/utils'
@@ -68,7 +68,7 @@ export const Mappings = () => {
   }
 
   return (
-    <Card className="w-full max-w-4xl">
+    <Card className="w-full">
       <CardHeader className="flex items-center justify-between">
         <CardTitle>Mappings</CardTitle>
         <Input
@@ -117,9 +117,7 @@ export const Mappings = () => {
       </CardContent>
       <CardFooter>
         <CreateMappingButton />
-        <Button type="button" variant="link" className="ml-auto">
-          <Link to="/">Home</Link>
-        </Button>
+        <ImportMappingButton />
       </CardFooter>
     </Card>
   )

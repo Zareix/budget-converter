@@ -6,6 +6,7 @@ export const MODES = [
 export type Mode = (typeof MODES)[number]['value']
 
 export type Mapping = {
+  id?: number
   mode: Mode
   fromName: string
   toName: string

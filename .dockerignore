@@ -26,3 +26,5 @@ biome.json
 components.json
 .zed
 .tanstack
+db.sqlite*
+.data

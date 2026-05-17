@@ -1,0 +1,35 @@
+import { Database } from 'bun:sqlite'
+import { sql } from 'drizzle-orm'
+import { drizzle } from 'drizzle-orm/bun-sqlite'
+import * as schema from './schema'
+import { env } from '@/env'
+
+const globalForDb = globalThis as unknown as {
+  client?: Database
+}
+
+export const client = globalForDb.client ?? new Database(env.DATABASE_PATH)
+if (env.NODE_ENV !== 'production') globalForDb.client = client
+
+client.run('PRAGMA journal_mode = WAL;')
+client.run('PRAGMA foreign_keys = ON;')
+
+export const db = drizzle(client, { schema })
+
+// -------------------------------- UTILS -------------------------------- //
+// TODO This does not handle concurrent transactions.
+export const runTransaction = async <T, TDb extends typeof db>(
+  database: TDb,
+  callback: (database: TDb) => Promise<T>,
+): Promise<T> => {
+  database.run(sql`BEGIN`)
+
+  try {
+    const result = await callback(database)
+    database.run(sql`COMMIT`)
+    return result
+  } catch (error) {
+    database.run(sql`ROLLBACK`)
+    throw error
+  }
+}

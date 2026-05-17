@@ -95,9 +95,7 @@ export const CreateMappingForm = ({
     mutationFn: async (data: v.InferInput<typeof mappingFormSchema>) =>
       editMapping({
         data: {
-          previous: previousValues as Parameters<
-            typeof editMapping
-          >[0]['data']['previous'],
+          id: previousValues!.id!,
           new: data,
         },
       }),

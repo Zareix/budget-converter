@@ -14,3 +14,4 @@ todos.json
 /mapping/
 compose.yml
 .data
+db.sqlite*

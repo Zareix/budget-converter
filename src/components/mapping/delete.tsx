@@ -14,7 +14,7 @@ import {
 import { deleteMapping } from '@/lib/server/functions'
 
 type Props = {
-  mapping: Pick<Mapping, 'fromName' | 'mode'>
+  mapping: Pick<Mapping, 'id'>
 }
 
 export const DeleteMappingButton = ({ mapping }: Props) => {
@@ -22,7 +22,7 @@ export const DeleteMappingButton = ({ mapping }: Props) => {
   const queryClient = useQueryClient()
   const deleteMappingMutation = useMutation({
     mutationKey: ['deleteMapping'],
-    mutationFn: async () => deleteMapping({ data: mapping }),
+    mutationFn: async () => deleteMapping({ data: { id: mapping.id! } }),
     onSuccess: () => {
       setIsOpen(false)
       queryClient.invalidateQueries({ queryKey: ['mapping'] })

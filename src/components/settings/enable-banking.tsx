@@ -5,6 +5,7 @@ import {
   ebListBanks,
   listAccounts,
 } from '@/lib/server/functions'
+import { ImportEbAccountsButton } from '@/components/settings/import-eb'
 import {
   Card,
   CardContent,
@@ -63,7 +64,7 @@ export const EnableBankingSettings = () => {
     a.name.localeCompare(b.name),
   )
   return (
-    <Card className="w-full max-w-4xl">
+    <Card className="w-full">
       <CardHeader className="flex items-center justify-between">
         <CardTitle>Enable Banking</CardTitle>
       </CardHeader>
@@ -98,7 +99,8 @@ export const EnableBankingSettings = () => {
           </TableBody>
         </Table>
       </CardContent>
-      <CardFooter className="flex items-center justify-end gap-2">
+      <CardFooter className="flex items-center gap-2">
+        <ImportEbAccountsButton />
         <Select
           disabled={listBanksQuery.isPending}
           items={banks.map((bank) => ({
@@ -108,7 +110,7 @@ export const EnableBankingSettings = () => {
           onValueChange={(value) => setSelectedBank(value as Bank)}
           itemToStringLabel={(bank: Bank) => `${bank.name} (${bank.country})`}
         >
-          <SelectTrigger className="w-full max-w-48">
+          <SelectTrigger className="w-full max-w-48 ml-auto">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

@@ -1,6 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
 import * as v from 'valibot'
-import { LogOut } from 'lucide-react'
 import type { Fetcher } from '@/lib/fetcher'
 import { PROVIDERS } from '@/lib/parsers'
 import * as lunchflow from '@/lib/fetcher/lunchflow'
@@ -119,23 +118,7 @@ export const editMapping = createServerFn({
 })
   .inputValidator(
     v.object({
-      previous: v.variant('mode', [
-        v.object({
-          mode: v.picklist(['default', 'exact-name']),
-          fromName: v.string('From name is required'),
-          toName: v.string('To name is required'),
-          toCategory: v.string('Category is required'),
-          exclude: v.optional(v.boolean()),
-        }),
-        v.object({
-          mode: v.literal('exact-name-price'),
-          fromName: v.string('From name is required'),
-          toName: v.string('To name is required'),
-          toCategory: v.string('Category is required'),
-          fromPrice: v.number(),
-          exclude: v.optional(v.boolean()),
-        }),
-      ]),
+      id: v.number(),
       new: v.variant('mode', [
         v.object({
           mode: v.picklist(['default', 'exact-name']),
@@ -160,13 +143,38 @@ export const editMapping = createServerFn({
 export const deleteMapping = createServerFn({
   method: 'POST',
 })
-  .inputValidator(
-    v.object({
-      mode: v.picklist(['default', 'exact-name', 'exact-name-price']),
-      fromName: v.string('From name is required'),
-    }),
-  )
+  .inputValidator(v.object({ id: v.number() }))
   .handler(({ data }) => mapping.deleteMapping(data))
+
+export const importMappingsFromYaml = createServerFn({ method: 'POST' })
+  .inputValidator(v.object({ yaml: v.string() }))
+  .handler(async ({ data }) => {
+    const parsed = Bun.YAML.parse(data.yaml) as { mappings?: Array<unknown> }
+    if (!Array.isArray(parsed.mappings)) {
+      throw new Error('Invalid YAML: expected a top-level "mappings" array')
+    }
+    const mappingSchema = v.variant('mode', [
+      v.object({
+        mode: v.picklist(['default', 'exact-name']),
+        fromName: v.string(),
+        toName: v.string(),
+        toCategory: v.string(),
+        fromPrice: v.optional(v.number()),
+        exclude: v.optional(v.boolean()),
+      }),
+      v.object({
+        mode: v.literal('exact-name-price'),
+        fromName: v.string(),
+        toName: v.string(),
+        toCategory: v.string(),
+        fromPrice: v.number(),
+        exclude: v.optional(v.boolean()),
+      }),
+    ])
+    const valid = v.parse(v.array(mappingSchema), parsed.mappings)
+    await mapping.bulkAddMappings(valid)
+    return { imported: valid.length }
+  })
 
 export const ebGetRedirectUrl = createServerFn()
   .inputValidator(
@@ -180,3 +188,22 @@ export const ebGetRedirectUrl = createServerFn()
   .handler(({ data }) => enableBanking.getRedirectUrl(data))
 
 export const ebListBanks = createServerFn().handler(enableBanking.getBanks)
+
+export const importEbAccountsFromJson = createServerFn({ method: 'POST' })
+  .inputValidator(v.object({ json: v.string() }))
+  .handler(async ({ data }) => {
+    const parsed = JSON.parse(data.json) as { accounts?: Array<unknown> }
+    if (!Array.isArray(parsed.accounts)) {
+      throw new Error('Invalid JSON: expected a top-level "accounts" array')
+    }
+    const accountSchema = v.object({
+      id: v.string(),
+      name: v.string(),
+      institutionName: v.string(),
+      institutionLogo: v.optional(v.nullable(v.string())),
+      validUntil: v.string(),
+    })
+    const valid = v.parse(v.array(accountSchema), parsed.accounts)
+    await enableBanking.bulkAddAccounts(valid)
+    return { imported: valid.length }
+  })
