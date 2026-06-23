@@ -2,7 +2,7 @@
   "name": "budget-converter",
   "private": true,
   "type": "module",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "scripts": {
     "dev": "bun run --bun vite dev --port 3000",
     "build": "bun run --bun vite build",
