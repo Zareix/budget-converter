@@ -105,15 +105,15 @@ const signWithKey = (data: string) => {
   return jwa('RS256').sign(data, key)
 }
 
-const getJWT = async (exp = 3600) => {
+const getJWT = (exp = 3600) => {
   const jwtHeaders = getJWTHeader()
   const jwtBody = getJWTBody(exp)
-  const jwtSignature = await signWithKey(`${jwtHeaders}.${jwtBody}`)
+  const jwtSignature = signWithKey(`${jwtHeaders}.${jwtBody}`)
   return `${jwtHeaders}.${jwtBody}.${jwtSignature}`
 }
 
 export const getBanks = async () => {
-  const jwt = await getJWT()
+  const jwt = getJWT()
   const response = await fetch(`${BASE_URL}/aspsps`, {
     headers: {
       Authorization: `Bearer ${jwt}`,
@@ -145,7 +145,7 @@ export const getBanks = async () => {
 export const getRedirectUrl = async (
   bank: NonNullable<Awaited<ReturnType<typeof getBanks>>[0]>,
 ) => {
-  const jwt = await getJWT()
+  const jwt = getJWT()
   const validUntil = new Date(
     new Date().getTime() + bank.maximumConsentValidity * 1000,
   )
@@ -179,7 +179,7 @@ export const getRedirectUrl = async (
 }
 
 export const completeAuthorization = async (code: string) => {
-  const jwt = await getJWT()
+  const jwt = getJWT()
   const baseHeaders = {
     Authorization: `Bearer ${jwt}`,
     'Content-Type': 'application/json',
@@ -281,7 +281,7 @@ export const fetchTransactions = async (
     return []
   }
 
-  const jwt = await getJWT()
+  const jwt = getJWT()
   const oneMonthAgo = new Date()
   oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
   const accountTransactionsResponse = await fetch(
