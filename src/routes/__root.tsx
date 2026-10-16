@@ -4,6 +4,8 @@ import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router"
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import { Toaster } from "sonner"
 
+import { useFaviconTheme } from "@/hooks/use-favicon-theme"
+
 import appCss from "../styles.css?url"
 
 export const Route = createRootRoute({
@@ -22,6 +24,11 @@ export const Route = createRootRoute({
     ],
     links: [
       {
+        rel: "icon",
+        type: "image/svg+xml",
+        href: "/favicon-light.svg",
+      },
+      {
         rel: "stylesheet",
         href: appCss,
       },
@@ -32,6 +39,7 @@ export const Route = createRootRoute({
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  useFaviconTheme()
   return (
     <html lang="en">
       <head>
