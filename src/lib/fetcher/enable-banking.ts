@@ -1,23 +1,24 @@
-import jwa from 'jwa'
-import { lt } from 'drizzle-orm'
-import type { Account } from '@/lib/fetcher'
-import type { Category, Transaction } from '@/lib/parsers'
-import { db } from '@/lib/db'
-import { ebAccounts } from '@/lib/db/schema'
-import { toPaymentMethod } from '@/lib/parsers'
-import { getMapping } from '@/lib/server/functions'
-import { firstNonNullNorEmpty, getFormattedDate } from '@/lib/utils'
-import { findInMapping } from '@/lib/mapping'
-import { env } from '@/env'
+import { eq, lt } from "drizzle-orm"
+import jwa from "jwa"
 
-const BASE_URL = 'https://api.enablebanking.com'
+import { env } from "@/env"
+import { db } from "@/lib/db"
+import { ebAccounts } from "@/lib/db/schema"
+import type { Account } from "@/lib/fetcher"
+import { findInMapping } from "@/lib/mapping"
+import type { Category, Transaction } from "@/lib/parsers"
+import { toPaymentMethod } from "@/lib/parsers"
+import { getMapping } from "@/lib/server/functions"
+import { firstNonNullNorEmpty, getFormattedDate } from "@/lib/utils"
+
+const BASE_URL = "https://api.enablebanking.com"
 
 export type EbTransactionsResponse = {
   transactions: Array<{
     entry_reference: string
     merchant_category_code: null
     transaction_amount: {
-      currency: 'EUR'
+      currency: "EUR"
       amount: string
     }
     creditor: {
@@ -45,7 +46,7 @@ export type EbTransactionsResponse = {
       iban: null
       other: {
         identification: string
-        scheme_name: 'CPAN' & (string | {})
+        scheme_name: "CPAN" & (string | {})
         issuer: null
       }
     }
@@ -53,8 +54,8 @@ export type EbTransactionsResponse = {
     bank_transaction_code: null | {
       code: string
     }
-    credit_debit_indicator: 'DBIT' & (string | {})
-    status: 'PDNG' | 'BOOK'
+    credit_debit_indicator: "DBIT" & (string | {})
+    status: "PDNG" | "BOOK"
     booking_date: Date
     value_date: null
     transaction_date: null
@@ -79,30 +80,30 @@ export type EbTransactionsResponse = {
 
 const getJWTHeader = () => {
   return encodeData({
-    typ: 'JWT',
-    alg: 'RS256',
+    typ: "JWT",
+    alg: "RS256",
     kid: env.EB_APPLICATION_ID,
   })
 }
 
 const encodeData = (data: any) => {
-  return Buffer.from(JSON.stringify(data)).toString('base64').replace('=', '')
+  return Buffer.from(JSON.stringify(data)).toString("base64").replace("=", "")
 }
 
 const getJWTBody = (exp: number) => {
   const timestamp = Math.floor(new Date().getTime() / 1000)
   return encodeData({
-    iss: 'enablebanking.com',
-    aud: 'api.enablebanking.com',
+    iss: "enablebanking.com",
+    aud: "api.enablebanking.com",
     iat: timestamp,
     exp: timestamp + exp,
   })
 }
 
 const signWithKey = (data: string) => {
-  const key = env.EB_PRIVATE_KEY?.replace(/\\n/g, '\n')
-  if (!key) throw new Error('EB_PRIVATE_KEY is not set')
-  return jwa('RS256').sign(data, key)
+  const key = env.EB_PRIVATE_KEY?.replace(/\\n/g, "\n")
+  if (!key) throw new Error("EB_PRIVATE_KEY is not set")
+  return jwa("RS256").sign(data, key)
 }
 
 const getJWT = (exp = 3600) => {
@@ -117,13 +118,11 @@ export const getBanks = async () => {
   const response = await fetch(`${BASE_URL}/aspsps`, {
     headers: {
       Authorization: `Bearer ${jwt}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
   })
   if (!response.ok) {
-    throw new Error(
-      `Failed to fetch banks: ${response.status} ${response.statusText}`,
-    )
+    throw new Error(`Failed to fetch banks: ${response.status} ${response.statusText}`)
   }
   const data = (await response.json()) as {
     aspsps: Array<{
@@ -134,21 +133,21 @@ export const getBanks = async () => {
     }>
   }
 
-  return data.aspsps.map((aspsp) => ({
-    name: aspsp.name,
-    country: aspsp.country,
-    logo: aspsp.logo,
-    maximumConsentValidity: aspsp.maximum_consent_validity,
-  }))
+  return data.aspsps
+    .filter((aspsp) => (env.COUNTRY_CODE ? aspsp.country === env.COUNTRY_CODE : true))
+    .map((aspsp) => ({
+      name: aspsp.name,
+      country: aspsp.country,
+      logo: aspsp.logo,
+      maximumConsentValidity: aspsp.maximum_consent_validity,
+    }))
 }
 
 export const getRedirectUrl = async (
   bank: NonNullable<Awaited<ReturnType<typeof getBanks>>[0]>,
 ) => {
   const jwt = getJWT()
-  const validUntil = new Date(
-    new Date().getTime() + bank.maximumConsentValidity * 1000,
-  )
+  const validUntil = new Date(new Date().getTime() + bank.maximumConsentValidity * 1000)
   const state = Math.random().toString(36).substring(2, 15)
   const startAuthorizationBody = {
     access: {
@@ -160,14 +159,14 @@ export const getRedirectUrl = async (
     },
     state: state,
     redirect_url: `${env.APP_URL}/api/enable-banking`,
-    psu_type: 'personal',
+    psu_type: "personal",
   }
   const baseHeaders = {
     Authorization: `Bearer ${jwt}`,
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   }
   const startAuthorizationResponse = await fetch(`${BASE_URL}/auth`, {
-    method: 'POST',
+    method: "POST",
     headers: baseHeaders,
     body: JSON.stringify(startAuthorizationBody),
   })
@@ -182,10 +181,10 @@ export const completeAuthorization = async (code: string) => {
   const jwt = getJWT()
   const baseHeaders = {
     Authorization: `Bearer ${jwt}`,
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   }
   const createSessionResponse = await fetch(`${BASE_URL}/sessions`, {
-    method: 'POST',
+    method: "POST",
     headers: baseHeaders,
     body: JSON.stringify({
       code: code,
@@ -209,9 +208,7 @@ export const completeAuthorization = async (code: string) => {
 
   const banks = await getBanks()
   const bank = banks.find(
-    (b) =>
-      b.name === sessionData.aspsp.name &&
-      b.country === sessionData.aspsp.country,
+    (b) => b.name === sessionData.aspsp.name && b.country === sessionData.aspsp.country,
   )
   if (!bank) {
     throw new Error(`Bank ${sessionData.aspsp.name} not found in banks list`)
@@ -231,17 +228,19 @@ export const completeAuthorization = async (code: string) => {
 }
 
 export const listAccounts = async (): Promise<Array<Account>> => {
-  await db
-    .delete(ebAccounts)
-    .where(lt(ebAccounts.validUntil, new Date().toISOString()))
+  await db.delete(ebAccounts).where(lt(ebAccounts.validUntil, new Date().toISOString()))
   const accounts = await db.select().from(ebAccounts)
   return accounts.map((account) => ({
     id: account.id,
     name: account.name,
     institutionName: account.institutionName,
     institutionLogo: account.institutionLogo,
-    fetcher: 'enable-banking' as const,
+    fetcher: "enable-banking" as const,
   }))
+}
+
+export const deleteAccount = async (accountId: Account["id"]) => {
+  await db.delete(ebAccounts).where(eq(ebAccounts.id, accountId))
 }
 
 export const bulkAddAccounts = async (
@@ -268,16 +267,12 @@ export const bulkAddAccounts = async (
     .onConflictDoNothing()
 }
 
-export const fetchTransactions = async (
-  accountId: Account['id'],
-): Promise<Array<Transaction>> => {
+export const fetchTransactions = async (accountId: Account["id"]): Promise<Array<Transaction>> => {
   const paymentMethod = toPaymentMethod(
     (await listAccounts()).find((acc) => acc.id === accountId)?.name,
   )
   if (!paymentMethod) {
-    console.error(
-      `Payment method for account ${accountId} not found, skipping it`,
-    )
+    console.error(`Payment method for account ${accountId} not found, skipping it`)
     return []
   }
 
@@ -289,7 +284,7 @@ export const fetchTransactions = async (
     {
       headers: {
         Authorization: `Bearer ${jwt}`,
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     },
   )
@@ -299,68 +294,49 @@ export const fetchTransactions = async (
     )
     return []
   }
-  const result =
-    (await accountTransactionsResponse.json()) as EbTransactionsResponse
-  console.log(
-    `Fetched ${result.transactions.length} transactions for account ${accountId}`,
-  )
+  const result = (await accountTransactionsResponse.json()) as EbTransactionsResponse
+  console.log(`Fetched ${result.transactions.length} transactions for account ${accountId}`)
 
   const mapping = await getMapping()
   const now = new Date()
   return result.transactions
     .filter(
       (record) =>
-        record.status === 'BOOK' &&
-        (!record.bank_transaction_code ||
-          record.bank_transaction_code.code === 'CARD_PAYMENT'),
+        record.status === "BOOK" &&
+        (!record.bank_transaction_code || record.bank_transaction_code.code === "CARD_PAYMENT"),
     )
     .filter((record) => {
-      const date = new Date(
-        firstNonNullNorEmpty(record.transaction_date, record.booking_date)!,
-      )
+      const date = new Date(firstNonNullNorEmpty(record.transaction_date, record.booking_date)!)
       return (
-        (date.getMonth() === now.getMonth() &&
-          date.getFullYear() === now.getFullYear()) ||
-        (date.getMonth() === now.getMonth() - 1 &&
-          date.getFullYear() === now.getFullYear())
+        (date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) ||
+        (date.getMonth() === now.getMonth() - 1 && date.getFullYear() === now.getFullYear())
       )
     })
     .filter((record) => {
-      if (paymentMethod !== 'Carte SG') {
+      if (paymentMethod !== "Carte SG") {
         return true
       }
-      const name = firstNonNullNorEmpty(
-        record.creditor?.name,
-        record.remittance_information[0],
-      )!
-      return name.startsWith('CARTE ')
+      const name = firstNonNullNorEmpty(record.creditor?.name, record.remittance_information[0])!
+      return name.startsWith("CARTE ")
     })
     .map((record) => {
-      const date = new Date(
-        firstNonNullNorEmpty(record.transaction_date, record.booking_date)!,
-      )
+      const date = new Date(firstNonNullNorEmpty(record.transaction_date, record.booking_date)!)
       const formattedDate = getFormattedDate(date)
       const amount = Number.parseFloat(record.transaction_amount.amount)
         .toFixed(2)
-        .replace('.', ',')
+        .replace(".", ",")
 
-      let name: string = firstNonNullNorEmpty(
-        record.creditor?.name,
-        record.remittance_information[0],
-      )!.split('   ')[0]
-      if (paymentMethod === 'Carte SG') {
+      let name: string =
+        firstNonNullNorEmpty(record.creditor?.name, record.remittance_information[0])?.split(
+          "   ",
+        )[0] ?? ""
+      if (paymentMethod === "Carte SG") {
         name = name.substring(17)
       }
       const description =
-        record.remittance_information.length > 1
-          ? record.remittance_information[0]
-          : null
-      let category: Category = '💬 Autres'
-      const mapped = findInMapping(
-        mapping,
-        name,
-        Number.parseFloat(amount.replace(',', '.')),
-      )
+        record.remittance_information.length > 1 ? record.remittance_information[0] : null
+      let category: Category = "💬 Autres"
+      const mapped = findInMapping(mapping, name, Number.parseFloat(amount.replace(",", ".")))
       if (mapped) {
         if (mapped.exclude) {
           return null
@@ -374,9 +350,7 @@ export const fetchTransactions = async (
       return {
         date: formattedDate,
         originalDate: date,
-        name:
-          name +
-          (description && description.length > 0 ? ` - ${description}` : ''),
+        name: name + (description && description.length > 0 ? ` - ${description}` : ""),
         amount: amount,
         category,
         paymentMethod,

@@ -1,14 +1,11 @@
-import { eq } from 'drizzle-orm'
-import type { Mapping } from '@/lib/mapping/constant'
-import { db } from '@/lib/db'
-import { mappings } from '@/lib/db/schema'
-import { Categories } from '@/lib/parsers'
+import { eq } from "drizzle-orm"
 
-const MODE_ORDER: Array<Mapping['mode']> = [
-  'exact-name-price',
-  'exact-name',
-  'default',
-]
+import { db } from "@/lib/db"
+import { mappings } from "@/lib/db/schema"
+import type { Mapping } from "@/lib/mapping/constant"
+import { Categories } from "@/lib/parsers"
+
+const MODE_ORDER: Array<Mapping["mode"]> = ["exact-name-price", "exact-name", "default"]
 
 const compareMapping = (a: Mapping, b: Mapping) => {
   if (a.mode === b.mode) {
@@ -20,17 +17,15 @@ const compareMapping = (a: Mapping, b: Mapping) => {
 export const getMapping = async (): Promise<Array<Mapping>> => {
   const rows = await db.select().from(mappings)
   return rows
-    .map(
-      (row): Mapping => ({
-        id: row.id,
-        mode: row.mode,
-        fromName: row.fromName,
-        toName: row.toName,
-        toCategory: row.toCategory,
-        ...(row.fromPrice !== null && { fromPrice: row.fromPrice }),
-        ...(row.exclude && { exclude: row.exclude }),
-      }),
-    )
+    .map((row): Mapping => ({
+      id: row.id,
+      mode: row.mode,
+      fromName: row.fromName,
+      toName: row.toName,
+      toCategory: row.toCategory,
+      ...(row.fromPrice !== null && { fromPrice: row.fromPrice }),
+      ...(row.exclude && { exclude: row.exclude }),
+    }))
     .toSorted(compareMapping)
 }
 
@@ -41,11 +36,11 @@ export const findInMapping = (
 ) => {
   const mapped = mapping.find((m) => {
     switch (m.mode) {
-      case 'default':
+      case "default":
         return name.toLowerCase().includes(m.fromName.toLowerCase())
-      case 'exact-name':
+      case "exact-name":
         return name === m.fromName
-      case 'exact-name-price':
+      case "exact-name-price":
         return name === m.fromName && price === m.fromPrice
       default:
         return false
@@ -56,8 +51,7 @@ export const findInMapping = (
         exclude: mapped.exclude ?? false,
         name: mapped.toName,
         category:
-          Categories.find((c) => c.toLowerCase().includes(mapped.toCategory)) ??
-          '💬 Autres',
+          Categories.find((c) => c.toLowerCase().includes(mapped.toCategory)) ?? "💬 Autres",
       }
     : null
 }
@@ -73,13 +67,7 @@ export const addMapping = async (mapping: Mapping) => {
   })
 }
 
-export const editMapping = async ({
-  id,
-  new: newMapping,
-}: {
-  id: number
-  new: Mapping
-}) => {
+export const editMapping = async ({ id, new: newMapping }: { id: number; new: Mapping }) => {
   await db
     .update(mappings)
     .set({

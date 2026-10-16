@@ -1,6 +1,13 @@
-import { useQuery } from '@tanstack/react-query'
-import { useNavigate, useSearch } from '@tanstack/react-router'
-import { getMapping } from '@/lib/server/functions'
+import { useQuery } from "@tanstack/react-query"
+import { useNavigate, useSearch } from "@tanstack/react-router"
+
+import { CreateMappingButton } from "@/components/mapping/create"
+import { DeleteMappingButton } from "@/components/mapping/delete"
+import { EditMappingButton } from "@/components/mapping/edit"
+import { ImportMappingButton } from "@/components/mapping/import"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   Table,
   TableBody,
@@ -9,32 +16,20 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { CreateMappingButton } from '@/components/mapping/create'
-import { ImportMappingButton } from '@/components/mapping/import'
-import { MODES } from '@/lib/mapping/constant'
-import { DeleteMappingButton } from '@/components/mapping/delete'
-import { Input } from '@/components/ui/input'
-import { EditMappingButton } from '@/components/mapping/edit'
-import { toCategoryFullName } from '@/lib/utils'
+} from "@/components/ui/table"
+import { MODES } from "@/lib/mapping/constant"
+import { getMapping } from "@/lib/server/functions"
+import { toCategoryFullName } from "@/lib/utils"
 
 export const Mappings = () => {
   const { q } = useSearch({
-    from: '/settings',
+    from: "/settings",
   })
   const navigate = useNavigate({
-    from: '/settings',
+    from: "/settings",
   })
   const mappingQuery = useQuery({
-    queryKey: ['mapping'],
+    queryKey: ["mapping"],
     queryFn: getMapping,
     select: (data) => {
       if (!q) return data
@@ -55,16 +50,14 @@ export const Mappings = () => {
   if (mappingQuery.isError || !mappingQuery.data) {
     return (
       <div>
-        Error loading mapping:{' '}
-        {mappingQuery.error instanceof Error
-          ? mappingQuery.error.message
-          : 'Unknown error'}
+        Error loading mapping:{" "}
+        {mappingQuery.error instanceof Error ? mappingQuery.error.message : "Unknown error"}
       </div>
     )
   }
 
   const getMappingModeName = (mode: string) => {
-    return MODES.find((m) => m.value === mode)?.label ?? 'Unknown mode'
+    return MODES.find((m) => m.value === mode)?.label ?? "Unknown mode"
   }
 
   return (
@@ -75,12 +68,12 @@ export const Mappings = () => {
           type="text"
           placeholder="Search mappings..."
           className="w-full max-w-60"
-          value={q ?? ''}
+          value={q ?? ""}
           onChange={(e) => navigate({ search: { q: e.target.value } })}
         />
       </CardHeader>
       <CardContent>
-        <ScrollArea className="w-full h-96">
+        <ScrollArea className="h-96 w-full">
           <Table>
             <TableCaption>A list of all mappings configured</TableCaption>
             <TableHeader className="sticky top-0">
@@ -100,11 +93,9 @@ export const Mappings = () => {
                   <TableCell>{getMappingModeName(mapping.mode)}</TableCell>
                   <TableCell>{mapping.fromName}</TableCell>
                   <TableCell>{mapping.toName}</TableCell>
-                  <TableCell>
-                    {toCategoryFullName(mapping.toCategory)}
-                  </TableCell>
-                  <TableCell>{mapping.fromPrice ?? '-'}</TableCell>
-                  <TableCell>{mapping.exclude ? 'Yes' : 'No'}</TableCell>
+                  <TableCell>{toCategoryFullName(mapping.toCategory)}</TableCell>
+                  <TableCell>{mapping.fromPrice ?? "-"}</TableCell>
+                  <TableCell>{mapping.exclude ? "Yes" : "No"}</TableCell>
                   <TableCell>
                     <EditMappingButton mapping={mapping} />
                     <DeleteMappingButton mapping={mapping} />

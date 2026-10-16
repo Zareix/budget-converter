@@ -1,16 +1,18 @@
-import { parse } from 'csv-parse/sync'
-import type { Category, Transaction } from '.'
-import { findInMapping, getMapping } from '@/lib/mapping'
+import { parse } from "csv-parse/sync"
+
+import { findInMapping, getMapping } from "@/lib/mapping"
+
+import type { Category, Transaction } from "."
 
 type AmexInput = {
   Date: string
   Description: string
   Montant: string
   Détails: string
-  'Apparait sur votre relevé de compte sous': string
+  "Apparait sur votre relevé de compte sous": string
   Adresse: string
   Ville: string
-  'Code postal': string
+  "Code postal": string
   Pays: string
   Référence: string
 }
@@ -21,7 +23,7 @@ export const parseToTransactions = async ({
   fileContent?: string
 }): Promise<Array<Transaction>> => {
   if (!fileContent) {
-    throw new Error('No file content provided')
+    throw new Error("No file content provided")
   }
 
   const mapping = await getMapping()
@@ -32,16 +34,14 @@ export const parseToTransactions = async ({
   })
     .map((record) => {
       const date = new Date(record.Date)
-      const formattedDate: `${number}/${number}` = `${date.getDate()}/${
-        date.getMonth() + 1
-      }`
+      const formattedDate: `${number}/${number}` = `${date.getDate()}/${date.getMonth() + 1}`
 
       let name: string | Array<string> = record.Description
-      let category: Category = '💬 Autres'
+      let category: Category = "💬 Autres"
       const mapped = findInMapping(
         mapping,
         name,
-        Number.parseFloat(record.Montant.replace(',', '.')),
+        Number.parseFloat(record.Montant.replace(",", ".")),
       )
       if (mapped) {
         if (mapped.exclude) {
@@ -57,7 +57,7 @@ export const parseToTransactions = async ({
         date: formattedDate,
         originalDate: date,
         amount: record.Montant,
-        paymentMethod: 'Carte AMEX',
+        paymentMethod: "Carte AMEX",
         name,
         category,
       } satisfies Transaction

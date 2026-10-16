@@ -1,26 +1,26 @@
 export const Categories = [
-  '🛒 Courses',
-  '🍣 Restaurant',
-  '🍹 Bar/Café',
-  '🚕 Transport',
-  '🎫 Divertissement',
-  '🛍️ Shopping',
-  '🌍 Voyage',
-  '⛑️ Santé',
-  '🏡 Maison',
-  '🎁 Cadeaux',
-  '🙏 Dons',
-  '💬 Autres',
+  "🛒 Courses",
+  "🍣 Restaurant",
+  "🍹 Bar/Café",
+  "🚕 Transport",
+  "🎫 Divertissement",
+  "🛍️ Shopping",
+  "🌍 Voyage",
+  "⛑️ Santé",
+  "🏡 Maison",
+  "🎁 Cadeaux",
+  "🙏 Dons",
+  "💬 Autres",
 ] as const
 export type Category = (typeof Categories)[number]
 
 export const PAYMENT_METHODS = [
-  'Carte SG',
-  'Carte AMEX',
-  'Carte Revolut',
-  'Carte compte joint',
-  'Tricount Lola',
-  'Espèces',
+  "Carte SG",
+  "Carte AMEX",
+  "Carte Revolut",
+  "Carte compte joint",
+  "Tricount Lola",
+  "Espèces",
 ] as const
 export type PaymentMethod = (typeof PAYMENT_METHODS)[number]
 
@@ -34,20 +34,17 @@ export const toPaymentMethod = (
     return value
   }
 
-  if (
-    value.toLowerCase().includes('amex') ||
-    value.toLowerCase().includes('american express')
-  ) {
-    return 'Carte AMEX'
+  if (value.toLowerCase().includes("amex") || value.toLowerCase().includes("american express")) {
+    return "Carte AMEX"
   }
-  if (value.toLowerCase().includes('revolut')) {
-    return 'Carte Revolut'
+  if (value.toLowerCase().includes("revolut")) {
+    return "Carte Revolut"
   }
   if (
-    value.toLowerCase().includes('sg') ||
-    value.toLowerCase().replaceAll('é', 'e').includes('societe generale')
+    value.toLowerCase().includes("sg") ||
+    value.toLowerCase().replaceAll("é", "e").includes("societe generale")
   ) {
-    return 'Carte SG'
+    return "Carte SG"
   }
 
   return null
@@ -61,5 +58,5 @@ export type Transaction = {
   category: Category
   paymentMethod: PaymentMethod
 }
-export const PROVIDERS = ['amex', 'revolut'] as const
+export const PROVIDERS = ["amex", "revolut"] as const
 export type Provider = (typeof PROVIDERS)[number]

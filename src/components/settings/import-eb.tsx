@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { importEbAccountsFromJson } from '@/lib/server/functions'
-import { Button } from '@/components/ui/button'
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useState } from "react"
+
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -9,23 +9,24 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import { Textarea } from '@/components/ui/textarea'
+} from "@/components/ui/dialog"
+import { Textarea } from "@/components/ui/textarea"
+import { importEbAccountsFromJson } from "@/lib/server/functions"
 
 export const ImportEbAccountsButton = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [json, setJson] = useState('')
+  const [json, setJson] = useState("")
   const queryClient = useQueryClient()
 
   const mutation = useMutation({
-    mutationKey: ['importEbAccounts'],
+    mutationKey: ["importEbAccounts"],
     mutationFn: () => importEbAccountsFromJson({ data: { json } }),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['listAccounts', 'enable-banking'],
+        queryKey: ["listAccounts", "enable-banking"],
       })
       setIsOpen(false)
-      setJson('')
+      setJson("")
     },
   })
 
@@ -35,9 +36,7 @@ export const ImportEbAccountsButton = () => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Import from eb.json</DialogTitle>
-          <DialogDescription>
-            Paste the contents of your eb.json file.
-          </DialogDescription>
+          <DialogDescription>Paste the contents of your eb.json file.</DialogDescription>
         </DialogHeader>
         <Textarea
           rows={14}
@@ -49,17 +48,12 @@ export const ImportEbAccountsButton = () => {
           className="max-h-64"
         />
         {mutation.isError && (
-          <p className="text-destructive text-xs">
-            {mutation.error instanceof Error
-              ? mutation.error.message
-              : 'Import failed'}
+          <p className="text-xs text-destructive">
+            {mutation.error instanceof Error ? mutation.error.message : "Import failed"}
           </p>
         )}
-        <Button
-          onClick={() => mutation.mutate()}
-          disabled={!json.trim() || mutation.isPending}
-        >
-          {mutation.isPending ? 'Importing...' : 'Import'}
+        <Button onClick={() => mutation.mutate()} disabled={!json.trim() || mutation.isPending}>
+          {mutation.isPending ? "Importing..." : "Import"}
         </Button>
       </DialogContent>
     </Dialog>

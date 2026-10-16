@@ -1,9 +1,9 @@
-import type { Category, Transaction } from '@/lib/parsers'
-import type { Account } from '@/lib/fetcher'
-import { isPaymentMethod } from '@/lib/parsers'
-import { findInMapping, getMapping } from '@/lib/mapping'
-import { firstNonNullNorEmpty, getFormattedDate } from '@/lib/utils'
-import { env } from '@/env'
+import { env } from "@/env"
+import type { Account } from "@/lib/fetcher"
+import { findInMapping, getMapping } from "@/lib/mapping"
+import type { Category, Transaction } from "@/lib/parsers"
+import { isPaymentMethod } from "@/lib/parsers"
+import { firstNonNullNorEmpty, getFormattedDate } from "@/lib/utils"
 
 export type ListAccountResponse = {
   accounts: Array<{
@@ -13,16 +13,16 @@ export type ListAccountResponse = {
     institution_name: string
     name: string
     provider:
-      | 'gocardless'
-      | 'quiltt'
-      | 'finverse'
-      | 'pluggy'
-      | 'lunchmoney'
-      | 'simplefin'
-      | 'stripe'
-      | 'akahu'
-      | 'snaptrade'
-    status?: 'ACTIVE' | 'DISCONNECTED' | 'ERROR'
+      | "gocardless"
+      | "quiltt"
+      | "finverse"
+      | "pluggy"
+      | "lunchmoney"
+      | "simplefin"
+      | "stripe"
+      | "akahu"
+      | "snaptrade"
+    status?: "ACTIVE" | "DISCONNECTED" | "ERROR"
   }>
   total: number
 }
@@ -52,15 +52,15 @@ export const listAccounts = async (): Promise<Array<Account>> => {
   if (!env.LUNCH_FLOW_API_KEY) {
     return []
   }
-  const res = await fetch('https://www.lunchflow.app/api/v1/accounts', {
+  const res = await fetch("https://www.lunchflow.app/api/v1/accounts", {
     headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': env.LUNCH_FLOW_API_KEY,
+      "Content-Type": "application/json",
+      "x-api-key": env.LUNCH_FLOW_API_KEY,
     },
   })
 
   if (!res.ok) {
-    throw new Error('Failed to fetch accounts')
+    throw new Error("Failed to fetch accounts")
   }
 
   const result = (await res.json()) as ListAccountResponse
@@ -71,7 +71,7 @@ export const listAccounts = async (): Promise<Array<Account>> => {
         name: account.name,
         institutionName: account.institution_name,
         institutionLogo: account.institution_logo,
-        fetcher: 'lunchflow',
+        fetcher: "lunchflow",
       }) satisfies Account,
   )
 }
@@ -81,32 +81,26 @@ const fetchTransactionsForAccount = async ({
   accounts,
 }: {
   accountId: string
-  accounts: Array<
-    Pick<Awaited<ReturnType<typeof listAccounts>>[number], 'id' | 'name'>
-  >
+  accounts: Array<Pick<Awaited<ReturnType<typeof listAccounts>>[number], "id" | "name">>
 }): Promise<Array<Transaction>> => {
   if (!env.LUNCH_FLOW_API_KEY) {
-    throw new Error('LUNCH_FLOW_API_KEY is not set')
+    throw new Error("LUNCH_FLOW_API_KEY is not set")
   }
 
-  const paymentMethod =
-    accounts.find((acc) => acc.id === accountId)?.name ?? 'Unknown'
+  const paymentMethod = accounts.find((acc) => acc.id === accountId)?.name ?? "Unknown"
   if (!isPaymentMethod(paymentMethod)) {
     return []
   }
 
-  const res = await fetch(
-    `https://www.lunchflow.app/api/v1/accounts/${accountId}/transactions`,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': env.LUNCH_FLOW_API_KEY,
-      },
+  const res = await fetch(`https://www.lunchflow.app/api/v1/accounts/${accountId}/transactions`, {
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": env.LUNCH_FLOW_API_KEY,
     },
-  )
+  })
 
   if (!res.ok) {
-    throw new Error('Failed to fetch transactions')
+    throw new Error("Failed to fetch transactions")
   }
 
   const result = (await res.json()) as ListAccountTransactionsResponse
@@ -118,25 +112,18 @@ const fetchTransactionsForAccount = async ({
     .filter((record) => {
       const date = new Date(record.date)
       return (
-        (date.getMonth() === now.getMonth() &&
-          date.getFullYear() === now.getFullYear()) ||
-        (date.getMonth() === now.getMonth() - 1 &&
-          date.getFullYear() === now.getFullYear())
+        (date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) ||
+        (date.getMonth() === now.getMonth() - 1 && date.getFullYear() === now.getFullYear())
       )
     })
     .map((record) => {
       const date = new Date(record.date)
       const formattedDate = getFormattedDate(date)
-      const amount = (record.amount * -1).toFixed(2).replace('.', ',')
+      const amount = (record.amount * -1).toFixed(2).replace(".", ",")
 
-      let name: string =
-        firstNonNullNorEmpty(record.merchant, record.description) ?? 'Unknown'
-      let category: Category = '💬 Autres'
-      const mapped = findInMapping(
-        mapping,
-        name,
-        Number.parseFloat(amount.replace(',', '.')),
-      )
+      let name: string = firstNonNullNorEmpty(record.merchant, record.description) ?? "Unknown"
+      let category: Category = "💬 Autres"
+      const mapped = findInMapping(mapping, name, Number.parseFloat(amount.replace(",", ".")))
       if (mapped) {
         if (mapped.exclude) {
           return null
@@ -154,10 +141,10 @@ const fetchTransactionsForAccount = async ({
           name +
           (record.merchant &&
           record.description &&
-          record.description !== 'undefined' &&
+          record.description !== "undefined" &&
           record.description.length > 0
             ? ` - ${record.description}`
-            : ''),
+            : ""),
         amount: amount,
         category,
         paymentMethod,
@@ -166,9 +153,7 @@ const fetchTransactionsForAccount = async ({
     .filter(Boolean)
 }
 
-export const fetchTransactions = async (
-  accountId: Account['id'],
-): Promise<Array<Transaction>> => {
+export const fetchTransactions = async (accountId: Account["id"]): Promise<Array<Transaction>> => {
   const accounts = await listAccounts()
   return fetchTransactionsForAccount({
     accountId: accountId,

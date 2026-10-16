@@ -1,13 +1,11 @@
-import { useEffect } from 'react'
-import { useForm } from '@tanstack/react-form'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import * as v from 'valibot'
+import { useForm } from "@tanstack/react-form"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { Link } from "@tanstack/react-router"
+import { useEffect } from "react"
+import { toast } from "sonner"
+import * as v from "valibot"
 
-import { Link } from '@tanstack/react-router'
-import type { Fetcher } from '@/lib/fetcher'
-import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -15,17 +13,13 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { fetchTransactions, listAccounts } from '@/lib/server/functions'
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-  FieldSet,
-} from '@/components/ui/field'
-import { useTransactions } from '@/context/transactions-context'
-import { FETCHERS } from '@/lib/fetcher'
+} from "@/components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Field, FieldError, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field"
+import { useTransactions } from "@/context/transactions-context"
+import type { Fetcher } from "@/lib/fetcher"
+import { FETCHERS } from "@/lib/fetcher"
+import { fetchTransactions, listAccounts } from "@/lib/server/functions"
 
 type FetchTransactionsInput = {
   accounts: Array<{
@@ -46,35 +40,35 @@ const formSchema = v.object({
 export function FetcherFormCard() {
   const { setTransactions, resetTransactions } = useTransactions()
   const listAccountsQuery = useQuery({
-    queryKey: ['fetcher', 'listAccounts'],
+    queryKey: ["fetcher", "listAccounts"],
     queryFn: async () => listAccounts(),
   })
 
   const fetchTransactionsMutation = useMutation({
-    mutationKey: ['fetcher', 'fetchTransactions'],
+    mutationKey: ["fetcher", "fetchTransactions"],
     mutationFn: async (input: FetchTransactionsInput) =>
       fetchTransactions({
         data: {
-          mode: 'fetcher',
+          mode: "fetcher",
           accounts: input.accounts,
         },
       }),
     onSuccess: (data) => {
       setTransactions(data)
       if (data.length === 0) {
-        toast.warning('No transactions found for the selected accounts.', {
-          position: 'bottom-right',
+        toast.warning("No transactions found for the selected accounts.", {
+          position: "bottom-right",
         })
         return
       }
-      toast.success('Transactions fetched successfully!', {
-        position: 'bottom-right',
+      toast.success("Transactions fetched successfully!", {
+        position: "bottom-right",
       })
     },
     onError: (error) => {
-      toast.error('Unable to fetch transactions', {
+      toast.error("Unable to fetch transactions", {
         description: error.message,
-        position: 'bottom-right',
+        position: "bottom-right",
       })
     },
   })
@@ -107,7 +101,7 @@ export function FetcherFormCard() {
     if (!accounts.length) return
 
     form.setFieldValue(
-      'selectedAccounts',
+      "selectedAccounts",
       accounts.map((account) => ({
         id: account.id,
         fetcher: account.fetcher,
@@ -119,24 +113,16 @@ export function FetcherFormCard() {
     <Card className="w-full">
       <CardHeader>
         <CardTitle>Fetcher</CardTitle>
-        <CardDescription>
-          Select accounts, then submit to fetch transactions.
-        </CardDescription>
+        <CardDescription>Select accounts, then submit to fetch transactions.</CardDescription>
       </CardHeader>
 
       <CardContent>
         {listAccountsQuery.isPending ? (
-          <div className="text-sm text-muted-foreground">
-            Loading accounts...
-          </div>
+          <div className="text-sm text-muted-foreground">Loading accounts...</div>
         ) : listAccountsQuery.isError ? (
-          <div className="text-sm text-red-500">
-            {listAccountsQuery.error.message}
-          </div>
+          <div className="text-sm text-red-500">{listAccountsQuery.error.message}</div>
         ) : accounts.length === 0 ? (
-          <div className="text-sm text-muted-foreground">
-            No accounts available.
-          </div>
+          <div className="text-sm text-muted-foreground">No accounts available.</div>
         ) : (
           <form
             onSubmit={(e) => {
@@ -150,8 +136,7 @@ export function FetcherFormCard() {
               name="selectedAccounts"
               mode="array"
               children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
+                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                 return (
                   <FieldSet>
                     <FieldGroup data-slot="checkbox-group">
@@ -167,8 +152,7 @@ export function FetcherFormCard() {
                             aria-invalid={isInvalid}
                             checked={field.state.value.some(
                               (value) =>
-                                value.id === account.id &&
-                                value.fetcher === account.fetcher,
+                                value.id === account.id && value.fetcher === account.fetcher,
                             )}
                             onCheckedChange={(checked) => {
                               if (checked) {
@@ -179,8 +163,7 @@ export function FetcherFormCard() {
                               } else {
                                 const index = field.state.value.findIndex(
                                   (value) =>
-                                    value.id === account.id &&
-                                    value.fetcher === account.fetcher,
+                                    value.id === account.id && value.fetcher === account.fetcher,
                                 )
                                 if (index > -1) {
                                   field.removeValue(index)
@@ -200,17 +183,13 @@ export function FetcherFormCard() {
                             )}
                             <div className="flex flex-col">
                               <div className="font-medium">{account.name}</div>
-                              <div className="text-muted-foreground">
-                                {account.institutionName}
-                              </div>
+                              <div className="text-muted-foreground">{account.institutionName}</div>
                             </div>
                           </FieldLabel>
                         </Field>
                       ))}
                     </FieldGroup>
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </FieldSet>
                 )
               }}
@@ -231,11 +210,9 @@ export function FetcherFormCard() {
           <Button
             type="submit"
             form="fetcher-form"
-            disabled={
-              fetchTransactionsMutation.isPending || !form.state.isValid
-            }
+            disabled={fetchTransactionsMutation.isPending || !form.state.isValid}
           >
-            {fetchTransactionsMutation.isPending ? 'Processing...' : 'Fetch'}
+            {fetchTransactionsMutation.isPending ? "Processing..." : "Fetch"}
           </Button>
           <Button type="button" variant="link" className="ml-auto">
             <Link to="/settings">Settings</Link>

@@ -1,29 +1,12 @@
-'use client'
+"use client"
 
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table'
-import React from 'react'
-import type {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-} from '@tanstack/react-table'
+import { flexRender, useTable } from "@tanstack/react-table"
+import type { ColumnDef, ColumnFiltersState, SortingState } from "@tanstack/react-table"
+import React from "react"
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
-import { CardContent, CardFooter } from '@/components/ui/card'
+import { resultTableFeatures } from "@/components/results/table-features"
+import { Button } from "@/components/ui/button"
+import { CardContent, CardFooter } from "@/components/ui/card"
 import {
   Select,
   SelectContent,
@@ -31,52 +14,52 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from "@/components/ui/select"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import type { Transaction } from "@/lib/parsers"
 
-interface DataTableProps<TData, TValue> {
-  columns: Array<ColumnDef<TData, TValue>>
-  data: Array<TData>
-  handleCopyAsCSV: (data: Array<TData>) => void
+interface DataTableProps {
+  columns: Array<ColumnDef<typeof resultTableFeatures, Transaction>>
+  data: Array<Transaction>
+  handleCopyAsCSV: (data: Array<Transaction>) => void
   reset: () => void
 }
 
 const months: Array<{ value: number; label: string }> = [
-  { value: 0, label: 'All months' },
-  { value: 1, label: 'January' },
-  { value: 2, label: 'February' },
-  { value: 3, label: 'March' },
-  { value: 4, label: 'April' },
-  { value: 5, label: 'May' },
-  { value: 6, label: 'June' },
-  { value: 7, label: 'July' },
-  { value: 8, label: 'August' },
-  { value: 9, label: 'September' },
-  { value: 10, label: 'October' },
-  { value: 11, label: 'November' },
-  { value: 12, label: 'December' },
+  { value: 0, label: "All months" },
+  { value: 1, label: "January" },
+  { value: 2, label: "February" },
+  { value: 3, label: "March" },
+  { value: 4, label: "April" },
+  { value: 5, label: "May" },
+  { value: 6, label: "June" },
+  { value: 7, label: "July" },
+  { value: 8, label: "August" },
+  { value: 9, label: "September" },
+  { value: 10, label: "October" },
+  { value: 11, label: "November" },
+  { value: 12, label: "December" },
 ]
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-  handleCopyAsCSV,
-  reset,
-}: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+export function DataTable({ columns, data, handleCopyAsCSV, reset }: DataTableProps) {
+  const [sorting, setSorting] = React.useState<SortingState>([{ id: "date", desc: true }])
   const [rowSelection, setRowSelection] = React.useState({})
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  )
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
 
-  const table = useReactTable({
+  const table = useTable({
+    features: resultTableFeatures,
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
     onRowSelectionChange: setRowSelection,
     onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
       rowSelection,
@@ -89,16 +72,16 @@ export function DataTable<TData, TValue>({
       <CardContent>
         <Select
           items={months}
-          value={table.getColumn('date')?.getFilterValue() ?? 0}
+          value={table.getColumn("date")?.getFilterValue() ?? 0}
           onValueChange={(value) => {
             if (value === 0) {
               table.resetColumnFilters()
               return
             }
-            table.getColumn('date')?.setFilterValue(value)
+            table.getColumn("date")?.setFilterValue(value)
           }}
         >
-          <SelectTrigger className="w-45 mb-2">
+          <SelectTrigger className="mb-2 w-45">
             <SelectValue placeholder="Month" />
           </SelectTrigger>
           <SelectContent>
@@ -106,13 +89,7 @@ export function DataTable<TData, TValue>({
               {months
                 .filter((month) =>
                   data.some((row) => {
-                    if (
-                      !(typeof row === 'object') ||
-                      !row ||
-                      !('originalDate' in row) ||
-                      !row.originalDate ||
-                      !(row.originalDate instanceof Date)
-                    ) {
+                    if (!(row.originalDate instanceof Date)) {
                       return false
                     }
                     if (month.value === 0) {
@@ -130,7 +107,7 @@ export function DataTable<TData, TValue>({
             </SelectGroup>
           </SelectContent>
         </Select>
-        <div className="overflow-hidden overflow-y-auto border max-h-96">
+        <div className="max-h-96 overflow-hidden overflow-y-auto border">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -140,10 +117,7 @@ export function DataTable<TData, TValue>({
                       <TableHead key={header.id}>
                         {header.isPlaceholder
                           ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
+                          : flexRender(header.column.columnDef.header, header.getContext())}
                       </TableHead>
                     )
                   })}
@@ -153,26 +127,17 @@ export function DataTable<TData, TValue>({
             <TableBody>
               {table.getRowModel().rows.length ? (
                 table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && 'selected'}
-                  >
-                    {row.getVisibleCells().map((cell) => (
+                  <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                    {row.getAllCells().map((cell) => (
                       <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
                     ))}
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
+                  <TableCell colSpan={columns.length} className="h-24 text-center">
                     No results.
                   </TableCell>
                 </TableRow>
@@ -187,11 +152,7 @@ export function DataTable<TData, TValue>({
         </Button>
         <Button
           onClick={() =>
-            handleCopyAsCSV(
-              table
-                .getFilteredSelectedRowModel()
-                .rows.map((row) => row.original),
-            )
+            handleCopyAsCSV(table.getFilteredSelectedRowModel().rows.map((row) => row.original))
           }
         >
           Copy as CSV

@@ -1,6 +1,7 @@
-import { createContext, useContext, useState } from 'react'
-import type { ReactNode } from 'react'
-import type { Transaction } from '@/lib/parsers'
+import { createContext, useContext, useState } from "react"
+import type { ReactNode } from "react"
+
+import type { Transaction } from "@/lib/parsers"
 
 type TransactionsContextValue = {
   transactions: Array<Transaction>
@@ -14,9 +15,7 @@ type TransactionsProviderProps = {
   children: ReactNode
 }
 
-export const TransactionsProvider = ({
-  children,
-}: TransactionsProviderProps) => {
+export const TransactionsProvider = ({ children }: TransactionsProviderProps) => {
   const [transactions, setTransactionsState] = useState<Array<Transaction>>([])
 
   const setTransactions = (next: Array<Transaction>) => {
@@ -44,9 +43,7 @@ export const useTransactions = () => {
   const context = useContext(TransactionsContext)
 
   if (!context) {
-    throw new Error(
-      'useTransactions must be used within a TransactionsProvider',
-    )
+    throw new Error("useTransactions must be used within a TransactionsProvider")
   }
 
   return context

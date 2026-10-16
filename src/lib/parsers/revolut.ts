@@ -1,12 +1,14 @@
-import { parse } from 'csv-parse/sync'
-import type { Category, Transaction } from '.'
-import { findInMapping, getMapping } from '@/lib/mapping'
+import { parse } from "csv-parse/sync"
+
+import { findInMapping, getMapping } from "@/lib/mapping"
+
+import type { Category, Transaction } from "."
 
 type RevolutInput = {
-  Type: 'Virement' | 'Paiement par carte' | 'Recharge'
+  Type: "Virement" | "Paiement par carte" | "Recharge"
   Produit: string
-  'Date de début': string
-  'Date de fin': string
+  "Date de début": string
+  "Date de fin": string
   Description: string
   Montant: string
   Frais: string
@@ -21,7 +23,7 @@ export const parseToTransactions = async ({
   fileContent?: string
 }): Promise<Array<Transaction>> => {
   if (!fileContent) {
-    throw new Error('No file content provided')
+    throw new Error("No file content provided")
   }
 
   const mapping = await getMapping()
@@ -30,26 +32,15 @@ export const parseToTransactions = async ({
     columns: true,
     skip_empty_lines: true,
   })
-    .filter(
-      (record) =>
-        record.Type === 'Paiement par carte' && record.État === 'TERMINÉ',
-    )
+    .filter((record) => record.Type === "Paiement par carte" && record.État === "TERMINÉ")
     .map((record) => {
-      const date = new Date(record['Date de début'])
-      const formattedDate: `${number}/${number}` = `${date.getDate()}/${
-        date.getMonth() + 1
-      }`
-      const amount = (Number.parseFloat(record.Montant) * -1)
-        .toFixed(2)
-        .replace('.', ',')
+      const date = new Date(record["Date de début"])
+      const formattedDate: `${number}/${number}` = `${date.getDate()}/${date.getMonth() + 1}`
+      const amount = (Number.parseFloat(record.Montant) * -1).toFixed(2).replace(".", ",")
 
       let name: string = record.Description
-      let category: Category = '💬 Autres'
-      const mapped = findInMapping(
-        mapping,
-        name,
-        Number.parseFloat(amount.replace(',', '.')),
-      )
+      let category: Category = "💬 Autres"
+      const mapped = findInMapping(mapping, name, Number.parseFloat(amount.replace(",", ".")))
       if (mapped) {
         if (mapped.exclude) {
           return null
@@ -65,7 +56,7 @@ export const parseToTransactions = async ({
         originalDate: date,
         name,
         amount,
-        paymentMethod: 'Carte Revolut',
+        paymentMethod: "Carte Revolut",
         category,
       } satisfies Transaction
     })

@@ -1,47 +1,43 @@
-import { toast } from 'sonner'
-import { stringify } from 'csv-stringify/browser/esm/sync'
-import type { Transaction } from '@/lib/parsers'
-import { useTransactions } from '@/context/transactions-context'
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { DataTable } from '@/components/results/data-table'
-import { columns } from '@/components/results/columns'
+import { stringify } from "csv-stringify/browser/esm/sync"
+import { toast } from "sonner"
+
+import { columns } from "@/components/results/columns"
+import { DataTable } from "@/components/results/data-table"
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useTransactions } from "@/context/transactions-context"
+import type { Transaction } from "@/lib/parsers"
 
 export const Results = () => {
   const { transactions, resetTransactions } = useTransactions()
   const handleCopyAsCSV = (selectedTransactions: Array<Transaction>) => {
     if (selectedTransactions.length === 0) {
-      toast.error('No transactions selected', {
-        description: 'Please select at least one transaction to copy.',
-        position: 'bottom-right',
+      toast.error("No transactions selected", {
+        description: "Please select at least one transaction to copy.",
+        position: "bottom-right",
       })
       return
     }
 
     try {
       const allRecords = selectedTransactions.sort((a, b) => {
-        const dateA = new Date(a.date.split('/').reverse().join('-'))
-        const dateB = new Date(b.date.split('/').reverse().join('-'))
+        const dateA = new Date(a.date.split("/").reverse().join("-"))
+        const dateB = new Date(b.date.split("/").reverse().join("-"))
         return dateA.getTime() - dateB.getTime()
       })
       const csv = stringify(allRecords, {
-        delimiter: ';',
-        columns: ['date', 'name', 'amount', 'category', 'paymentMethod'],
+        delimiter: ";",
+        columns: ["date", "name", "amount", "category", "paymentMethod"],
       })
 
       navigator.clipboard.writeText(csv)
-      toast.success('Copied to clipboard!', {
-        description: `${selectedTransactions.length} transaction${selectedTransactions.length !== 1 ? 's' : ''} copied to your clipboard.`,
-        position: 'bottom-right',
+      toast.success("Copied to clipboard!", {
+        description: `${selectedTransactions.length} transaction${selectedTransactions.length !== 1 ? "s" : ""} copied to your clipboard.`,
+        position: "bottom-right",
       })
-    } catch (error) {
-      toast.error('Failed to copy', {
-        description: 'Could not copy CSV to clipboard.',
-        position: 'bottom-right',
+    } catch {
+      toast.error("Failed to copy", {
+        description: "Could not copy CSV to clipboard.",
+        position: "bottom-right",
       })
     }
   }
@@ -51,12 +47,12 @@ export const Results = () => {
   }
 
   return (
-    <Card className="w-full">
+    <Card className="w-full md:col-span-2">
       <CardHeader>
         <CardTitle>Results</CardTitle>
         <CardDescription>
           {transactions.length} transaction
-          {transactions.length !== 1 ? 's' : ''}
+          {transactions.length !== 1 ? "s" : ""}
         </CardDescription>
       </CardHeader>
       <DataTable

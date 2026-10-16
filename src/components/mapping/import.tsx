@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { importMappingsFromYaml } from '@/lib/server/functions'
-import { Button } from '@/components/ui/button'
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useState } from "react"
+
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -9,21 +9,22 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import { Textarea } from '@/components/ui/textarea'
+} from "@/components/ui/dialog"
+import { Textarea } from "@/components/ui/textarea"
+import { importMappingsFromYaml } from "@/lib/server/functions"
 
 export const ImportMappingButton = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [yaml, setYaml] = useState('')
+  const [yaml, setYaml] = useState("")
   const queryClient = useQueryClient()
 
   const mutation = useMutation({
-    mutationKey: ['importMappings'],
+    mutationKey: ["importMappings"],
     mutationFn: () => importMappingsFromYaml({ data: { yaml } }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['mapping'] })
+      queryClient.invalidateQueries({ queryKey: ["mapping"] })
       setIsOpen(false)
-      setYaml('')
+      setYaml("")
     },
   })
 
@@ -39,31 +40,24 @@ export const ImportMappingButton = () => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Import from YAML</DialogTitle>
-          <DialogDescription>
-            Paste the contents of your mapping.yaml file.
-          </DialogDescription>
+          <DialogDescription>Paste the contents of your mapping.yaml file.</DialogDescription>
         </DialogHeader>
         <Textarea
           rows={14}
           placeholder={
-            'mappings:\n  - mode: default\n    fromName: ...\n    toName: ...\n    toCategory: ...'
+            "mappings:\n  - mode: default\n    fromName: ...\n    toName: ...\n    toCategory: ..."
           }
           value={yaml}
           className="max-h-64"
           onChange={(e) => setYaml(e.target.value)}
         />
         {mutation.isError && (
-          <p className="text-destructive text-xs">
-            {mutation.error instanceof Error
-              ? mutation.error.message
-              : 'Import failed'}
+          <p className="text-xs text-destructive">
+            {mutation.error instanceof Error ? mutation.error.message : "Import failed"}
           </p>
         )}
-        <Button
-          onClick={() => mutation.mutate()}
-          disabled={!yaml.trim() || mutation.isPending}
-        >
-          {mutation.isPending ? 'Importing...' : 'Import'}
+        <Button onClick={() => mutation.mutate()} disabled={!yaml.trim() || mutation.isPending}>
+          {mutation.isPending ? "Importing..." : "Import"}
         </Button>
       </DialogContent>
     </Dialog>

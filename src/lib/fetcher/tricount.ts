@@ -1,9 +1,10 @@
-import crypto from 'node:crypto'
-import type { Account } from '@/lib/fetcher'
-import type { Transaction } from '@/lib/parsers'
-import { PAYMENT_METHODS } from '@/lib/parsers'
-import { getFormattedDate } from '@/lib/utils'
-import { env } from '@/env'
+import crypto from "node:crypto"
+
+import { env } from "@/env"
+import type { Account } from "@/lib/fetcher"
+import type { Transaction } from "@/lib/parsers"
+import { PAYMENT_METHODS } from "@/lib/parsers"
+import { getFormattedDate } from "@/lib/utils"
 
 type TricountSessionResponse = {
   Response: Array<{
@@ -129,7 +130,7 @@ type TricountDataResponse = {
       created: Date
       updated: Date
       uuid: string
-      currency: 'EUR'
+      currency: "EUR"
       emoji: string
       title: string
       description: string
@@ -145,20 +146,20 @@ type TricountDataResponse = {
           alias: {
             display_name: string
             pointer: {
-              type: 'UUID'
+              type: "UUID"
               value: string
               name: string
             }
           }
-          status: 'ACTIVE'
+          status: "ACTIVE"
           setting: {
-            auto_add_card_transaction: 'INACTIVE'
+            auto_add_card_transaction: "INACTIVE"
             time_auto_add_card_transaction_end: null
             time_auto_add_card_transaction_start: null
             card_ids: Array<any>
             card_labels: Array<any>
           }
-          auto_add_card_transaction: 'NONE'
+          auto_add_card_transaction: "NONE"
           remover: null
         }
       }>
@@ -170,19 +171,19 @@ type TricountDataResponse = {
           created: Date
           updated: Date
           uuid: string
-          status: 'ACTIVE'
+          status: "ACTIVE"
           amount: {
-            currency: 'EUR'
+            currency: "EUR"
             value: string
           }
           amount_local: {
-            currency: 'EUR'
+            currency: "EUR"
             value: string
           }
           exchange_rate: string
           description: string
-          type: 'MANUAL'
-          type_transaction: 'NORMAL' | 'BALANCE'
+          type: "MANUAL"
+          type_transaction: "NORMAL" | "BALANCE"
           membership_owned: {
             RegistryMembershipNonUser: {
               id: number
@@ -192,30 +193,30 @@ type TricountDataResponse = {
               alias: {
                 display_name: string
                 pointer: {
-                  type: 'UUID'
+                  type: "UUID"
                   value: string
                   name: string
                 }
               }
-              status: 'ACTIVE'
+              status: "ACTIVE"
               setting: {
-                auto_add_card_transaction: 'INACTIVE'
+                auto_add_card_transaction: "INACTIVE"
                 time_auto_add_card_transaction_end: null
                 time_auto_add_card_transaction_start: null
                 card_ids: Array<any>
                 card_labels: Array<any>
               }
-              auto_add_card_transaction: 'NONE'
+              auto_add_card_transaction: "NONE"
               remover: null
             }
           }
           allocations: Array<{
             amount: {
-              currency: 'EUR'
+              currency: "EUR"
               value: string
             }
             amount_local: {
-              currency: 'EUR'
+              currency: "EUR"
               value: string
             }
             membership: {
@@ -227,14 +228,14 @@ type TricountDataResponse = {
                 alias: {
                   display_name: string
                   pointer: {
-                    type: 'UUID'
+                    type: "UUID"
                     value: string
                     name: string
                   }
                 }
               }
             }
-            type: 'RATIO' | 'AMOUNT'
+            type: "RATIO" | "AMOUNT"
             share_ratio?: number
           }>
           attachment: Array<any>
@@ -263,47 +264,45 @@ type TricountSession = {
 const getTricountSession = async (): Promise<TricountSession> => {
   const appId = crypto.randomUUID()
 
-  const { publicKey } = crypto.generateKeyPairSync('rsa', {
+  const { publicKey } = crypto.generateKeyPairSync("rsa", {
     modulusLength: 2048,
     publicKeyEncoding: {
-      type: 'pkcs1',
-      format: 'pem',
+      type: "pkcs1",
+      format: "pem",
     },
   })
 
-  console.log('Creating Tricount session')
+  console.log("Creating Tricount session")
   const headers = {
-    'User-Agent': 'com.bunq.tricount.android:RELEASE:7.0.7:3174:ANDROID:13:C',
-    'app-id': appId,
-    'X-Bunq-Client-Request-Id': '049bfcdf-6ae4-4cee-af7b-45da31ea85d0',
+    "User-Agent": "com.bunq.tricount.android:RELEASE:7.0.7:3174:ANDROID:13:C",
+    "app-id": appId,
+    "X-Bunq-Client-Request-Id": "049bfcdf-6ae4-4cee-af7b-45da31ea85d0",
   }
   const responseSes = await fetch(
     `https://api.tricount.bunq.com/v1/session-registry-installation`,
     {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify({
         app_installation_uuid: appId,
         client_public_key: publicKey,
-        device_description: 'Android',
+        device_description: "Android",
       }),
       headers,
     },
   )
   if (!responseSes.ok) {
-    console.error('Failed to fetch transactions', await responseSes.text())
-    throw new Error('Failed to fetch transactions')
+    console.error("Failed to fetch transactions", await responseSes.text())
+    throw new Error("Failed to fetch transactions")
   }
   const sessionData = (await responseSes.json()) as TricountSessionResponse
-  const authToken = sessionData.Response.find((item) => item.Token)?.Token
-    ?.token
+  const authToken = sessionData.Response.find((item) => item.Token)?.Token?.token
   if (!authToken) {
-    throw new Error('Failed to retrieve auth token from Tricount response')
+    throw new Error("Failed to retrieve auth token from Tricount response")
   }
 
-  const userId = sessionData.Response.find((item) => item.UserPerson)
-    ?.UserPerson?.id
+  const userId = sessionData.Response.find((item) => item.UserPerson)?.UserPerson?.id
   if (!userId) {
-    throw new Error('Failed to retrieve user id from Tricount response')
+    throw new Error("Failed to retrieve user id from Tricount response")
   }
 
   return {
@@ -311,7 +310,7 @@ const getTricountSession = async (): Promise<TricountSession> => {
     userId,
     headers: {
       ...headers,
-      'X-Bunq-Client-Authentication': authToken,
+      "X-Bunq-Client-Authentication": authToken,
     },
   }
 }
@@ -325,47 +324,53 @@ const getTricountRegistryData = async (tricountKey: string) => {
     },
   )
   if (!responseData.ok) {
-    console.error('Failed to fetch transactions', await responseData.text())
-    throw new Error('Failed to fetch transactions')
+    console.error("Failed to fetch transactions", await responseData.text())
+    throw new Error("Failed to fetch transactions")
   }
   const data = (await responseData.json()) as TricountDataResponse
 
+  const registry = data.Response[0]?.Registry
+  if (!registry) {
+    throw new Error("Failed to fetch tricount registry data: no registry found")
+  }
+
   return {
     key: tricountKey,
-    name: data.Response[0].Registry.title,
-    entries: data.Response[0].Registry.all_registry_entry,
+    name: registry.title,
+    entries: registry.all_registry_entry,
   }
 }
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export const listAccounts = async (): Promise<Array<Account>> => {
   return (
-    env.TRICOUNT_KEYS?.split(',').map((k) => {
-      const [key, name] = k.split(':')
-      return {
-        fetcher: 'tricount',
-        institutionName: 'Tricount',
-        institutionLogo:
-          'https://play-lh.googleusercontent.com/O284MSRmvHs4jfH4hqbn2771WJxkZptZm9qVVUW1GMSO2B9pj3yJTClYrOw72WDRuDQ=w480-h960',
-        id: key,
-        name: `${name}${env.TRICOUNT_FILTERED_USER_NAME ? ` (${env.TRICOUNT_FILTERED_USER_NAME})` : ''}`,
-      }
-    }) ?? []
+    env.TRICOUNT_KEYS?.split(",")
+      .map((k) => {
+        const [key, name] = k.split(":")
+        if (!key || !name) {
+          return null
+        }
+        return {
+          fetcher: "tricount" as const,
+          institutionName: "Tricount",
+          institutionLogo:
+            "https://play-lh.googleusercontent.com/O284MSRmvHs4jfH4hqbn2771WJxkZptZm9qVVUW1GMSO2B9pj3yJTClYrOw72WDRuDQ=w480-h960",
+          id: key,
+          name: `${name}${env.TRICOUNT_FILTERED_USER_NAME ? ` (${env.TRICOUNT_FILTERED_USER_NAME})` : ""}`,
+        }
+      })
+      .filter((account) => account !== null) ?? []
   )
 }
 
 export const isActive = () => !!env.TRICOUNT_KEYS
 
-export const fetchTransactions = async (
-  accountId: Account['id'],
-): Promise<Array<Transaction>> => {
+export const fetchTransactions = async (accountId: Account["id"]): Promise<Array<Transaction>> => {
   const data = await getTricountRegistryData(accountId)
 
-  const paymentMethod = PAYMENT_METHODS.find((pm) =>
-    pm.toLowerCase().includes('tricount'),
-  )
+  const paymentMethod = PAYMENT_METHODS.find((pm) => pm.toLowerCase().includes("tricount"))
   if (!paymentMethod) {
-    throw new Error('Tricount payment method not found')
+    throw new Error("Tricount payment method not found")
   }
 
   const now = new Date()
@@ -377,8 +382,7 @@ export const fetchTransactions = async (
       }
       const allocation = entry.RegistryEntry.allocations.find(
         (alloc) =>
-          alloc.membership.RegistryMembershipNonUser.alias.pointer.name ===
-          filteredUserName,
+          alloc.membership.RegistryMembershipNonUser.alias.pointer.name === filteredUserName,
       )
       if (!allocation) {
         return false
@@ -390,8 +394,8 @@ export const fetchTransactions = async (
         return true
       }
       return (
-        entry.RegistryEntry.membership_owned.RegistryMembershipNonUser.alias
-          .pointer.name !== filteredUserName
+        entry.RegistryEntry.membership_owned.RegistryMembershipNonUser.alias.pointer.name !==
+        filteredUserName
       )
     })
     .map((entry) => {
@@ -399,10 +403,10 @@ export const fetchTransactions = async (
       const date = getFormattedDate(originalDate)
       const amount = (Number.parseFloat(entry.RegistryEntry.amount.value) * -1)
         .toFixed(2)
-        .replace('.', ',')
+        .replace(".", ",")
       return {
         amount,
-        category: '💬 Autres',
+        category: "💬 Autres",
         name: entry.RegistryEntry.description,
         originalDate: originalDate,
         date: date,
@@ -413,10 +417,8 @@ export const fetchTransactions = async (
     .filter((transaction) => {
       const date = new Date(transaction.originalDate)
       return (
-        (date.getMonth() === now.getMonth() &&
-          date.getFullYear() === now.getFullYear()) ||
-        (date.getMonth() === now.getMonth() - 1 &&
-          date.getFullYear() === now.getFullYear())
+        (date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) ||
+        (date.getMonth() === now.getMonth() - 1 && date.getFullYear() === now.getFullYear())
       )
     })
     .toSorted((a, b) => b.originalDate.getTime() - a.originalDate.getTime())

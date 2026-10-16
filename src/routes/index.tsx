@@ -1,11 +1,12 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { TransactionsProvider } from '@/context/transactions-context'
-import { Results } from '@/components/results'
-import { FetcherFormCard } from '@/components/fetcher-form-card'
-import { ParserFormCard } from '@/components/parser-form-card'
-import { getActiveFetchers } from '@/lib/server/functions'
+import { createFileRoute } from "@tanstack/react-router"
 
-export const Route = createFileRoute('/')({
+import { FetcherFormCard } from "@/components/fetcher-form-card"
+import { ParserFormCard } from "@/components/parser-form-card"
+import { Results } from "@/components/results"
+import { TransactionsProvider } from "@/context/transactions-context"
+import { getActiveFetchers } from "@/lib/server/functions"
+
+export const Route = createFileRoute("/")({
   component: Home,
   loader: () => getActiveFetchers(),
 })
@@ -22,8 +23,8 @@ function HomeContent() {
   const fetchers = Route.useLoaderData()
 
   return (
-    <div className="min-h-screen flex items-center justify-center gap-6 px-4">
-      <div className="flex flex-col gap-4 w-full max-w-sm">
+    <div className="grid min-h-screen items-center justify-center gap-6 px-4 md:grid-cols-3">
+      <div className="flex w-full flex-col gap-4">
         <ParserFormCard />
         {fetchers.length > 0 && <FetcherFormCard />}
       </div>

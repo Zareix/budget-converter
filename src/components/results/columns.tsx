@@ -1,22 +1,27 @@
-import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react'
-import type { ColumnDef } from '@tanstack/react-table'
-import type { Transaction } from '@/lib/parsers'
-import { CreateMappingButton } from '@/components/mapping/create'
-import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
+import type { ColumnDef } from "@tanstack/react-table"
+import { ArrowDownIcon, ArrowUpIcon } from "lucide-react"
 
-export const columns: Array<ColumnDef<Transaction>> = [
+import { CreateMappingButton } from "@/components/mapping/create"
+import type { resultTableFeatures } from "@/components/results/table-features"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import type { Transaction } from "@/lib/parsers"
+
+export const columns: Array<ColumnDef<typeof resultTableFeatures, Transaction>> = [
   {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() || table.getIsSomePageRowsSelected()
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
+    id: "select",
+    header: ({ table }) => {
+      const allPageRowsSelected = table.getIsAllPageRowsSelected()
+      const somePageRowsSelected = table.getIsSomePageRowsSelected()
+      return (
+        <Checkbox
+          checked={allPageRowsSelected}
+          indeterminate={!allPageRowsSelected && somePageRowsSelected}
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      )
+    },
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
@@ -25,17 +30,15 @@ export const columns: Array<ColumnDef<Transaction>> = [
       />
     ),
     enableSorting: false,
-    enableHiding: false,
   },
   {
-    id: 'date',
-    sortingFn: (rowA, rowB) =>
-      rowA.original.originalDate.getTime() -
-      rowB.original.originalDate.getTime(),
+    id: "date",
+    sortFn: (rowA, rowB) =>
+      rowA.original.originalDate.getTime() - rowB.original.originalDate.getTime(),
     accessorFn: (row) =>
       row.originalDate.toLocaleDateString(undefined, {
-        day: '2-digit',
-        month: '2-digit',
+        day: "2-digit",
+        month: "2-digit",
         year: undefined,
       }),
     filterFn: (row, _id, value: number) => {
@@ -46,12 +49,12 @@ export const columns: Array<ColumnDef<Transaction>> = [
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Date
-          {column.getIsSorted() === 'asc' ? (
+          {column.getIsSorted() === "asc" ? (
             <ArrowUpIcon className="ml-2 h-4 w-4" />
-          ) : column.getIsSorted() === 'desc' ? (
+          ) : column.getIsSorted() === "desc" ? (
             <ArrowDownIcon className="ml-2 h-4 w-4" />
           ) : null}
         </Button>
@@ -59,23 +62,23 @@ export const columns: Array<ColumnDef<Transaction>> = [
     },
   },
   {
-    accessorKey: 'name',
-    header: 'Name',
+    accessorKey: "name",
+    header: "Name",
   },
   {
-    accessorKey: 'amount',
-    header: 'Amount',
+    accessorKey: "amount",
+    header: "Amount",
   },
   {
-    accessorKey: 'category',
-    header: 'Category',
+    accessorKey: "category",
+    header: "Category",
   },
   {
-    accessorKey: 'paymentMethod',
-    header: 'Payment Method',
+    accessorKey: "paymentMethod",
+    header: "Payment Method",
   },
   {
-    id: 'actions',
+    id: "actions",
     cell: ({ row }) => {
       const transaction = row.original
       return (
@@ -83,7 +86,7 @@ export const columns: Array<ColumnDef<Transaction>> = [
           defaultValues={{
             fromName: transaction.name,
             toName: transaction.name,
-            fromPrice: Number.parseFloat(transaction.amount.replace(',', '.')),
+            fromPrice: Number.parseFloat(transaction.amount.replace(",", ".")),
           }}
         />
       )

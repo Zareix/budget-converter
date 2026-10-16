@@ -1,12 +1,10 @@
-import { useForm } from '@tanstack/react-form'
-import { useMutation } from '@tanstack/react-query'
-import { Link } from '@tanstack/react-router'
-import { toast } from 'sonner'
-import * as v from 'valibot'
+import { useForm } from "@tanstack/react-form"
+import { useMutation } from "@tanstack/react-query"
+import { Link } from "@tanstack/react-router"
+import { toast } from "sonner"
+import * as v from "valibot"
 
-import type { Provider } from '@/lib/parsers'
-import { useTransactions } from '@/context/transactions-context'
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -14,63 +12,59 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
+} from "@/components/ui/card"
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { fetchTransactions } from '@/lib/server/functions'
-import { PROVIDERS } from '@/lib/parsers'
+} from "@/components/ui/select"
+import { useTransactions } from "@/context/transactions-context"
+import type { Provider } from "@/lib/parsers"
+import { PROVIDERS } from "@/lib/parsers"
+import { fetchTransactions } from "@/lib/server/functions"
 
 const formSchema = v.object({
-  provider: v.picklist(PROVIDERS, 'Please select a valid provider'),
+  provider: v.picklist(PROVIDERS, "Please select a valid provider"),
   file: v.pipe(
-    v.file('Please upload a valid CSV file'),
-    v.mimeType(['text/csv'], 'Only CSV files are allowed'),
+    v.file("Please upload a valid CSV file"),
+    v.mimeType(["text/csv"], "Only CSV files are allowed"),
   ),
 })
 
 export const ParserFormCard = () => {
   const { setTransactions, resetTransactions } = useTransactions()
   const parseFileWithProviderMutation = useMutation({
-    mutationKey: ['parseFileWithProvider'],
+    mutationKey: ["parseFileWithProvider"],
     mutationFn: (data: { fileContent: string; provider: Provider }) =>
       fetchTransactions({
         data: {
-          mode: 'parser',
+          mode: "parser",
           fileContent: data.fileContent,
           provider: data.provider,
         },
       }),
     onSuccess: (data) => {
       setTransactions(data)
-      toast.success('File parsed successfully!', {
+      toast.success("File parsed successfully!", {
         description: `Processed ${data.length || 0} transactions.`,
-        position: 'bottom-right',
+        position: "bottom-right",
       })
     },
     onError: (error) => {
-      toast.error('Failed to parse file', {
+      toast.error("Failed to parse file", {
         description: error.message,
-        position: 'bottom-right',
+        position: "bottom-right",
       })
     },
   })
 
   const form = useForm({
     defaultValues: {
-      provider: '',
+      provider: "",
       file: undefined as File | undefined,
     },
     validators: {
@@ -78,7 +72,7 @@ export const ParserFormCard = () => {
     },
     onSubmit: ({ value }) => {
       if (!value.file) {
-        toast.error('No file selected')
+        toast.error("No file selected")
         return
       }
 
@@ -94,20 +88,20 @@ export const ParserFormCard = () => {
           })
         }
         reader.onerror = () => {
-          toast.error('Failed to read file')
+          toast.error("Failed to read file")
         }
         reader.readAsText(value.file)
-      } catch (error) {
-        toast.error('An error occurred while processing the file')
+      } catch {
+        toast.error("An error occurred while processing the file")
       }
     },
   })
 
   const resetForm = () => {
     form.reset()
-    const inputFile = document.getElementById('file-upload')
+    const inputFile = document.getElementById("file-upload")
     if (inputFile) {
-      ;(inputFile as HTMLInputElement).value = ''
+      ;(inputFile as HTMLInputElement).value = ""
     }
     resetTransactions()
     parseFileWithProviderMutation.reset()
@@ -115,20 +109,19 @@ export const ParserFormCard = () => {
 
   const autodetectProvider = (fileName: string) => {
     const lowerCaseName = fileName.toLowerCase()
-    if (lowerCaseName === 'activity.csv') {
-      form.setFieldValue('provider', 'amex')
-    } else if (lowerCaseName.startsWith('account-statement')) {
-      form.setFieldValue('provider', 'revolut')
+    if (lowerCaseName === "activity.csv") {
+      form.setFieldValue("provider", "amex")
+    } else if (lowerCaseName.startsWith("account-statement")) {
+      form.setFieldValue("provider", "revolut")
     }
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Budget Converter</CardTitle>
+        <CardTitle>Parser</CardTitle>
         <CardDescription>
-          Upload your CSV file and select your provider to convert your
-          transactions.
+          Upload your CSV file and select your provider to convert your transactions.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -142,8 +135,7 @@ export const ParserFormCard = () => {
           <FieldGroup>
             <form.Field name="provider">
               {(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
+                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor="provider-select">Provider</FieldLabel>
@@ -156,19 +148,12 @@ export const ParserFormCard = () => {
                         }
                       }}
                     >
-                      <SelectTrigger
-                        id="provider-select"
-                        aria-invalid={isInvalid}
-                      >
+                      <SelectTrigger id="provider-select" aria-invalid={isInvalid}>
                         <SelectValue placeholder="Select a provider" />
                       </SelectTrigger>
                       <SelectContent>
                         {PROVIDERS.map((provider) => (
-                          <SelectItem
-                            key={provider}
-                            value={provider}
-                            className="capitalize"
-                          >
+                          <SelectItem key={provider} value={provider} className="capitalize">
                             {provider}
                           </SelectItem>
                         ))}
@@ -177,9 +162,7 @@ export const ParserFormCard = () => {
                     <FieldDescription>
                       Choose the bank or service that generated your CSV file.
                     </FieldDescription>
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>
                 )
               }}
@@ -187,8 +170,7 @@ export const ParserFormCard = () => {
 
             <form.Field name="file">
               {(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
+                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor="file-upload">CSV File</FieldLabel>
@@ -211,14 +193,12 @@ export const ParserFormCard = () => {
                       Upload your transaction CSV file from your provider.
                     </FieldDescription>
                     {field.state.value && (
-                      <div className="text-sm text-muted-foreground mt-1">
+                      <div className="mt-1 text-sm text-muted-foreground">
                         Selected: {field.state.value.name} (
                         {(field.state.value.size / 1024).toFixed(2)} KB)
                       </div>
                     )}
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>
                 )
               }}
@@ -239,13 +219,9 @@ export const ParserFormCard = () => {
           <Button
             type="submit"
             form="parser-form"
-            disabled={
-              parseFileWithProviderMutation.isPending || !form.state.isValid
-            }
+            disabled={parseFileWithProviderMutation.isPending || !form.state.isValid}
           >
-            {parseFileWithProviderMutation.isPending
-              ? 'Processing...'
-              : 'Parse'}
+            {parseFileWithProviderMutation.isPending ? "Processing..." : "Parse"}
           </Button>
           <Button type="button" variant="link" className="ml-auto">
             <Link to="/settings">Settings</Link>
