@@ -1,3 +1,8 @@
+# user
+# Ignore secret env file (env vars are injected at runtime via compose env_file)
+.env
+.DS_Store
+
 # Ignore node_modules, as they will be installed in the Docker image
 node_modules
 
@@ -21,7 +26,7 @@ Dockerfile
 # Ignore documentation
 README.md
 
-.cta.sjon
+.cta.json
 biome.json
 components.json
 .zed

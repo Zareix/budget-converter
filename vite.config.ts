@@ -13,7 +13,7 @@ const config = defineConfig({
     // runtime ("__commonJSMin is not a function").
     // Inlining dynamic imports disables code splitting entirely, which makes
     // the cycle impossible. See https://github.com/rolldown/rolldown/issues/9993
-    nitro({ preset: "bun", inlineDynamicImports: true }),
+    nitro({ preset: "bun", inlineDynamicImports: true, minify: true }),
     tailwindcss(),
     tanstackStart(),
     viteReact(),
