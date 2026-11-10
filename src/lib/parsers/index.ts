@@ -8,7 +8,7 @@ export const Categories = [
   "🌍 Voyage",
   "⛑️ Santé",
   "🏡 Maison",
-  "🐶  Chiens",
+  "🐶  Chien",
   "🎁 Cadeaux",
   "🙏 Dons",
   "💬 Autres",
