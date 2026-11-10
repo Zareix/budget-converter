@@ -331,12 +331,17 @@ export const fetchTransactions = async (accountId: Account["id"]): Promise<Array
           "   ",
         )[0] ?? ""
       if (paymentMethod === "Carte SG") {
-        name = name.substring(17)
+        // remittance is "CARTE X9448 06/11 MERCHANT": drop card + date, keeping the merchant only
+        name = name.replace(/^CARTE\s+\S+\s+\d{1,2}\/\d{1,2}\s+/, "")
       }
       const description =
         record.remittance_information.length > 1 ? record.remittance_information[0] : null
+      const price = Number.parseFloat(amount.replace(",", "."))
+      // mappings may target the merchant alone or the "merchant - description" shown in the table
+      const mapped =
+        findInMapping(mapping, name, price) ??
+        (description ? findInMapping(mapping, `${name} - ${description}`, price) : null)
       let category: Category = "💬 Autres"
-      const mapped = findInMapping(mapping, name, Number.parseFloat(amount.replace(",", ".")))
       if (mapped) {
         if (mapped.exclude) {
           return null
