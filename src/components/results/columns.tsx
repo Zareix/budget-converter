@@ -1,10 +1,18 @@
 import type { ColumnDef } from "@tanstack/react-table"
-import { ArrowDownIcon, ArrowUpIcon } from "lucide-react"
+import { ArrowDownIcon, ArrowUpIcon, InfoIcon } from "lucide-react"
 
 import { CreateMappingButton } from "@/components/mapping/create"
 import type { resultTableFeatures } from "@/components/results/table-features"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import type { Transaction } from "@/lib/parsers"
 
 export const columns: Array<ColumnDef<typeof resultTableFeatures, Transaction>> = [
@@ -84,12 +92,32 @@ export const columns: Array<ColumnDef<typeof resultTableFeatures, Transaction>> 
       return (
         <CreateMappingButton
           defaultValues={{
-            fromName: transaction.name,
-            toName: transaction.name,
+            fromName: transaction.sourceName,
+            toName: transaction.sourceName,
             fromPrice: Number.parseFloat(transaction.amount.replace(",", ".")),
           }}
         />
       )
     },
+  },
+  {
+    id: "raw",
+    enableSorting: false,
+    cell: ({ row }) => (
+      <Dialog>
+        <DialogTrigger render={<Button variant="ghost" size="icon-sm" aria-label="Raw data" />}>
+          <InfoIcon />
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>{row.original.name}</DialogTitle>
+            <DialogDescription>Raw transaction data</DialogDescription>
+          </DialogHeader>
+          <pre className="max-h-[60vh] overflow-auto rounded-none border p-2 text-xs">
+            {row.original.raw}
+          </pre>
+        </DialogContent>
+      </Dialog>
+    ),
   },
 ]

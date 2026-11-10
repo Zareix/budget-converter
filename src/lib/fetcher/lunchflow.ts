@@ -122,6 +122,7 @@ const fetchTransactionsForAccount = async ({
       const amount = (record.amount * -1).toFixed(2).replace(".", ",")
 
       let name: string = firstNonNullNorEmpty(record.merchant, record.description) ?? "Unknown"
+      const sourceName = name
       let category: Category = "💬 Autres"
       const mapped = findInMapping(mapping, name, Number.parseFloat(amount.replace(",", ".")))
       if (mapped) {
@@ -148,6 +149,8 @@ const fetchTransactionsForAccount = async ({
         amount: amount,
         category,
         paymentMethod,
+        sourceName,
+        raw: JSON.stringify(record, null, 2),
       } satisfies Transaction
     })
     .filter(Boolean)

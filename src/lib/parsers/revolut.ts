@@ -58,6 +58,8 @@ export const parseToTransactions = async ({
         amount,
         paymentMethod: "Carte Revolut",
         category,
+        sourceName: record.Description,
+        raw: JSON.stringify(record, null, 2),
       } satisfies Transaction
     })
     .filter(Boolean)

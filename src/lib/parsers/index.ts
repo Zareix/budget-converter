@@ -58,6 +58,8 @@ export type Transaction = {
   amount: string // with a coma as decimal separator
   category: Category
   paymentMethod: PaymentMethod
+  sourceName: string
+  raw: string
 }
 export const PROVIDERS = ["amex", "revolut"] as const
 export type Provider = (typeof PROVIDERS)[number]

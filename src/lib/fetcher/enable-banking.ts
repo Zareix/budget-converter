@@ -334,6 +334,7 @@ export const fetchTransactions = async (accountId: Account["id"]): Promise<Array
         // remittance is "CARTE X9448 06/11 MERCHANT": drop card + date, keeping the merchant only
         name = name.replace(/^CARTE\s+\S+\s+\d{1,2}\/\d{1,2}\s+/, "")
       }
+      const sourceName = name
       const description =
         record.remittance_information.length > 1 ? record.remittance_information[0] : null
       const price = Number.parseFloat(amount.replace(",", "."))
@@ -359,6 +360,8 @@ export const fetchTransactions = async (accountId: Account["id"]): Promise<Array
         amount: amount,
         category,
         paymentMethod,
+        sourceName,
+        raw: JSON.stringify(record, null, 2),
       } satisfies Transaction
     })
     .filter(Boolean)

@@ -411,6 +411,8 @@ export const fetchTransactions = async (accountId: Account["id"]): Promise<Array
         originalDate: originalDate,
         date: date,
         paymentMethod,
+        sourceName: entry.RegistryEntry.description,
+        raw: JSON.stringify(entry, null, 2),
       } satisfies Transaction
     })
     .filter(Boolean)

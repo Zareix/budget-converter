@@ -60,6 +60,8 @@ export const parseToTransactions = async ({
         paymentMethod: "Carte AMEX",
         name,
         category,
+        sourceName: record.Description,
+        raw: JSON.stringify(record, null, 2),
       } satisfies Transaction
     })
     .filter(Boolean)
