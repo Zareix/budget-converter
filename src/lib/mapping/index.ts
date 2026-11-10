@@ -1,11 +1,16 @@
 import { eq } from "drizzle-orm"
 
 import { db } from "@/lib/db"
-import { mappings } from "@/lib/db/schema"
+import { categories, mappings } from "@/lib/db/schema"
 import type { Mapping } from "@/lib/mapping/constant"
-import { Categories } from "@/lib/parsers"
 
 const MODE_ORDER: Array<Mapping["mode"]> = ["exact-name-price", "exact-name", "default"]
+
+// Slugs used before categories moved to the database, mapped to their canonical slug.
+const LEGACY_CATEGORY_SLUGS: Record<string, string> = {
+  bar: "bar/café",
+  café: "bar/café",
+}
 
 const compareMapping = (a: Mapping, b: Mapping) => {
   if (a.mode === b.mode) {
@@ -14,15 +19,19 @@ const compareMapping = (a: Mapping, b: Mapping) => {
   return MODE_ORDER.indexOf(a.mode) - MODE_ORDER.indexOf(b.mode)
 }
 
-export const getMapping = async (): Promise<Array<Mapping>> => {
-  const rows = await db.select().from(mappings)
+export const getMapping = async () => {
+  const rows = await db
+    .select({ mapping: mappings, categoryLabel: categories.label })
+    .from(mappings)
+    .leftJoin(categories, eq(mappings.toCategory, categories.slug))
   return rows
-    .map((row): Mapping => ({
+    .map(({ mapping: row, categoryLabel }) => ({
       id: row.id,
       mode: row.mode,
       fromName: row.fromName,
       toName: row.toName,
       toCategory: row.toCategory,
+      toCategoryLabel: categoryLabel ?? row.toCategory,
       ...(row.fromPrice !== null && { fromPrice: row.fromPrice }),
       ...(row.exclude && { exclude: row.exclude }),
     }))
@@ -50,8 +59,7 @@ export const findInMapping = (
     ? {
         exclude: mapped.exclude ?? false,
         name: mapped.toName,
-        category:
-          Categories.find((c) => c.toLowerCase().includes(mapped.toCategory)) ?? "💬 Autres",
+        category: mapped.toCategoryLabel,
       }
     : null
 }
@@ -92,7 +100,7 @@ export const bulkAddMappings = async (items: Array<Mapping>) => {
       mode: m.mode,
       fromName: m.fromName,
       toName: m.toName,
-      toCategory: m.toCategory,
+      toCategory: LEGACY_CATEGORY_SLUGS[m.toCategory] ?? m.toCategory,
       fromPrice: m.fromPrice ?? null,
       exclude: m.exclude ?? false,
     })),

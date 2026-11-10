@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/table"
 import { MODES } from "@/lib/mapping/constant"
 import { getMapping } from "@/lib/server/functions"
-import { toCategoryFullName } from "@/lib/utils"
 
 export const Mappings = () => {
   const { q } = useSearch({
@@ -38,7 +37,7 @@ export const Mappings = () => {
         (m) =>
           m.fromName.toLowerCase().includes(lowerQ) ||
           m.toName.toLowerCase().includes(lowerQ) ||
-          m.toCategory.toLowerCase().includes(lowerQ),
+          m.toCategoryLabel.toLowerCase().includes(lowerQ),
       )
     },
   })
@@ -93,7 +92,7 @@ export const Mappings = () => {
                   <TableCell>{getMappingModeName(mapping.mode)}</TableCell>
                   <TableCell>{mapping.fromName}</TableCell>
                   <TableCell>{mapping.toName}</TableCell>
-                  <TableCell>{toCategoryFullName(mapping.toCategory)}</TableCell>
+                  <TableCell>{mapping.toCategoryLabel}</TableCell>
                   <TableCell>{mapping.fromPrice ?? "-"}</TableCell>
                   <TableCell>{mapping.exclude ? "Yes" : "No"}</TableCell>
                   <TableCell>

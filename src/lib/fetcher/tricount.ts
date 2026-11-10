@@ -1,6 +1,7 @@
 import crypto from "node:crypto"
 
 import { env } from "@/env"
+import { getDefaultCategory } from "@/lib/categories"
 import type { Account } from "@/lib/fetcher"
 import type { Transaction } from "@/lib/parsers"
 import { PAYMENT_METHODS } from "@/lib/parsers"
@@ -374,6 +375,7 @@ export const fetchTransactions = async (accountId: Account["id"]): Promise<Array
   }
 
   const now = new Date()
+  const defaultCategory = await getDefaultCategory()
   const filteredUserName = env.TRICOUNT_FILTERED_USER_NAME
   return data.entries
     .filter((entry) => {
@@ -406,7 +408,7 @@ export const fetchTransactions = async (accountId: Account["id"]): Promise<Array
         .replace(".", ",")
       return {
         amount,
-        category: "💬 Autres",
+        category: defaultCategory,
         name: entry.RegistryEntry.description,
         originalDate: originalDate,
         date: date,

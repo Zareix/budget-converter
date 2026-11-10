@@ -8,6 +8,12 @@ export const ebAccounts = sqliteTable("eb_accounts", {
   validUntil: text("valid_until").notNull(),
 })
 
+export const categories = sqliteTable("categories", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  slug: text("slug").notNull().unique(),
+  label: text("label").notNull(),
+})
+
 export const mappings = sqliteTable("mappings", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   mode: text("mode", {
@@ -15,7 +21,9 @@ export const mappings = sqliteTable("mappings", {
   }).notNull(),
   fromName: text("from_name").notNull(),
   toName: text("to_name").notNull(),
-  toCategory: text("to_category").notNull(),
+  toCategory: text("to_category")
+    .notNull()
+    .references(() => categories.slug),
   fromPrice: real("from_price"),
   exclude: integer("exclude", { mode: "boolean" }).notNull().default(false),
 })

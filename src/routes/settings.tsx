@@ -3,6 +3,7 @@ import { ChevronLeftIcon } from "lucide-react"
 import * as v from "valibot"
 
 import { Mappings } from "@/components/mapping"
+import { CategoriesSettings } from "@/components/settings/categories"
 import { EnableBankingSettings } from "@/components/settings/enable-banking"
 
 export const Route = createFileRoute("/settings")({
@@ -22,6 +23,7 @@ function SettingsRouteComponent() {
         Settings
       </h1>
       <Mappings />
+      <CategoriesSettings />
       <EnableBankingSettings />
     </div>
   )

@@ -1,20 +1,3 @@
-export const Categories = [
-  "🛒 Courses",
-  "🍣 Restaurant",
-  "🍹 Bar/Café",
-  "🚕 Transport",
-  "🎫 Divertissement",
-  "🛍️ Shopping",
-  "🌍 Voyage",
-  "⛑️ Santé",
-  "🏡 Maison",
-  "🐶  Chien",
-  "🎁 Cadeaux",
-  "🙏 Dons",
-  "💬 Autres",
-] as const
-export type Category = (typeof Categories)[number]
-
 export const PAYMENT_METHODS = [
   "Carte SG",
   "Carte AMEX",
@@ -56,7 +39,7 @@ export type Transaction = {
   originalDate: Date
   name: string
   amount: string // with a coma as decimal separator
-  category: Category
+  category: string
   paymentMethod: PaymentMethod
   sourceName: string
   raw: string

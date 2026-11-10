@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start"
 import * as v from "valibot"
 
+import * as categories from "@/lib/categories"
 import type { Fetcher } from "@/lib/fetcher"
 import { FETCHERS } from "@/lib/fetcher"
 import * as enableBanking from "@/lib/fetcher/enable-banking"
@@ -89,6 +90,36 @@ export const fetchTransactions = createServerFn({
   })
 
 export const getMapping = createServerFn().handler(mapping.getMapping)
+
+export const getCategories = createServerFn().handler(categories.getCategories)
+
+export const addCategory = createServerFn({
+  method: "POST",
+})
+  .validator(
+    v.object({
+      slug: v.pipe(v.string(), v.regex(/^[\p{L}\p{N}/-]+$/u, "Invalid slug")),
+      label: v.pipe(v.string(), v.minLength(1, "Label is required")),
+    }),
+  )
+  .handler(({ data }) => categories.addCategory(data))
+
+export const editCategory = createServerFn({
+  method: "POST",
+})
+  .validator(
+    v.object({
+      id: v.number(),
+      label: v.pipe(v.string(), v.minLength(1, "Label is required")),
+    }),
+  )
+  .handler(({ data }) => categories.editCategory(data))
+
+export const deleteCategory = createServerFn({
+  method: "POST",
+})
+  .validator(v.object({ id: v.number() }))
+  .handler(({ data }) => categories.deleteCategory(data))
 
 export const addMapping = createServerFn({
   method: "POST",

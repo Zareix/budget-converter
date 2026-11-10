@@ -2,11 +2,12 @@ import { eq, lt } from "drizzle-orm"
 import jwa from "jwa"
 
 import { env } from "@/env"
+import { getDefaultCategory } from "@/lib/categories"
 import { db } from "@/lib/db"
 import { ebAccounts } from "@/lib/db/schema"
 import type { Account } from "@/lib/fetcher"
 import { findInMapping } from "@/lib/mapping"
-import type { Category, Transaction } from "@/lib/parsers"
+import type { Transaction } from "@/lib/parsers"
 import { toPaymentMethod } from "@/lib/parsers"
 import { getMapping } from "@/lib/server/functions"
 import { firstNonNullNorEmpty, getFormattedDate } from "@/lib/utils"
@@ -298,6 +299,7 @@ export const fetchTransactions = async (accountId: Account["id"]): Promise<Array
   console.log(`Fetched ${result.transactions.length} transactions for account ${accountId}`)
 
   const mapping = await getMapping()
+  const defaultCategory = await getDefaultCategory()
   const now = new Date()
   return result.transactions
     .filter(
@@ -342,7 +344,7 @@ export const fetchTransactions = async (accountId: Account["id"]): Promise<Array
       const mapped =
         findInMapping(mapping, name, price) ??
         (description ? findInMapping(mapping, `${name} - ${description}`, price) : null)
-      let category: Category = "💬 Autres"
+      let category: string = defaultCategory
       if (mapped) {
         if (mapped.exclude) {
           return null

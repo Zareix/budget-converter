@@ -2,22 +2,8 @@ import { clsx } from "clsx"
 import type { ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
-import { Categories } from "@/lib/parsers"
-
 export function cn(...inputs: Array<ClassValue>) {
   return twMerge(clsx(inputs))
-}
-
-export const toShortCategoryName = (fullName: string): string => {
-  const parts = fullName.split(" ")
-  if (parts.length > 1) {
-    return parts[1]?.toLowerCase() ?? fullName.toLowerCase()
-  }
-  return fullName.toLowerCase()
-}
-
-export const toCategoryFullName = (category: string) => {
-  return Categories.find((c) => c.toLowerCase().includes(category)) ?? "💬 Autres"
 }
 
 export const firstNonNullNorEmpty = <T>(...values: Array<T | null | undefined | "">): T | null => {

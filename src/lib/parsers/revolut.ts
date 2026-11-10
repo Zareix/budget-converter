@@ -1,8 +1,9 @@
 import { parse } from "csv-parse/sync"
 
+import { getDefaultCategory } from "@/lib/categories"
 import { findInMapping, getMapping } from "@/lib/mapping"
 
-import type { Category, Transaction } from "."
+import type { Transaction } from "."
 
 type RevolutInput = {
   Type: "Virement" | "Paiement par carte" | "Recharge"
@@ -27,6 +28,7 @@ export const parseToTransactions = async ({
   }
 
   const mapping = await getMapping()
+  const defaultCategory = await getDefaultCategory()
 
   return parse<RevolutInput>(fileContent, {
     columns: true,
@@ -39,7 +41,7 @@ export const parseToTransactions = async ({
       const amount = (Number.parseFloat(record.Montant) * -1).toFixed(2).replace(".", ",")
 
       let name: string = record.Description
-      let category: Category = "💬 Autres"
+      let category: string = defaultCategory
       const mapped = findInMapping(mapping, name, Number.parseFloat(amount.replace(",", ".")))
       if (mapped) {
         if (mapped.exclude) {

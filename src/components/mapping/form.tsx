@@ -1,5 +1,5 @@
 import { useForm } from "@tanstack/react-form"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import * as v from "valibot"
 
@@ -16,9 +16,7 @@ import {
 } from "@/components/ui/select"
 import type { Mapping } from "@/lib/mapping/constant"
 import { MODES } from "@/lib/mapping/constant"
-import { Categories } from "@/lib/parsers"
-import { addMapping, editMapping } from "@/lib/server/functions"
-import { toShortCategoryName } from "@/lib/utils"
+import { addMapping, editMapping, getCategories } from "@/lib/server/functions"
 
 const mappingFormSchema = v.variant("mode", [
   v.object({
@@ -58,6 +56,8 @@ type Props = {
 
 export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: Props) => {
   const queryClient = useQueryClient()
+  const categoriesQuery = useQuery({ queryKey: ["categories"], queryFn: getCategories })
+  const categories = categoriesQuery.data ?? []
   const addMappingMutation = useMutation({
     mutationKey: ["addMapping"],
     mutationFn: async (data: v.InferInput<typeof mappingFormSchema>) => addMapping({ data }),
@@ -224,18 +224,18 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
                       field.handleChange(value)
                     }
                   }}
-                  items={Categories.map((category) => ({
-                    value: toShortCategoryName(category),
-                    label: category,
+                  items={categories.map((category) => ({
+                    value: category.slug,
+                    label: category.label,
                   }))}
                 >
                   <SelectTrigger id="category-select" aria-invalid={isInvalid}>
                     <SelectValue placeholder="Select a category" />
                   </SelectTrigger>
                   <SelectContent>
-                    {Categories.map((category) => (
-                      <SelectItem key={category} value={toShortCategoryName(category)}>
-                        {category}
+                    {categories.map((category) => (
+                      <SelectItem key={category.slug} value={category.slug}>
+                        {category.label}
                       </SelectItem>
                     ))}
                   </SelectContent>

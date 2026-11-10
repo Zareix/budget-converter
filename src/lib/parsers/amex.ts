@@ -1,8 +1,9 @@
 import { parse } from "csv-parse/sync"
 
+import { getDefaultCategory } from "@/lib/categories"
 import { findInMapping, getMapping } from "@/lib/mapping"
 
-import type { Category, Transaction } from "."
+import type { Transaction } from "."
 
 type AmexInput = {
   Date: string
@@ -27,6 +28,7 @@ export const parseToTransactions = async ({
   }
 
   const mapping = await getMapping()
+  const defaultCategory = await getDefaultCategory()
 
   return parse<AmexInput>(fileContent, {
     columns: true,
@@ -37,7 +39,7 @@ export const parseToTransactions = async ({
       const formattedDate: `${number}/${number}` = `${date.getDate()}/${date.getMonth() + 1}`
 
       let name: string | Array<string> = record.Description
-      let category: Category = "💬 Autres"
+      let category: string = defaultCategory
       const mapped = findInMapping(
         mapping,
         name,

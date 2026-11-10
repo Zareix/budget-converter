@@ -1,7 +1,8 @@
 import { env } from "@/env"
+import { getDefaultCategory } from "@/lib/categories"
 import type { Account } from "@/lib/fetcher"
 import { findInMapping, getMapping } from "@/lib/mapping"
-import type { Category, Transaction } from "@/lib/parsers"
+import type { Transaction } from "@/lib/parsers"
 import { isPaymentMethod } from "@/lib/parsers"
 import { firstNonNullNorEmpty, getFormattedDate } from "@/lib/utils"
 
@@ -106,6 +107,7 @@ const fetchTransactionsForAccount = async ({
   const result = (await res.json()) as ListAccountTransactionsResponse
 
   const mapping = await getMapping()
+  const defaultCategory = await getDefaultCategory()
   const now = new Date()
   return result.transactions
     .filter((record) => !record.isPending)
@@ -123,7 +125,7 @@ const fetchTransactionsForAccount = async ({
 
       let name: string = firstNonNullNorEmpty(record.merchant, record.description) ?? "Unknown"
       const sourceName = name
-      let category: Category = "💬 Autres"
+      let category: string = defaultCategory
       const mapped = findInMapping(mapping, name, Number.parseFloat(amount.replace(",", ".")))
       if (mapped) {
         if (mapped.exclude) {
