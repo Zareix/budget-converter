@@ -346,9 +346,6 @@ export const fetchTransactions = async (accountId: Account["id"]): Promise<Array
         (description ? findInMapping(mapping, `${name} - ${description}`, price) : null)
       let category: string = defaultCategory
       if (mapped) {
-        if (mapped.exclude) {
-          return null
-        }
         name = mapped.name
         category = mapped.category
       } else {
@@ -363,6 +360,7 @@ export const fetchTransactions = async (accountId: Account["id"]): Promise<Array
         category,
         paymentMethod,
         sourceName,
+        excluded: mapped?.exclude ?? false,
         raw: JSON.stringify(record, null, 2),
       } satisfies Transaction
     })

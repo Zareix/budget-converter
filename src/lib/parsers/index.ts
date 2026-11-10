@@ -42,6 +42,7 @@ export type Transaction = {
   category: string
   paymentMethod: PaymentMethod
   sourceName: string
+  excluded?: boolean
   raw: string
 }
 export const PROVIDERS = ["amex", "revolut"] as const

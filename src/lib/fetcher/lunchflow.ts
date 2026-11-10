@@ -128,9 +128,6 @@ const fetchTransactionsForAccount = async ({
       let category: string = defaultCategory
       const mapped = findInMapping(mapping, name, Number.parseFloat(amount.replace(",", ".")))
       if (mapped) {
-        if (mapped.exclude) {
-          return null
-        }
         name = mapped.name
         category = mapped.category
       } else {
@@ -152,6 +149,7 @@ const fetchTransactionsForAccount = async ({
         category,
         paymentMethod,
         sourceName,
+        excluded: mapped?.exclude ?? false,
         raw: JSON.stringify(record, null, 2),
       } satisfies Transaction
     })

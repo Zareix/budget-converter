@@ -57,6 +57,7 @@ export function DataTable({ columns, data, handleCopyAsCSV, reset }: DataTablePr
     features: resultTableFeatures,
     data,
     columns,
+    enableRowSelection: (row) => !row.original.excluded,
     onSortingChange: setSorting,
     onRowSelectionChange: setRowSelection,
     onColumnFiltersChange: setColumnFilters,
@@ -127,7 +128,11 @@ export function DataTable({ columns, data, handleCopyAsCSV, reset }: DataTablePr
             <TableBody>
               {table.getRowModel().rows.length ? (
                 table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    className={row.original.excluded ? "opacity-50" : undefined}
+                  >
                     {row.getAllCells().map((cell) => (
                       <TableCell key={cell.id}>
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}

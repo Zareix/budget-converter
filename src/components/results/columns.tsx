@@ -3,6 +3,7 @@ import { ArrowDownIcon, ArrowUpIcon, InfoIcon } from "lucide-react"
 
 import { CreateMappingButton } from "@/components/mapping/create"
 import type { resultTableFeatures } from "@/components/results/table-features"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -33,6 +34,7 @@ export const columns: Array<ColumnDef<typeof resultTableFeatures, Transaction>> 
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
+        disabled={!row.getCanSelect()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
       />
@@ -72,6 +74,12 @@ export const columns: Array<ColumnDef<typeof resultTableFeatures, Transaction>> 
   {
     accessorKey: "name",
     header: "Name",
+    cell: ({ row }) => (
+      <div className="flex items-center gap-2">
+        {row.original.name}
+        {row.original.excluded && <Badge variant="outline">Disabled</Badge>}
+      </div>
+    ),
   },
   {
     accessorKey: "amount",

@@ -10,7 +10,8 @@ import type { Transaction } from "@/lib/parsers"
 export const Results = () => {
   const { transactions, resetTransactions } = useTransactions()
   const handleCopyAsCSV = (selectedTransactions: Array<Transaction>) => {
-    if (selectedTransactions.length === 0) {
+    const exportable = selectedTransactions.filter((transaction) => !transaction.excluded)
+    if (exportable.length === 0) {
       toast.error("No transactions selected", {
         description: "Please select at least one transaction to copy.",
         position: "bottom-right",
@@ -19,7 +20,7 @@ export const Results = () => {
     }
 
     try {
-      const allRecords = selectedTransactions.sort((a, b) => {
+      const allRecords = exportable.sort((a, b) => {
         const dateA = new Date(a.date.split("/").reverse().join("-"))
         const dateB = new Date(b.date.split("/").reverse().join("-"))
         return dateA.getTime() - dateB.getTime()
@@ -31,7 +32,7 @@ export const Results = () => {
 
       navigator.clipboard.writeText(csv)
       toast.success("Copied to clipboard!", {
-        description: `${selectedTransactions.length} transaction${selectedTransactions.length !== 1 ? "s" : ""} copied to your clipboard.`,
+        description: `${exportable.length} transaction${exportable.length !== 1 ? "s" : ""} copied to your clipboard.`,
         position: "bottom-right",
       })
     } catch {
@@ -46,13 +47,16 @@ export const Results = () => {
     return null
   }
 
+  const disabledCount = transactions.filter((transaction) => transaction.excluded).length
+
   return (
     <Card className="w-full md:col-span-2">
       <CardHeader>
         <CardTitle>Results</CardTitle>
         <CardDescription>
-          {transactions.length} transaction
-          {transactions.length !== 1 ? "s" : ""}
+          {transactions.length - disabledCount} transaction
+          {transactions.length - disabledCount !== 1 ? "s" : ""}
+          {disabledCount > 0 ? ` (${disabledCount} disabled)` : ""}
         </CardDescription>
       </CardHeader>
       <DataTable

@@ -46,9 +46,6 @@ export const parseToTransactions = async ({
         Number.parseFloat(record.Montant.replace(",", ".")),
       )
       if (mapped) {
-        if (mapped.exclude) {
-          return null
-        }
         name = mapped.name
         category = mapped.category
       } else {
@@ -63,6 +60,7 @@ export const parseToTransactions = async ({
         name,
         category,
         sourceName: record.Description,
+        excluded: mapped?.exclude ?? false,
         raw: JSON.stringify(record, null, 2),
       } satisfies Transaction
     })

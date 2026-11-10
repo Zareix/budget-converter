@@ -44,9 +44,6 @@ export const parseToTransactions = async ({
       let category: string = defaultCategory
       const mapped = findInMapping(mapping, name, Number.parseFloat(amount.replace(",", ".")))
       if (mapped) {
-        if (mapped.exclude) {
-          return null
-        }
         name = mapped.name
         category = mapped.category
       } else {
@@ -61,6 +58,7 @@ export const parseToTransactions = async ({
         paymentMethod: "Carte Revolut",
         category,
         sourceName: record.Description,
+        excluded: mapped?.exclude ?? false,
         raw: JSON.stringify(record, null, 2),
       } satisfies Transaction
     })
