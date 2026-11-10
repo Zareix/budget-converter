@@ -23,7 +23,7 @@ function HomeContent() {
   const fetchers = Route.useLoaderData()
 
   return (
-    <div className="grid min-h-screen items-center justify-center gap-6 px-4 md:grid-cols-3">
+    <div className="grid min-h-screen items-center justify-center gap-6 px-4 md:grid-cols-[0.8fr_1fr_1fr]">
       <div className="flex w-full flex-col gap-4">
         <ParserFormCard />
         {fetchers.length > 0 && <FetcherFormCard />}

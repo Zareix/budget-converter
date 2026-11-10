@@ -107,7 +107,7 @@ export function DataTable({ columns, data, handleCopyAsCSV, reset }: DataTablePr
             </SelectGroup>
           </SelectContent>
         </Select>
-        <div className="max-h-96 overflow-hidden overflow-y-auto border">
+        <div className="max-h-[70vh] overflow-hidden overflow-y-auto border">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (

@@ -46,7 +46,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <main className="py-8">{children}</main>
+        <main>{children}</main>
         <Toaster richColors />
         <TanStackDevtools
           config={{
