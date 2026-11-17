@@ -275,7 +275,9 @@ const getTricountSession = async (): Promise<TricountSession> => {
 
   console.log("Creating Tricount session")
   const headers = {
-    "User-Agent": "com.bunq.tricount.android:RELEASE:7.0.7:3174:ANDROID:13:C",
+    // Tricount rejects old builds with "Please update your app"; the 4th field (build) must be above its minimum.
+    // shortcut: version/build will need bumping again when Tricount raises its minimum (currently ~4200).
+    "User-Agent": "com.bunq.tricount.android:RELEASE:14.8.2:4500:ANDROID:13:C",
     "app-id": appId,
     "X-Bunq-Client-Request-Id": "049bfcdf-6ae4-4cee-af7b-45da31ea85d0",
   }
