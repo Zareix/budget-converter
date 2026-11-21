@@ -131,15 +131,21 @@ export const PositionsTable = ({
                 </TableCell>
 
                 <TableCell className="text-right text-xs tabular-nums">
-                  {formatQuantity(pos.quantity)}
+                  {pos.security.assetClass === "euro_fund" ? (
+                    <span className="text-muted-foreground">—</span>
+                  ) : (
+                    formatQuantity(pos.quantity)
+                  )}
                 </TableCell>
 
                 <TableCell className="text-right text-xs text-muted-foreground tabular-nums">
-                  {formatCents(pos.avgCostEurCents)}
+                  {pos.security.assetClass === "euro_fund" ? "—" : formatCents(pos.avgCostEurCents)}
                 </TableCell>
 
                 <TableCell className="text-right">
-                  {pos.security.pricingMode === "manual" ? (
+                  {pos.security.assetClass === "euro_fund" ? (
+                    <span className="text-xs text-muted-foreground">—</span>
+                  ) : pos.security.pricingMode === "manual" ? (
                     <InlineAmountInput
                       cents={pos.currentPriceEurCents}
                       onSave={(next) => {

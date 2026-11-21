@@ -17,7 +17,7 @@ export type AssetClass = (typeof ASSET_CLASSES)[number]
 export const PRICING_MODES = ["yahoo", "manual"] as const
 export type PricingMode = (typeof PRICING_MODES)[number]
 
-export const INVESTMENT_TX_TYPES = ["buy", "sell", "dividend"] as const
+export const INVESTMENT_TX_TYPES = ["buy", "sell", "dividend", "interest"] as const
 export type InvestmentTxType = (typeof INVESTMENT_TX_TYPES)[number]
 
 export const ebAccounts = sqliteTable("eb_accounts", {

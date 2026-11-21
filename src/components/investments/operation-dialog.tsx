@@ -157,15 +157,23 @@ export const OperationDialog = ({
     staleTime: 60_000,
   })
 
+  const selectedExistingSecurity = securities.find((s) => String(s.id) === securityId) ?? null
+
   const activeCurrency =
     mode === "search"
       ? (selectedYahoo?.currency ?? "EUR")
       : mode === "manual"
         ? "EUR"
-        : (securities.find((s) => String(s.id) === securityId)?.currency ?? "EUR")
+        : (selectedExistingSecurity?.currency ?? "EUR")
+
+  const isEuroFund =
+    (mode === "manual" && manualAssetClass === "euro_fund") ||
+    (mode === "existing" && selectedExistingSecurity?.assetClass === "euro_fund")
+
+  const isAmountOnly = isEuroFund || txType === "interest"
 
   useEffect(() => {
-    if (totalManuallyEdited) return
+    if (totalManuallyEdited || isAmountOnly) return
     const qty = parseQuantity(quantity)
     const priceCents = parseAmountToCents(unitPrice)
     const feesCents = parseAmountToCents(fees)
@@ -185,7 +193,7 @@ export const OperationDialog = ({
     } else {
       setTotalEur("")
     }
-  }, [quantity, unitPrice, fees, txType, totalManuallyEdited])
+  }, [quantity, unitPrice, fees, txType, totalManuallyEdited, isAmountOnly])
 
   const saveMutation = useMutation({
     mutationKey: ["saveInvestmentOperation"],
@@ -193,10 +201,10 @@ export const OperationDialog = ({
       const parsedAccountId = Number.parseInt(accountId, 10)
       if (!Number.isFinite(parsedAccountId)) throw new Error("Account is required")
 
-      const qty = parseQuantity(quantity)
-      const unitPriceCents = parseAmountToCents(unitPrice)
-      const feesCents = parseAmountToCents(fees)
       const totalEurCents = parseAmountToCents(totalEur)
+      const qty = isAmountOnly ? 1 : parseQuantity(quantity)
+      const unitPriceCents = isAmountOnly ? totalEurCents : parseAmountToCents(unitPrice)
+      const feesCents = txType === "interest" ? 0 : parseAmountToCents(fees)
 
       if (editingTx) {
         const parsedSecId = Number.parseInt(securityId, 10)
@@ -243,7 +251,8 @@ export const OperationDialog = ({
             assetClass: manualAssetClass,
             currency: "EUR",
             pricingMode: "manual",
-            manualPriceCents: unitPriceCents > 0 ? unitPriceCents : null,
+            manualPriceCents:
+              manualAssetClass === "euro_fund" ? null : unitPriceCents > 0 ? unitPriceCents : null,
           },
         })
         resolvedSecurityId = sec.id
@@ -276,7 +285,7 @@ export const OperationDialog = ({
   const canSubmit = (() => {
     if (!accountId || !date || saveMutation.isPending) return false
     if (parseAmountToCents(totalEur) <= 0) return false
-    if (txType !== "dividend" && parseQuantity(quantity) <= 0) return false
+    if (!isAmountOnly && txType !== "dividend" && parseQuantity(quantity) <= 0) return false
     if (mode === "existing" && !securityId) return false
     if (mode === "search" && !selectedYahoo) return false
     if (mode === "manual" && !manualName.trim()) return false
@@ -532,79 +541,110 @@ export const OperationDialog = ({
               </div>
             )}
 
-            {/* Date, Qty, Unit Price, Fees */}
-            <div className="grid grid-cols-2 gap-3">
-              <Field>
-                <FieldLabel htmlFor="inv-op-date">{m.inv_op_date_label()}</FieldLabel>
-                <Input
-                  id="inv-op-date"
-                  type="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  required
-                />
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="inv-op-qty">{m.inv_op_quantity_label()}</FieldLabel>
-                <Input
-                  id="inv-op-qty"
-                  inputMode="decimal"
-                  value={quantity}
-                  onChange={(e) => {
-                    setQuantity(e.target.value)
-                    setTotalManuallyEdited(false)
-                  }}
-                  placeholder="10"
-                />
-              </Field>
-            </div>
+            {/* Date + Amount (streamlined for Euro Fund / Interest) OR full Qty/Price/Fees */}
+            {isAmountOnly ? (
+              <div className="grid grid-cols-2 gap-3">
+                <Field>
+                  <FieldLabel htmlFor="inv-op-date">{m.inv_op_date_label()}</FieldLabel>
+                  <Input
+                    id="inv-op-date"
+                    type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    required
+                  />
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="inv-op-total">{m.inv_op_amount_eur_label()}</FieldLabel>
+                  <Input
+                    id="inv-op-total"
+                    inputMode="decimal"
+                    value={totalEur}
+                    onChange={(e) => {
+                      setTotalEur(e.target.value)
+                      setTotalManuallyEdited(true)
+                    }}
+                    placeholder="100.00"
+                    required
+                  />
+                </Field>
+              </div>
+            ) : (
+              <>
+                <div className="grid grid-cols-2 gap-3">
+                  <Field>
+                    <FieldLabel htmlFor="inv-op-date">{m.inv_op_date_label()}</FieldLabel>
+                    <Input
+                      id="inv-op-date"
+                      type="date"
+                      value={date}
+                      onChange={(e) => setDate(e.target.value)}
+                      required
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="inv-op-qty">{m.inv_op_quantity_label()}</FieldLabel>
+                    <Input
+                      id="inv-op-qty"
+                      inputMode="decimal"
+                      value={quantity}
+                      onChange={(e) => {
+                        setQuantity(e.target.value)
+                        setTotalManuallyEdited(false)
+                      }}
+                      placeholder="10"
+                    />
+                  </Field>
+                </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <Field>
-                <FieldLabel htmlFor="inv-op-price">
-                  {m.inv_op_unit_price_label({ currency: activeCurrency })}
-                </FieldLabel>
-                <Input
-                  id="inv-op-price"
-                  inputMode="decimal"
-                  value={unitPrice}
-                  onChange={(e) => {
-                    setUnitPrice(e.target.value)
-                    setTotalManuallyEdited(false)
-                  }}
-                  placeholder="500.00"
-                />
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="inv-op-fees">{m.inv_op_fees_label()}</FieldLabel>
-                <Input
-                  id="inv-op-fees"
-                  inputMode="decimal"
-                  value={fees}
-                  onChange={(e) => {
-                    setFees(e.target.value)
-                    setTotalManuallyEdited(false)
-                  }}
-                  placeholder="0.00"
-                />
-              </Field>
-            </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <Field>
+                    <FieldLabel htmlFor="inv-op-price">
+                      {m.inv_op_unit_price_label({ currency: activeCurrency })}
+                    </FieldLabel>
+                    <Input
+                      id="inv-op-price"
+                      inputMode="decimal"
+                      value={unitPrice}
+                      onChange={(e) => {
+                        setUnitPrice(e.target.value)
+                        setTotalManuallyEdited(false)
+                      }}
+                      placeholder="500.00"
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="inv-op-fees">{m.inv_op_fees_label()}</FieldLabel>
+                    <Input
+                      id="inv-op-fees"
+                      inputMode="decimal"
+                      value={fees}
+                      onChange={(e) => {
+                        setFees(e.target.value)
+                        setTotalManuallyEdited(false)
+                      }}
+                      placeholder="0.00"
+                    />
+                  </Field>
+                </div>
 
-            <Field>
-              <FieldLabel htmlFor="inv-op-total">{m.inv_op_total_eur_label()}</FieldLabel>
-              <Input
-                id="inv-op-total"
-                inputMode="decimal"
-                value={totalEur}
-                onChange={(e) => {
-                  setTotalEur(e.target.value)
-                  setTotalManuallyEdited(true)
-                }}
-                placeholder="5000.00"
-                required
-              />
-              <FieldDescription>{m.inv_op_total_eur_hint()}</FieldDescription>
-            </Field>
+                <Field>
+                  <FieldLabel htmlFor="inv-op-total">{m.inv_op_total_eur_label()}</FieldLabel>
+                  <Input
+                    id="inv-op-total"
+                    inputMode="decimal"
+                    value={totalEur}
+                    onChange={(e) => {
+                      setTotalEur(e.target.value)
+                      setTotalManuallyEdited(true)
+                    }}
+                    placeholder="5000.00"
+                    required
+                  />
+                  <FieldDescription>{m.inv_op_total_eur_hint()}</FieldDescription>
+                </Field>
+              </>
+            )}
 
             <Field>
               <FieldLabel htmlFor="inv-op-note">{m.inv_op_note_label()}</FieldLabel>

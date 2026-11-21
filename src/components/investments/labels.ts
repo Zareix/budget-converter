@@ -38,6 +38,8 @@ export const getInvestmentTxTypeLabel = (type: InvestmentTxType): string => {
       return m.inv_tx_type_sell()
     case "dividend":
       return m.inv_tx_type_dividend()
+    case "interest":
+      return m.inv_tx_type_interest()
   }
 }
 

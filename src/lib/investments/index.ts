@@ -1,6 +1,6 @@
-import { asc, desc, eq, inArray } from "drizzle-orm"
+import { and, asc, desc, eq, inArray } from "drizzle-orm"
 
-import { db } from "@/lib/db"
+import { db, runTransaction } from "@/lib/db"
 import type { AssetClass, InvestmentTxType, PricingMode } from "@/lib/db/schema"
 import {
   accounts,
@@ -9,6 +9,15 @@ import {
   securityMonthlyPrices,
   securityQuotes,
 } from "@/lib/db/schema"
+import type { FortuneoParsedRow } from "@/lib/investments/fortuneo"
+import {
+  decodeFortuneoBytes,
+  extractCsvFromZip,
+  isZipBuffer,
+  parseFortuneoCsv,
+  resolveFortuneoLabelOnYahoo,
+} from "@/lib/investments/fortuneo"
+import type { YahooSearchResult } from "@/lib/market/yahoo"
 import { fetchYahooMonthlyHistory, fetchYahooQuote } from "@/lib/market/yahoo"
 
 const QUOTE_TTL_MS = 15 * 60 * 1000 // 15 minutes
@@ -322,4 +331,189 @@ export const refreshAllInvestmentQuotes = async (options?: {
     force: options?.force ?? true,
     includeHistory: options?.includeHistory ?? true,
   })
+}
+
+export type FortuneoLabelResolution = {
+  label: string
+  place: string
+  currency: string
+  count: number
+  matchedSecurityId: number | null
+  candidates: Array<YahooSearchResult>
+}
+
+export const previewFortuneoImport = async ({
+  base64,
+}: {
+  fileName: string
+  base64: string
+}): Promise<{
+  rows: Array<FortuneoParsedRow>
+  skippedCount: number
+  labels: Array<FortuneoLabelResolution>
+}> => {
+  const bytes = new Uint8Array(Buffer.from(base64, "base64"))
+  const csvBytes = isZipBuffer(bytes) ? extractCsvFromZip(bytes) : bytes
+  const csvText = decodeFortuneoBytes(csvBytes)
+  const { rows, skippedCount } = parseFortuneoCsv(csvText)
+
+  const existingSecurities = await db.select().from(securities)
+  const uniqueMeta = new Map<string, { place: string; currency: string; count: number }>()
+
+  for (const row of rows) {
+    const current = uniqueMeta.get(row.label)
+    if (current) {
+      current.count += 1
+    } else {
+      uniqueMeta.set(row.label, { place: row.place, currency: row.currency, count: 1 })
+    }
+  }
+
+  const labels = await Promise.all(
+    Array.from(uniqueMeta.entries()).map(async ([label, meta]) => {
+      const normalizedLabel = label.toLowerCase()
+      const existingMatch = existingSecurities.find(
+        (s) =>
+          s.name.toLowerCase() === normalizedLabel || s.symbol.toLowerCase() === normalizedLabel,
+      )
+      const candidates = await resolveFortuneoLabelOnYahoo(label, meta.place, meta.currency)
+      const symbolMatch =
+        existingMatch ??
+        (candidates[0]
+          ? existingSecurities.find(
+              (s) => s.symbol.toUpperCase() === candidates[0]!.symbol.toUpperCase(),
+            )
+          : undefined)
+
+      return {
+        label,
+        place: meta.place,
+        currency: meta.currency,
+        count: meta.count,
+        matchedSecurityId: symbolMatch?.id ?? null,
+        candidates,
+      }
+    }),
+  )
+
+  return { rows, skippedCount, labels }
+}
+
+export type FortuneoLabelMapping = {
+  label: string
+  securityId?: number | null
+  yahoo?: {
+    symbol: string
+    name: string
+    assetClass: AssetClass
+    currency: string
+  } | null
+  manual?: {
+    name: string
+    assetClass: AssetClass
+  } | null
+}
+
+export const commitFortuneoImport = async ({
+  accountId,
+  mappings,
+  rows,
+}: {
+  accountId: number
+  mappings: Array<FortuneoLabelMapping>
+  rows: Array<FortuneoParsedRow>
+}): Promise<{ imported: number; skipped: number }> => {
+  const securityIdByLabel = new Map<string, number>()
+  const symbolsToRefresh: Array<string> = []
+
+  for (const mapping of mappings) {
+    if (mapping.securityId) {
+      securityIdByLabel.set(mapping.label, mapping.securityId)
+      const sec = db.select().from(securities).where(eq(securities.id, mapping.securityId)).get()
+      if (sec?.pricingMode === "yahoo") {
+        symbolsToRefresh.push(sec.symbol)
+      }
+    } else if (mapping.yahoo) {
+      const created = await upsertSecurity({
+        symbol: mapping.yahoo.symbol,
+        name: mapping.yahoo.name,
+        assetClass: mapping.yahoo.assetClass,
+        currency: mapping.yahoo.currency,
+        pricingMode: "yahoo",
+      })
+      securityIdByLabel.set(mapping.label, created.id)
+      symbolsToRefresh.push(created.symbol)
+    } else if (mapping.manual) {
+      const slug = mapping.manual.name
+        .normalize("NFD")
+        .replace(/\p{Diacritic}/gu, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "")
+      const created = await upsertSecurity({
+        symbol: `MANUAL:${slug || "asset"}`,
+        name: mapping.manual.name,
+        assetClass: mapping.manual.assetClass,
+        currency: "EUR",
+        pricingMode: "manual",
+      })
+      securityIdByLabel.set(mapping.label, created.id)
+    }
+  }
+
+  const result = await runTransaction(db, async (tx) => {
+    let imported = 0
+    let skipped = 0
+    const now = new Date().toISOString()
+
+    for (const row of rows) {
+      const securityId = securityIdByLabel.get(row.label)
+      if (!securityId) {
+        skipped += 1
+        continue
+      }
+
+      const duplicate = tx
+        .select({ id: investmentTransactions.id })
+        .from(investmentTransactions)
+        .where(
+          and(
+            eq(investmentTransactions.accountId, accountId),
+            eq(investmentTransactions.securityId, securityId),
+            eq(investmentTransactions.type, row.type),
+            eq(investmentTransactions.date, row.date),
+            eq(investmentTransactions.quantity, row.quantity),
+            eq(investmentTransactions.totalEurCents, row.totalEurCents),
+          ),
+        )
+        .get()
+
+      if (duplicate) {
+        skipped += 1
+        continue
+      }
+
+      await tx.insert(investmentTransactions).values({
+        accountId,
+        securityId,
+        type: row.type,
+        date: row.date,
+        quantity: row.quantity,
+        unitPriceCents: row.unitPriceCents,
+        feesCents: row.feesCents,
+        totalEurCents: row.totalEurCents,
+        note: row.operation,
+        createdAt: now,
+      })
+      imported += 1
+    }
+
+    return { imported, skipped }
+  })
+
+  if (symbolsToRefresh.length > 0) {
+    await refreshQuotesForSymbols(symbolsToRefresh, { force: true, includeHistory: true })
+  }
+
+  return result
 }

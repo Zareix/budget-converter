@@ -83,3 +83,58 @@ export const refreshAllInvestmentQuotes = createServerFn({ method: "POST" })
     ),
   )
   .handler(({ data }) => investments.refreshAllInvestmentQuotes(data))
+
+export const previewFortuneoImport = createServerFn({ method: "POST" })
+  .validator(
+    v.object({
+      fileName: v.pipe(v.string(), v.minLength(1)),
+      base64: v.pipe(v.string(), v.minLength(1)),
+    }),
+  )
+  .handler(({ data }) => investments.previewFortuneoImport(data))
+
+export const commitFortuneoImport = createServerFn({ method: "POST" })
+  .validator(
+    v.object({
+      accountId: v.pipe(v.number(), v.integer()),
+      mappings: v.array(
+        v.object({
+          label: v.string(),
+          securityId: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
+          yahoo: v.optional(
+            v.nullable(
+              v.object({
+                symbol: v.pipe(v.string(), v.minLength(1)),
+                name: v.pipe(v.string(), v.minLength(1)),
+                assetClass: v.picklist(ASSET_CLASSES),
+                currency: v.pipe(v.string(), v.minLength(3), v.maxLength(6)),
+              }),
+            ),
+          ),
+          manual: v.optional(
+            v.nullable(
+              v.object({
+                name: v.pipe(v.string(), v.minLength(1)),
+                assetClass: v.picklist(ASSET_CLASSES),
+              }),
+            ),
+          ),
+        }),
+      ),
+      rows: v.array(
+        v.object({
+          label: v.string(),
+          operation: v.string(),
+          type: v.picklist(INVESTMENT_TX_TYPES),
+          place: v.string(),
+          date: isoDateSchema,
+          quantity: v.pipe(v.number(), v.minValue(0)),
+          unitPriceCents: v.pipe(v.number(), v.integer(), v.minValue(0)),
+          feesCents: v.pipe(v.number(), v.integer(), v.minValue(0)),
+          totalEurCents: v.pipe(v.number(), v.integer(), v.minValue(0)),
+          currency: v.string(),
+        }),
+      ),
+    }),
+  )
+  .handler(({ data }) => investments.commitFortuneoImport(data))

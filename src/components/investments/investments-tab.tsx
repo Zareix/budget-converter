@@ -1,16 +1,19 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import {
   AlertTriangleIcon,
+  ChevronDownIcon,
   EditIcon,
   PlusIcon,
   RefreshCwIcon,
   TrashIcon,
   TrendingDownIcon,
   TrendingUpIcon,
+  UploadIcon,
 } from "lucide-react"
 import { useMemo, useState } from "react"
 import { toast } from "sonner"
 
+import { FortuneoImportDialog } from "@/components/investments/fortuneo-import-dialog"
 import { InvestmentAccountDialog } from "@/components/investments/investment-account-dialog"
 import { InvestmentsCharts } from "@/components/investments/investments-charts"
 import { OperationDialog } from "@/components/investments/operation-dialog"
@@ -29,6 +32,12 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import type { AssetAccountLike } from "@/lib/assets/calculations"
 import { formatPercentSigned } from "@/lib/assets/calculations"
 import { formatCents } from "@/lib/budget/calculations"
@@ -73,6 +82,7 @@ export const InvestmentsTab = ({
 }: InvestmentsTabProps) => {
   const queryClient = useQueryClient()
   const [selectedAccountId, setSelectedAccountId] = useState<number | null>(null)
+  const [fortuneoImportOpen, setFortuneoImportOpen] = useState(false)
   const [opDialogOpen, setOpDialogOpen] = useState(false)
   const [opDefaults, setOpDefaults] = useState<{
     accountId: number | null
@@ -274,6 +284,26 @@ export const InvestmentsTab = ({
               {m.inv_quotes_updated_at({ time: formatTimeAgo(summary.latestQuoteFetchedAt) })}
             </span>
           )}
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <UploadIcon className="size-3.5" />
+                  <span>{m.common_import()}</span>
+                  <ChevronDownIcon className="size-3 opacity-70" />
+                </Button>
+              }
+            />
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setFortuneoImportOpen(true)}>
+                {m.inv_fortuneo_dropdown_item()}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button
             variant="outline"
             size="sm"
@@ -479,6 +509,14 @@ export const InvestmentsTab = ({
         defaultAccountId={opDefaults.accountId}
         defaultSecurityId={opDefaults.securityId}
         editingTx={opDefaults.editingTx}
+      />
+
+      <FortuneoImportDialog
+        open={fortuneoImportOpen}
+        onOpenChange={setFortuneoImportOpen}
+        accounts={accounts}
+        securities={securities}
+        defaultAccountId={selectedAccountId}
       />
     </div>
   )

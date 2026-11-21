@@ -118,18 +118,26 @@ export const OperationsTable = ({
                             "border-orange-500/40 bg-orange-500/10 text-orange-700 dark:text-orange-300",
                           tx.type === "dividend" &&
                             "border-sky-500/40 bg-sky-500/10 text-sky-700 dark:text-sky-300",
+                          tx.type === "interest" &&
+                            "border-teal-500/40 bg-teal-500/10 text-teal-700 dark:text-teal-300",
                         )}
                       >
                         {getInvestmentTxTypeLabel(tx.type)}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right text-xs tabular-nums">
-                      {formatQuantity(tx.quantity)}
+                      {security?.assetClass === "euro_fund" || tx.type === "interest" ? (
+                        <span className="text-muted-foreground">—</span>
+                      ) : (
+                        formatQuantity(tx.quantity)
+                      )}
                     </TableCell>
                     <TableCell className="text-right text-xs text-muted-foreground tabular-nums">
-                      {security
-                        ? formatNativePrice(tx.unitPriceCents / 100, security.currency)
-                        : formatCents(tx.unitPriceCents)}
+                      {security?.assetClass === "euro_fund" || tx.type === "interest"
+                        ? "—"
+                        : security
+                          ? formatNativePrice(tx.unitPriceCents / 100, security.currency)
+                          : formatCents(tx.unitPriceCents)}
                     </TableCell>
                     <TableCell className="text-right text-xs text-muted-foreground tabular-nums">
                       {tx.feesCents > 0 ? formatCents(tx.feesCents) : "—"}

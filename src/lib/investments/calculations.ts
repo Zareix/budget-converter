@@ -122,11 +122,14 @@ type PositionAccumulator = {
   costBasisEurCents: number
   realizedGainEurCents: number
   dividendsEurCents: number
+  interestEurCents: number
+  euroFundBalanceCents: number
   lastUnitPriceEurCents: number
 }
 
 const accumulateTransactions = (
   transactions: ReadonlyArray<InvestmentTransactionLike>,
+  securityById: Map<number, SecurityLike>,
 ): Map<string, PositionAccumulator> => {
   const sorted = transactions.toSorted((a, b) => a.date.localeCompare(b.date) || a.id - b.id)
   const map = new Map<string, PositionAccumulator>()
@@ -142,9 +145,40 @@ const accumulateTransactions = (
         costBasisEurCents: 0,
         realizedGainEurCents: 0,
         dividendsEurCents: 0,
+        interestEurCents: 0,
+        euroFundBalanceCents: 0,
         lastUnitPriceEurCents: 0,
       }
       map.set(key, acc)
+    }
+
+    const isEuroFund = securityById.get(tx.securityId)?.assetClass === "euro_fund"
+
+    if (isEuroFund) {
+      if (tx.type === "buy") {
+        acc.costBasisEurCents += tx.totalEurCents
+        acc.euroFundBalanceCents += tx.totalEurCents
+        acc.quantity = acc.euroFundBalanceCents > 0 ? 1 : 0
+      } else if (tx.type === "interest") {
+        acc.interestEurCents += tx.totalEurCents
+        acc.euroFundBalanceCents += tx.totalEurCents
+        acc.quantity = acc.euroFundBalanceCents > 0 ? 1 : 0
+      } else if (tx.type === "sell") {
+        if (acc.euroFundBalanceCents > 0 && tx.totalEurCents > 0) {
+          const soldRatio = Math.min(1, tx.totalEurCents / acc.euroFundBalanceCents)
+          const soldCost = Math.round(acc.costBasisEurCents * soldRatio)
+          acc.realizedGainEurCents += tx.totalEurCents - soldCost
+          acc.costBasisEurCents = Math.max(0, acc.costBasisEurCents - soldCost)
+          acc.euroFundBalanceCents = Math.max(0, acc.euroFundBalanceCents - tx.totalEurCents)
+          if (acc.euroFundBalanceCents === 0) {
+            acc.costBasisEurCents = 0
+            acc.quantity = 0
+          }
+        }
+      } else {
+        acc.dividendsEurCents += tx.totalEurCents
+      }
+      continue
     }
 
     if (tx.type === "buy") {
@@ -168,6 +202,9 @@ const accumulateTransactions = (
       if (tx.quantity > 0) {
         acc.lastUnitPriceEurCents = Math.round(tx.totalEurCents / tx.quantity)
       }
+    } else if (tx.type === "interest") {
+      acc.interestEurCents += tx.totalEurCents
+      acc.dividendsEurCents += tx.totalEurCents
     } else {
       acc.dividendsEurCents += tx.totalEurCents
     }
@@ -197,7 +234,7 @@ export const computeInvestmentsPortfolio = ({
     ? transactions.filter((t) => t.accountId === accountFilterId)
     : transactions
 
-  const accumulated = accumulateTransactions(filteredTx)
+  const accumulated = accumulateTransactions(filteredTx, securityById)
 
   const positions: Array<InvestmentPosition> = []
   let totalValueEurCents = 0
@@ -241,7 +278,11 @@ export const computeInvestmentsPortfolio = ({
     let isQuoteMissing = false
     let quoteFetchedAt: string | null = null
 
-    if (security.pricingMode === "manual") {
+    if (security.assetClass === "euro_fund") {
+      currentPriceEurCents = acc.euroFundBalanceCents
+      currentPriceNative = acc.euroFundBalanceCents / 100
+      marketValueEurCents = acc.euroFundBalanceCents
+    } else if (security.pricingMode === "manual") {
       const manualUnit = security.manualPriceCents ?? acc.lastUnitPriceEurCents
       currentPriceEurCents = manualUnit
       currentPriceNative = manualUnit / 100
@@ -453,11 +494,33 @@ export const computeInvestmentsTimeline = ({
           costBasisEurCents: 0,
           realizedGainEurCents: 0,
           dividendsEurCents: 0,
+          interestEurCents: 0,
+          euroFundBalanceCents: 0,
           lastUnitPriceEurCents: 0,
         }
         state.set(key, acc)
       }
-      if (tx.type === "buy") {
+      const isEuroFund = securityById.get(tx.securityId)?.assetClass === "euro_fund"
+      if (isEuroFund) {
+        if (tx.type === "buy") {
+          acc.costBasisEurCents += tx.totalEurCents
+          acc.euroFundBalanceCents += tx.totalEurCents
+          acc.quantity = acc.euroFundBalanceCents > 0 ? 1 : 0
+        } else if (tx.type === "interest") {
+          acc.interestEurCents += tx.totalEurCents
+          acc.euroFundBalanceCents += tx.totalEurCents
+          acc.quantity = acc.euroFundBalanceCents > 0 ? 1 : 0
+        } else if (tx.type === "sell" && acc.euroFundBalanceCents > 0 && tx.totalEurCents > 0) {
+          const ratio = Math.min(1, tx.totalEurCents / acc.euroFundBalanceCents)
+          const soldCost = Math.round(acc.costBasisEurCents * ratio)
+          acc.costBasisEurCents = Math.max(0, acc.costBasisEurCents - soldCost)
+          acc.euroFundBalanceCents = Math.max(0, acc.euroFundBalanceCents - tx.totalEurCents)
+          if (acc.euroFundBalanceCents === 0) {
+            acc.costBasisEurCents = 0
+            acc.quantity = 0
+          }
+        }
+      } else if (tx.type === "buy") {
         acc.quantity += tx.quantity
         acc.costBasisEurCents += tx.totalEurCents
         if (tx.quantity > 0) acc.lastUnitPriceEurCents = Math.round(tx.totalEurCents / tx.quantity)
@@ -488,7 +551,9 @@ export const computeInvestmentsTimeline = ({
       investedCents += acc.costBasisEurCents
       let posValue = acc.costBasisEurCents
 
-      if (security.pricingMode === "manual") {
+      if (security.assetClass === "euro_fund") {
+        posValue = acc.euroFundBalanceCents
+      } else if (security.pricingMode === "manual") {
         const unit =
           monthId >= currentMonthId && security.manualPriceCents !== null
             ? security.manualPriceCents

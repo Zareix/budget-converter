@@ -292,6 +292,25 @@
 /** @typedef {{}} Inv_Empty_Accounts_TitleInputs */
 /** @typedef {{}} Inv_Empty_Positions_DescInputs */
 /** @typedef {{}} Inv_Empty_Positions_TitleInputs */
+/** @typedef {{}} Inv_Fortuneo_Change_TickerInputs */
+/** @typedef {{}} Inv_Fortuneo_Choose_FileInputs */
+/** @typedef {{}} Inv_Fortuneo_Dialog_DescInputs */
+/** @typedef {{}} Inv_Fortuneo_Dialog_TitleInputs */
+/** @typedef {{}} Inv_Fortuneo_Dropdown_ItemInputs */
+/** @typedef {{}} Inv_Fortuneo_File_LabelInputs */
+/** @typedef {{}} Inv_Fortuneo_Import_ButtonInputs */
+/** @typedef {{}} Inv_Fortuneo_Import_ErrorInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Inv_Fortuneo_Import_SubmitInputs */
+/** @typedef {{ imported: NonNullable<unknown> }} Inv_Fortuneo_Imported_ToastInputs */
+/** @typedef {{ imported: NonNullable<unknown>, skipped: NonNullable<unknown> }} Inv_Fortuneo_Imported_With_Skipped_ToastInputs */
+/** @typedef {{}} Inv_Fortuneo_Mapping_TitleInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Inv_Fortuneo_Ops_CountInputs */
+/** @typedef {{}} Inv_Fortuneo_Parse_ErrorInputs */
+/** @typedef {{}} Inv_Fortuneo_ParsingInputs */
+/** @typedef {{}} Inv_Fortuneo_Preview_TitleInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Inv_Fortuneo_Skipped_Non_TradesInputs */
+/** @typedef {{ rows: NonNullable<unknown>, securities: NonNullable<unknown> }} Inv_Fortuneo_SummaryInputs */
+/** @typedef {{}} Inv_Fortuneo_UnmatchedInputs */
 /** @typedef {{}} Inv_Kpi_Day_ChangeInputs */
 /** @typedef {{}} Inv_Kpi_Day_Change_NaInputs */
 /** @typedef {{}} Inv_Kpi_InvestedInputs */
@@ -306,6 +325,7 @@
 /** @typedef {{}} Inv_Manual_Price_UpdatedInputs */
 /** @typedef {{}} Inv_No_Quote_BadgeInputs */
 /** @typedef {{}} Inv_Op_Account_LabelInputs */
+/** @typedef {{}} Inv_Op_Amount_Eur_LabelInputs */
 /** @typedef {{}} Inv_Op_Asset_Class_LabelInputs */
 /** @typedef {{}} Inv_Op_Date_LabelInputs */
 /** @typedef {{}} Inv_Op_Dialog_DescInputs */
@@ -352,6 +372,7 @@
 /** @typedef {{}} Inv_Tx_TitleInputs */
 /** @typedef {{}} Inv_Tx_Type_BuyInputs */
 /** @typedef {{}} Inv_Tx_Type_DividendInputs */
+/** @typedef {{}} Inv_Tx_Type_InterestInputs */
 /** @typedef {{}} Inv_Tx_Type_SellInputs */
 /** @typedef {{}} Inv_Tx_Updated_ToastInputs */
 /** @typedef {{}} Mapping_Col_ExcludeInputs */
@@ -1819,6 +1840,82 @@ export const inv_empty_positions_title = /** @type {(inputs: Inv_Empty_Positions
 	return /** @type {LocalizedString} */ (`Aucune position enregistrée`)
 };
 
+export const inv_fortuneo_change_ticker = /** @type {(inputs: Inv_Fortuneo_Change_TickerInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Autre ticker`)
+};
+
+export const inv_fortuneo_choose_file = /** @type {(inputs: Inv_Fortuneo_Choose_FileInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Choisir un fichier .zip ou .csv`)
+};
+
+export const inv_fortuneo_dialog_desc = /** @type {(inputs: Inv_Fortuneo_Dialog_DescInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Sélectionnez le fichier ZIP ou CSV téléchargé depuis Fortuneo (HistoriqueOperationsBourse). Les doublons sont ignorés automatiquement.`)
+};
+
+export const inv_fortuneo_dialog_title = /** @type {(inputs: Inv_Fortuneo_Dialog_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Importer un export Fortuneo`)
+};
+
+export const inv_fortuneo_dropdown_item = /** @type {(inputs: Inv_Fortuneo_Dropdown_ItemInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Fortuneo (ZIP / CSV)`)
+};
+
+export const inv_fortuneo_file_label = /** @type {(inputs: Inv_Fortuneo_File_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Fichier ZIP / CSV Fortuneo`)
+};
+
+export const inv_fortuneo_import_button = /** @type {(inputs: Inv_Fortuneo_Import_ButtonInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Importer Fortuneo`)
+};
+
+export const inv_fortuneo_import_error = /** @type {(inputs: Inv_Fortuneo_Import_ErrorInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Impossible d'importer les opérations`)
+};
+
+export const inv_fortuneo_import_submit = /** @type {(inputs: Inv_Fortuneo_Import_SubmitInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Importer ${i?.count} opération(s)`)
+};
+
+export const inv_fortuneo_imported_toast = /** @type {(inputs: Inv_Fortuneo_Imported_ToastInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`${i?.imported} opération(s) importée(s)`)
+};
+
+export const inv_fortuneo_imported_with_skipped_toast = /** @type {(inputs: Inv_Fortuneo_Imported_With_Skipped_ToastInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`${i?.imported} opération(s) importée(s), ${i?.skipped} doublon(s) ignoré(s)`)
+};
+
+export const inv_fortuneo_mapping_title = /** @type {(inputs: Inv_Fortuneo_Mapping_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Associer les libellés Fortuneo aux tickers Yahoo Finance`)
+};
+
+export const inv_fortuneo_ops_count = /** @type {(inputs: Inv_Fortuneo_Ops_CountInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`${i?.count} op.`)
+};
+
+export const inv_fortuneo_parse_error = /** @type {(inputs: Inv_Fortuneo_Parse_ErrorInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Impossible de lire le fichier Fortuneo`)
+};
+
+export const inv_fortuneo_parsing = /** @type {(inputs: Inv_Fortuneo_ParsingInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Lecture du fichier et recherche des tickers...`)
+};
+
+export const inv_fortuneo_preview_title = /** @type {(inputs: Inv_Fortuneo_Preview_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Aperçu des opérations`)
+};
+
+export const inv_fortuneo_skipped_non_trades = /** @type {(inputs: Inv_Fortuneo_Skipped_Non_TradesInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`(${i?.count} ligne(s) hors bourse ignorée(s))`)
+};
+
+export const inv_fortuneo_summary = /** @type {(inputs: Inv_Fortuneo_SummaryInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`${i?.rows} opération(s) détectée(s) sur ${i?.securities} titre(s)`)
+};
+
+export const inv_fortuneo_unmatched = /** @type {(inputs: Inv_Fortuneo_UnmatchedInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Aucun ticker trouvé — rechercher`)
+};
+
 export const inv_kpi_day_change = /** @type {(inputs: Inv_Kpi_Day_ChangeInputs) => LocalizedString} */ () => {
 	return /** @type {LocalizedString} */ (`Variation du jour`)
 };
@@ -1875,6 +1972,10 @@ export const inv_op_account_label = /** @type {(inputs: Inv_Op_Account_LabelInpu
 	return /** @type {LocalizedString} */ (`Compte`)
 };
 
+export const inv_op_amount_eur_label = /** @type {(inputs: Inv_Op_Amount_Eur_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Montant (€)`)
+};
+
 export const inv_op_asset_class_label = /** @type {(inputs: Inv_Op_Asset_Class_LabelInputs) => LocalizedString} */ () => {
 	return /** @type {LocalizedString} */ (`Classe d'actifs`)
 };
@@ -1888,7 +1989,7 @@ export const inv_op_dialog_desc = /** @type {(inputs: Inv_Op_Dialog_DescInputs) 
 };
 
 export const inv_op_euro_fund_hint = /** @type {(inputs: Inv_Op_Euro_Fund_HintInputs) => LocalizedString} */ () => {
-	return /** @type {LocalizedString} */ (`Astuce : pour un Fonds Euros, mettez Quantité = 1 et saisissez le montant versé comme prix.`)
+	return /** @type {LocalizedString} */ (`Pour un Fonds Euros, saisissez chaque versement mensuel en Achat et les bénéfices annuels en Intérêts.`)
 };
 
 export const inv_op_fees_label = /** @type {(inputs: Inv_Op_Fees_LabelInputs) => LocalizedString} */ () => {
@@ -2057,6 +2158,10 @@ export const inv_tx_type_buy = /** @type {(inputs: Inv_Tx_Type_BuyInputs) => Loc
 
 export const inv_tx_type_dividend = /** @type {(inputs: Inv_Tx_Type_DividendInputs) => LocalizedString} */ () => {
 	return /** @type {LocalizedString} */ (`Dividende`)
+};
+
+export const inv_tx_type_interest = /** @type {(inputs: Inv_Tx_Type_InterestInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Intérêts`)
 };
 
 export const inv_tx_type_sell = /** @type {(inputs: Inv_Tx_Type_SellInputs) => LocalizedString} */ () => {

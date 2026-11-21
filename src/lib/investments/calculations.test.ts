@@ -72,7 +72,18 @@ const SECURITIES: Array<SecurityLike> = [
     assetClass: "euro_fund",
     currency: "EUR",
     pricingMode: "manual",
-    manualPriceCents: 520_000,
+    manualPriceCents: null,
+    updatedAt: "2026-11-01T00:00:00Z",
+  },
+  {
+    id: 4,
+    symbol: "MANUAL:scpi-remake",
+    isin: null,
+    name: "SCPI Remake Live",
+    assetClass: "scpi",
+    currency: "EUR",
+    pricingMode: "manual",
+    manualPriceCents: 20_500,
     updatedAt: "2026-11-01T00:00:00Z",
   },
 ]
@@ -169,7 +180,7 @@ describe("computeInvestmentsPortfolio", () => {
         quantity: 5,
         totalEurCents: 1_200,
       }),
-      // AV: Buy 1 Fonds Euros @ 5000 EUR, manualPriceCents updated to 5200 EUR -> +200 EUR gain
+      // AV: Monthly Euro Fund deposits (3000 + 100 + 100 = 3200 EUR) + 120 EUR annual interest -> value 3320 EUR
       tx({
         id: 6,
         accountId: 7,
@@ -177,7 +188,44 @@ describe("computeInvestmentsPortfolio", () => {
         type: "buy",
         date: "2026-05-01",
         quantity: 1,
-        totalEurCents: 500_000,
+        totalEurCents: 300_000,
+      }),
+      tx({
+        id: 7,
+        accountId: 7,
+        securityId: 3,
+        type: "buy",
+        date: "2026-06-01",
+        quantity: 1,
+        totalEurCents: 10_000,
+      }),
+      tx({
+        id: 8,
+        accountId: 7,
+        securityId: 3,
+        type: "buy",
+        date: "2026-07-01",
+        quantity: 1,
+        totalEurCents: 10_000,
+      }),
+      tx({
+        id: 9,
+        accountId: 7,
+        securityId: 3,
+        type: "interest",
+        date: "2026-10-15",
+        quantity: 1,
+        totalEurCents: 12_000,
+      }),
+      // SCPI (manual unit price): Buy 10 shares @ 200 EUR = 2000 EUR, manualPrice = 205 EUR -> value 2050 EUR
+      tx({
+        id: 10,
+        accountId: 7,
+        securityId: 4,
+        type: "buy",
+        date: "2026-05-01",
+        quantity: 10,
+        totalEurCents: 200_000,
       }),
     ]
 
@@ -188,7 +236,7 @@ describe("computeInvestmentsPortfolio", () => {
       quotes: QUOTES,
     })
 
-    expect(positions).toHaveLength(3)
+    expect(positions).toHaveLength(4)
 
     const cw8 = positions.find((p) => p.security.symbol === "CW8.PA")!
     expect(cw8.quantity).toBe(3)
@@ -206,19 +254,25 @@ describe("computeInvestmentsPortfolio", () => {
     expect(aapl.dividendsEurCents).toBe(1_200)
 
     const fondsEuros = positions.find((p) => p.security.assetClass === "euro_fund")!
-    expect(fondsEuros.marketValueEurCents).toBe(520_000)
-    expect(fondsEuros.unrealizedGainEurCents).toBe(20_000)
+    expect(fondsEuros.costBasisEurCents).toBe(320_000)
+    expect(fondsEuros.marketValueEurCents).toBe(332_000)
+    expect(fondsEuros.unrealizedGainEurCents).toBe(12_000)
 
-    // Total value = 1650 + 900 + 5200 = 7750 EUR
-    expect(summary.totalValueEurCents).toBe(775_000)
-    // Total invested = 1530 + 850 + 5000 = 7380 EUR
-    expect(summary.totalInvestedEurCents).toBe(738_000)
-    expect(summary.totalUnrealizedGainEurCents).toBe(37_000)
+    const scpi = positions.find((p) => p.security.assetClass === "scpi")!
+    expect(scpi.marketValueEurCents).toBe(205_000)
+    expect(scpi.unrealizedGainEurCents).toBe(5_000)
+
+    // Total value = 1650 + 900 + 3320 + 2050 = 7920 EUR
+    expect(summary.totalValueEurCents).toBe(792_000)
+    // Total invested = 1530 + 850 + 3200 + 2000 = 7580 EUR
+    expect(summary.totalInvestedEurCents).toBe(758_000)
+    expect(summary.totalUnrealizedGainEurCents).toBe(34_000)
     expect(summary.totalRealizedGainEurCents).toBe(3_000)
     expect(summary.totalDividendsEurCents).toBe(1_200)
     expect(summary.byAssetClass.etf).toBe(165_000)
     expect(summary.byAssetClass.stock).toBe(90_000)
-    expect(summary.byAssetClass.euro_fund).toBe(520_000)
+    expect(summary.byAssetClass.euro_fund).toBe(332_000)
+    expect(summary.byAssetClass.scpi).toBe(205_000)
   })
 
   test("filters cleanly by accountId", () => {

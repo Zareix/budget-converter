@@ -294,6 +294,25 @@ import { getLocale, experimentalStaticLocale } from "../runtime.js"
 /** @typedef {{}} Inv_Empty_Accounts_TitleInputs */
 /** @typedef {{}} Inv_Empty_Positions_DescInputs */
 /** @typedef {{}} Inv_Empty_Positions_TitleInputs */
+/** @typedef {{}} Inv_Fortuneo_Change_TickerInputs */
+/** @typedef {{}} Inv_Fortuneo_Choose_FileInputs */
+/** @typedef {{}} Inv_Fortuneo_Dialog_DescInputs */
+/** @typedef {{}} Inv_Fortuneo_Dialog_TitleInputs */
+/** @typedef {{}} Inv_Fortuneo_Dropdown_ItemInputs */
+/** @typedef {{}} Inv_Fortuneo_File_LabelInputs */
+/** @typedef {{}} Inv_Fortuneo_Import_ButtonInputs */
+/** @typedef {{}} Inv_Fortuneo_Import_ErrorInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Inv_Fortuneo_Import_SubmitInputs */
+/** @typedef {{ imported: NonNullable<unknown> }} Inv_Fortuneo_Imported_ToastInputs */
+/** @typedef {{ imported: NonNullable<unknown>, skipped: NonNullable<unknown> }} Inv_Fortuneo_Imported_With_Skipped_ToastInputs */
+/** @typedef {{}} Inv_Fortuneo_Mapping_TitleInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Inv_Fortuneo_Ops_CountInputs */
+/** @typedef {{}} Inv_Fortuneo_Parse_ErrorInputs */
+/** @typedef {{}} Inv_Fortuneo_ParsingInputs */
+/** @typedef {{}} Inv_Fortuneo_Preview_TitleInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Inv_Fortuneo_Skipped_Non_TradesInputs */
+/** @typedef {{ rows: NonNullable<unknown>, securities: NonNullable<unknown> }} Inv_Fortuneo_SummaryInputs */
+/** @typedef {{}} Inv_Fortuneo_UnmatchedInputs */
 /** @typedef {{}} Inv_Kpi_Day_ChangeInputs */
 /** @typedef {{}} Inv_Kpi_Day_Change_NaInputs */
 /** @typedef {{}} Inv_Kpi_InvestedInputs */
@@ -308,6 +327,7 @@ import { getLocale, experimentalStaticLocale } from "../runtime.js"
 /** @typedef {{}} Inv_Manual_Price_UpdatedInputs */
 /** @typedef {{}} Inv_No_Quote_BadgeInputs */
 /** @typedef {{}} Inv_Op_Account_LabelInputs */
+/** @typedef {{}} Inv_Op_Amount_Eur_LabelInputs */
 /** @typedef {{}} Inv_Op_Asset_Class_LabelInputs */
 /** @typedef {{}} Inv_Op_Date_LabelInputs */
 /** @typedef {{}} Inv_Op_Dialog_DescInputs */
@@ -354,6 +374,7 @@ import { getLocale, experimentalStaticLocale } from "../runtime.js"
 /** @typedef {{}} Inv_Tx_TitleInputs */
 /** @typedef {{}} Inv_Tx_Type_BuyInputs */
 /** @typedef {{}} Inv_Tx_Type_DividendInputs */
+/** @typedef {{}} Inv_Tx_Type_InterestInputs */
 /** @typedef {{}} Inv_Tx_Type_SellInputs */
 /** @typedef {{}} Inv_Tx_Updated_ToastInputs */
 /** @typedef {{}} Mapping_Col_ExcludeInputs */
@@ -4744,6 +4765,272 @@ export const inv_empty_positions_title = /** @type {((inputs?: Inv_Empty_Positio
 /**
 * | output |
 * | --- |
+* | "Search other" |
+*
+* @param {Inv_Fortuneo_Change_TickerInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const inv_fortuneo_change_ticker = /** @type {((inputs?: Inv_Fortuneo_Change_TickerInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Inv_Fortuneo_Change_TickerInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.inv_fortuneo_change_ticker(inputs)
+	return __en.inv_fortuneo_change_ticker(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Choose .zip or .csv file" |
+*
+* @param {Inv_Fortuneo_Choose_FileInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const inv_fortuneo_choose_file = /** @type {((inputs?: Inv_Fortuneo_Choose_FileInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Inv_Fortuneo_Choose_FileInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.inv_fortuneo_choose_file(inputs)
+	return __en.inv_fortuneo_choose_file(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Upload the ZIP or CSV file downloaded from Fortuneo (HistoriqueOperationsBourse). Duplicates are skipped automatically." |
+*
+* @param {Inv_Fortuneo_Dialog_DescInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const inv_fortuneo_dialog_desc = /** @type {((inputs?: Inv_Fortuneo_Dialog_DescInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Inv_Fortuneo_Dialog_DescInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.inv_fortuneo_dialog_desc(inputs)
+	return __en.inv_fortuneo_dialog_desc(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Import Fortuneo Export" |
+*
+* @param {Inv_Fortuneo_Dialog_TitleInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const inv_fortuneo_dialog_title = /** @type {((inputs?: Inv_Fortuneo_Dialog_TitleInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Inv_Fortuneo_Dialog_TitleInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.inv_fortuneo_dialog_title(inputs)
+	return __en.inv_fortuneo_dialog_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Fortuneo (ZIP / CSV)" |
+*
+* @param {Inv_Fortuneo_Dropdown_ItemInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const inv_fortuneo_dropdown_item = /** @type {((inputs?: Inv_Fortuneo_Dropdown_ItemInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Inv_Fortuneo_Dropdown_ItemInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.inv_fortuneo_dropdown_item(inputs)
+	return __en.inv_fortuneo_dropdown_item(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Fortuneo ZIP / CSV file" |
+*
+* @param {Inv_Fortuneo_File_LabelInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const inv_fortuneo_file_label = /** @type {((inputs?: Inv_Fortuneo_File_LabelInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Inv_Fortuneo_File_LabelInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.inv_fortuneo_file_label(inputs)
+	return __en.inv_fortuneo_file_label(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Import Fortuneo" |
+*
+* @param {Inv_Fortuneo_Import_ButtonInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const inv_fortuneo_import_button = /** @type {((inputs?: Inv_Fortuneo_Import_ButtonInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Inv_Fortuneo_Import_ButtonInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.inv_fortuneo_import_button(inputs)
+	return __en.inv_fortuneo_import_button(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Failed to import operations" |
+*
+* @param {Inv_Fortuneo_Import_ErrorInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const inv_fortuneo_import_error = /** @type {((inputs?: Inv_Fortuneo_Import_ErrorInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Inv_Fortuneo_Import_ErrorInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.inv_fortuneo_import_error(inputs)
+	return __en.inv_fortuneo_import_error(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Import {count} operation(s)" |
+*
+* @param {Inv_Fortuneo_Import_SubmitInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const inv_fortuneo_import_submit = /** @type {((inputs: Inv_Fortuneo_Import_SubmitInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Inv_Fortuneo_Import_SubmitInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.inv_fortuneo_import_submit(inputs)
+	return __en.inv_fortuneo_import_submit(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Imported {imported} operation(s)" |
+*
+* @param {Inv_Fortuneo_Imported_ToastInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const inv_fortuneo_imported_toast = /** @type {((inputs: Inv_Fortuneo_Imported_ToastInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Inv_Fortuneo_Imported_ToastInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.inv_fortuneo_imported_toast(inputs)
+	return __en.inv_fortuneo_imported_toast(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Imported {imported} operation(s), skipped {skipped} duplicate(s)" |
+*
+* @param {Inv_Fortuneo_Imported_With_Skipped_ToastInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const inv_fortuneo_imported_with_skipped_toast = /** @type {((inputs: Inv_Fortuneo_Imported_With_Skipped_ToastInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Inv_Fortuneo_Imported_With_Skipped_ToastInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.inv_fortuneo_imported_with_skipped_toast(inputs)
+	return __en.inv_fortuneo_imported_with_skipped_toast(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Match Fortuneo labels to Yahoo Finance tickers" |
+*
+* @param {Inv_Fortuneo_Mapping_TitleInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const inv_fortuneo_mapping_title = /** @type {((inputs?: Inv_Fortuneo_Mapping_TitleInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Inv_Fortuneo_Mapping_TitleInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.inv_fortuneo_mapping_title(inputs)
+	return __en.inv_fortuneo_mapping_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "{count} op." |
+*
+* @param {Inv_Fortuneo_Ops_CountInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const inv_fortuneo_ops_count = /** @type {((inputs: Inv_Fortuneo_Ops_CountInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Inv_Fortuneo_Ops_CountInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.inv_fortuneo_ops_count(inputs)
+	return __en.inv_fortuneo_ops_count(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Failed to parse Fortuneo file" |
+*
+* @param {Inv_Fortuneo_Parse_ErrorInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const inv_fortuneo_parse_error = /** @type {((inputs?: Inv_Fortuneo_Parse_ErrorInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Inv_Fortuneo_Parse_ErrorInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.inv_fortuneo_parse_error(inputs)
+	return __en.inv_fortuneo_parse_error(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Reading file & matching tickers..." |
+*
+* @param {Inv_Fortuneo_ParsingInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const inv_fortuneo_parsing = /** @type {((inputs?: Inv_Fortuneo_ParsingInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Inv_Fortuneo_ParsingInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.inv_fortuneo_parsing(inputs)
+	return __en.inv_fortuneo_parsing(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Operations preview" |
+*
+* @param {Inv_Fortuneo_Preview_TitleInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const inv_fortuneo_preview_title = /** @type {((inputs?: Inv_Fortuneo_Preview_TitleInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Inv_Fortuneo_Preview_TitleInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.inv_fortuneo_preview_title(inputs)
+	return __en.inv_fortuneo_preview_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "({count} non-trade row(s) ignored)" |
+*
+* @param {Inv_Fortuneo_Skipped_Non_TradesInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const inv_fortuneo_skipped_non_trades = /** @type {((inputs: Inv_Fortuneo_Skipped_Non_TradesInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Inv_Fortuneo_Skipped_Non_TradesInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.inv_fortuneo_skipped_non_trades(inputs)
+	return __en.inv_fortuneo_skipped_non_trades(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "{rows} operation(s) detected across {securities} security(ies)" |
+*
+* @param {Inv_Fortuneo_SummaryInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const inv_fortuneo_summary = /** @type {((inputs: Inv_Fortuneo_SummaryInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Inv_Fortuneo_SummaryInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.inv_fortuneo_summary(inputs)
+	return __en.inv_fortuneo_summary(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "No match found — search ticker" |
+*
+* @param {Inv_Fortuneo_UnmatchedInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const inv_fortuneo_unmatched = /** @type {((inputs?: Inv_Fortuneo_UnmatchedInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Inv_Fortuneo_UnmatchedInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.inv_fortuneo_unmatched(inputs)
+	return __en.inv_fortuneo_unmatched(inputs)
+});
+/**
+* | output |
+* | --- |
 * | "Daily Change" |
 *
 * @param {Inv_Kpi_Day_ChangeInputs} inputs
@@ -4940,6 +5227,20 @@ export const inv_op_account_label = /** @type {((inputs?: Inv_Op_Account_LabelIn
 /**
 * | output |
 * | --- |
+* | "Amount (€)" |
+*
+* @param {Inv_Op_Amount_Eur_LabelInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const inv_op_amount_eur_label = /** @type {((inputs?: Inv_Op_Amount_Eur_LabelInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Inv_Op_Amount_Eur_LabelInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.inv_op_amount_eur_label(inputs)
+	return __en.inv_op_amount_eur_label(inputs)
+});
+/**
+* | output |
+* | --- |
 * | "Asset Class" |
 *
 * @param {Inv_Op_Asset_Class_LabelInputs} inputs
@@ -4982,7 +5283,7 @@ export const inv_op_dialog_desc = /** @type {((inputs?: Inv_Op_Dialog_DescInputs
 /**
 * | output |
 * | --- |
-* | "Tip: for a Euro Fund, set Quantity = 1 and enter your deposit amount as the price." |
+* | "For a Euro Fund, simply enter each monthly deposit as Buy and annual returns as Interest." |
 *
 * @param {Inv_Op_Euro_Fund_HintInputs} inputs
 * @param {{ locale?: "en" | "fr" }} options
@@ -5580,6 +5881,20 @@ export const inv_tx_type_dividend = /** @type {((inputs?: Inv_Tx_Type_DividendIn
 	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
 	if (locale === "fr") return __fr.inv_tx_type_dividend(inputs)
 	return __en.inv_tx_type_dividend(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Interest" |
+*
+* @param {Inv_Tx_Type_InterestInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const inv_tx_type_interest = /** @type {((inputs?: Inv_Tx_Type_InterestInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Inv_Tx_Type_InterestInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.inv_tx_type_interest(inputs)
+	return __en.inv_tx_type_interest(inputs)
 });
 /**
 * | output |
