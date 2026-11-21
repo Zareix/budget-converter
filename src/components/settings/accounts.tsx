@@ -36,15 +36,23 @@ import {
 import type { AccountType } from "@/lib/db/schema"
 import { ACCOUNT_TYPES } from "@/lib/db/schema"
 import { addAccount, deleteAccount, editAccount, getAccounts } from "@/lib/server/budget"
+import { m } from "@/paraglide/messages"
 
 type AccountRow = Awaited<ReturnType<typeof getAccounts>>[number]
 
-const ACCOUNT_TYPE_LABELS: Record<AccountType, string> = {
-  checking: "Checking",
-  savings: "Savings",
-  joint: "Joint",
-  investment: "Investment",
-  other: "Other",
+const getAccountTypeLabel = (type: AccountType): string => {
+  switch (type) {
+    case "checking":
+      return m.account_type_checking()
+    case "savings":
+      return m.account_type_savings()
+    case "joint":
+      return m.account_type_joint()
+    case "investment":
+      return m.account_type_investment()
+    case "other":
+      return m.account_type_other()
+  }
 }
 
 const toSlug = (value: string) =>
@@ -72,7 +80,7 @@ const AccountForm = ({ account, onFinish }: { account?: AccountRow; onFinish: ()
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["accounts"] })
       queryClient.invalidateQueries({ queryKey: ["budget"] })
-      toast.success(account ? "Account updated" : "Account created")
+      toast.success(account ? m.accounts_updated_toast() : m.accounts_created_toast())
       onFinish()
     },
   })
@@ -86,7 +94,7 @@ const AccountForm = ({ account, onFinish }: { account?: AccountRow; onFinish: ()
     >
       <FieldGroup>
         <Field>
-          <FieldLabel htmlFor="account-name">Name</FieldLabel>
+          <FieldLabel htmlFor="account-name">{m.common_name()}</FieldLabel>
           <Input
             id="account-name"
             value={name}
@@ -96,22 +104,22 @@ const AccountForm = ({ account, onFinish }: { account?: AccountRow; onFinish: ()
         </Field>
         {!account && (
           <Field>
-            <FieldLabel htmlFor="account-slug">Slug</FieldLabel>
+            <FieldLabel htmlFor="account-slug">{m.common_slug()}</FieldLabel>
             <Input
               id="account-slug"
               value={slug}
               onChange={(e) => setSlug(e.target.value)}
               placeholder={toSlug(name) || "sg-checking"}
             />
-            <FieldDescription>Unique identifier for this account.</FieldDescription>
+            <FieldDescription>{m.accounts_slug_desc()}</FieldDescription>
           </Field>
         )}
         <div className="grid grid-cols-2 gap-3">
           <Field>
-            <FieldLabel htmlFor="account-type">Type</FieldLabel>
+            <FieldLabel htmlFor="account-type">{m.common_type()}</FieldLabel>
             <Select
               value={type}
-              items={ACCOUNT_TYPES.map((t) => ({ value: t, label: ACCOUNT_TYPE_LABELS[t] }))}
+              items={ACCOUNT_TYPES.map((t) => ({ value: t, label: getAccountTypeLabel(t) }))}
               onValueChange={(value) => {
                 if (value) setType(value)
               }}
@@ -122,14 +130,14 @@ const AccountForm = ({ account, onFinish }: { account?: AccountRow; onFinish: ()
               <SelectContent>
                 {ACCOUNT_TYPES.map((t) => (
                   <SelectItem key={t} value={t}>
-                    {ACCOUNT_TYPE_LABELS[t]}
+                    {getAccountTypeLabel(t)}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </Field>
           <Field>
-            <FieldLabel htmlFor="account-color">Color</FieldLabel>
+            <FieldLabel htmlFor="account-color">{m.common_color()}</FieldLabel>
             <div className="flex items-center gap-2">
               <input
                 id="account-color"
@@ -144,7 +152,7 @@ const AccountForm = ({ account, onFinish }: { account?: AccountRow; onFinish: ()
         </div>
         {mutation.isError && (
           <p className="text-xs text-destructive">
-            {mutation.error instanceof Error ? mutation.error.message : "Failed to save account"}
+            {mutation.error instanceof Error ? mutation.error.message : m.accounts_save_error()}
           </p>
         )}
         <Button
@@ -152,7 +160,7 @@ const AccountForm = ({ account, onFinish }: { account?: AccountRow; onFinish: ()
           disabled={!name.trim() || !finalSlug || mutation.isPending}
           className="self-end"
         >
-          {mutation.isPending ? "Saving..." : "Save"}
+          {mutation.isPending ? m.common_saving() : m.common_save()}
         </Button>
       </FieldGroup>
     </form>
@@ -166,10 +174,8 @@ const AccountDialog = ({ account, trigger }: { account?: AccountRow; trigger: Re
       <DialogTrigger render={trigger} />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{account ? "Edit account" : "Create account"}</DialogTitle>
-          <DialogDescription>
-            Bank and investment accounts used as bill sources and future balance snapshots.
-          </DialogDescription>
+          <DialogTitle>{account ? m.accounts_edit_title() : m.accounts_create_title()}</DialogTitle>
+          <DialogDescription>{m.accounts_dialog_desc()}</DialogDescription>
         </DialogHeader>
         <AccountForm account={account} onFinish={() => setIsOpen(false)} />
       </DialogContent>
@@ -201,18 +207,15 @@ const DeleteAccountButton = ({ account }: { account: AccountRow }) => {
       />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete Account</DialogTitle>
-          <DialogDescription>
-            Delete "{account.name}"? Bills referencing it will keep their amounts with an empty
-            source account.
-          </DialogDescription>
+          <DialogTitle>{m.accounts_delete_title()}</DialogTitle>
+          <DialogDescription>{m.accounts_delete_desc({ name: account.name })}</DialogDescription>
         </DialogHeader>
         <Button
           variant="destructive"
           onClick={() => mutation.mutate()}
           disabled={mutation.isPending}
         >
-          {mutation.isPending ? "Deleting..." : "Delete"}
+          {mutation.isPending ? m.common_deleting() : m.common_delete()}
         </Button>
       </DialogContent>
     </Dialog>
@@ -222,25 +225,25 @@ const DeleteAccountButton = ({ account }: { account: AccountRow }) => {
 export const AccountsSettings = () => {
   const accountsQuery = useQuery({ queryKey: ["accounts"], queryFn: getAccounts })
 
-  if (accountsQuery.isLoading) return <div>Loading accounts...</div>
+  if (accountsQuery.isLoading) return <div>{m.accounts_loading()}</div>
   if (accountsQuery.isError || !accountsQuery.data) {
-    return <div>Error loading accounts.</div>
+    return <div>{m.accounts_load_error()}</div>
   }
 
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Accounts</CardTitle>
+        <CardTitle>{m.accounts_title()}</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
-          <TableCaption>Bank & investment accounts used as source accounts for bills</TableCaption>
+          <TableCaption>{m.accounts_caption()}</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Color</TableHead>
-              <TableHead className="w-24 text-right">Actions</TableHead>
+              <TableHead>{m.common_name()}</TableHead>
+              <TableHead>{m.common_type()}</TableHead>
+              <TableHead>{m.common_color()}</TableHead>
+              <TableHead className="w-24 text-right">{m.common_actions()}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -248,7 +251,7 @@ export const AccountsSettings = () => {
               <TableRow key={account.id}>
                 <TableCell className="font-medium">{account.name}</TableCell>
                 <TableCell>
-                  <Badge variant="outline">{ACCOUNT_TYPE_LABELS[account.type]}</Badge>
+                  <Badge variant="outline">{getAccountTypeLabel(account.type)}</Badge>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
@@ -284,7 +287,7 @@ export const AccountsSettings = () => {
           trigger={
             <Button variant="outline">
               <PlusIcon />
-              Create Account
+              {m.accounts_create_button()}
             </Button>
           }
         />

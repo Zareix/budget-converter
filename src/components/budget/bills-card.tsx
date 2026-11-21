@@ -46,11 +46,7 @@ import {
   parseAmountToCents,
 } from "@/lib/budget/calculations"
 import type { SubtrackerMetric } from "@/lib/fetcher/subtracker"
-import {
-  SUBTRACKER_METRICS,
-  SUBTRACKER_METRIC_LABELS,
-  resolveMetricForMonth,
-} from "@/lib/fetcher/subtracker"
+import { SUBTRACKER_METRICS, resolveMetricForMonth } from "@/lib/fetcher/subtracker"
 import {
   addBill,
   applySubtrackerBillsSync,
@@ -60,6 +56,18 @@ import {
   updateBill,
 } from "@/lib/server/budget"
 import { cn } from "@/lib/utils"
+import { m } from "@/paraglide/messages"
+
+const getSubtrackerMetricLabel = (metric: SubtrackerMetric): string => {
+  switch (metric) {
+    case "totalThisMonth":
+      return m.subtracker_metric_this_month()
+    case "expectedNextMonth":
+      return m.subtracker_metric_next_month()
+    case "totalPerMonth":
+      return m.subtracker_metric_monthly_avg()
+  }
+}
 
 type AccountOption = {
   id: number
@@ -113,14 +121,18 @@ const SubtrackerSyncDialog = ({ monthId }: { monthId: string }) => {
       queryClient.invalidateQueries({ queryKey: ["budget", monthId] })
       queryClient.invalidateQueries({ queryKey: ["months"] })
       const parts: Array<string> = []
-      if (res.created > 0) parts.push(`${res.created} created`)
-      if (res.updated > 0) parts.push(`${res.updated} updated`)
-      if (res.unchanged > 0) parts.push(`${res.unchanged} unchanged`)
-      toast.success(`Subtracker sync complete (${parts.join(", ") || "no changes"})`)
+      if (res.created > 0) parts.push(m.subtracker_sync_created({ count: res.created }))
+      if (res.updated > 0) parts.push(m.subtracker_sync_updated({ count: res.updated }))
+      if (res.unchanged > 0) parts.push(m.subtracker_sync_unchanged({ count: res.unchanged }))
+      toast.success(
+        m.subtracker_sync_complete_toast({
+          summary: parts.join(", ") || m.subtracker_sync_no_changes(),
+        }),
+      )
       setOpen(false)
     },
     onError: (err) => {
-      toast.error(err instanceof Error ? err.message : "Failed to sync from Subtracker")
+      toast.error(err instanceof Error ? err.message : m.subtracker_sync_error())
     },
   })
 
@@ -133,26 +145,26 @@ const SubtrackerSyncDialog = ({ monthId }: { monthId: string }) => {
         render={
           <Button variant="outline" size="sm">
             <RefreshCwIcon className="size-3.5" />
-            Sync Subtracker
+            {m.subtracker_sync_button()}
           </Button>
         }
       />
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Sync Bills from Subtracker</DialogTitle>
+          <DialogTitle>{m.subtracker_sync_title()}</DialogTitle>
           <DialogDescription>
-            Preview subscription totals for {formatMonthLabel(monthId)} before updating Bills.
+            {m.subtracker_sync_description({ month: formatMonthLabel(monthId) })}
           </DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-3">
           <Field>
-            <FieldLabel htmlFor="st-sync-metric">Subtracker Metric</FieldLabel>
+            <FieldLabel htmlFor="st-sync-metric">{m.subtracker_metric_label()}</FieldLabel>
             <Select
               value={metric}
-              items={SUBTRACKER_METRICS.map((m) => ({
-                value: m,
-                label: SUBTRACKER_METRIC_LABELS[m],
+              items={SUBTRACKER_METRICS.map((metricKey) => ({
+                value: metricKey,
+                label: getSubtrackerMetricLabel(metricKey),
               }))}
               onValueChange={(v) => {
                 if (v) setMetric(v)
@@ -162,43 +174,42 @@ const SubtrackerSyncDialog = ({ monthId }: { monthId: string }) => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {SUBTRACKER_METRICS.map((m) => (
-                  <SelectItem key={m} value={m}>
-                    {SUBTRACKER_METRIC_LABELS[m]}
+                {SUBTRACKER_METRICS.map((metricKey) => (
+                  <SelectItem key={metricKey} value={metricKey}>
+                    {getSubtrackerMetricLabel(metricKey)}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
             {!autoMetric && (
               <p className="text-xs text-amber-600 dark:text-amber-400">
-                Subtracker&apos;s API only exposes the current and next calendar months — choose the
-                metric you want to apply to {formatMonthLabel(monthId)}.
+                {m.subtracker_metric_warning({ month: formatMonthLabel(monthId) })}
               </p>
             )}
           </Field>
 
           {previewQuery.isLoading ? (
             <div className="py-6 text-center text-xs text-muted-foreground">
-              Fetching stats from Subtracker...
+              {m.subtracker_fetching()}
             </div>
           ) : previewQuery.isError ? (
             <div className="border border-destructive/30 bg-destructive/5 p-3 text-xs text-destructive">
               {previewQuery.error instanceof Error
                 ? previewQuery.error.message
-                : "Failed to fetch Subtracker stats"}
+                : m.subtracker_fetch_error()}
             </div>
           ) : items.length === 0 ? (
             <div className="py-6 text-center text-xs text-muted-foreground">
-              No active Subtracker sync rules found. Configure rules in Settings.
+              {m.subtracker_no_rules()}
             </div>
           ) : (
             <div className="border">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Bill</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
-                    <TableHead className="w-24 text-right">Status</TableHead>
+                    <TableHead>{m.subtracker_col_bill()}</TableHead>
+                    <TableHead className="text-right">{m.common_amount()}</TableHead>
+                    <TableHead className="w-24 text-right">{m.common_status()}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -232,10 +243,10 @@ const SubtrackerSyncDialog = ({ monthId }: { monthId: string }) => {
                           }
                         >
                           {item.action === "create"
-                            ? "New"
+                            ? m.subtracker_status_new()
                             : item.action === "update"
-                              ? "Update"
-                              : "Same"}
+                              ? m.subtracker_status_update()
+                              : m.subtracker_status_same()}
                         </Badge>
                       </TableCell>
                     </TableRow>
@@ -252,7 +263,7 @@ const SubtrackerSyncDialog = ({ monthId }: { monthId: string }) => {
               onClick={() => setOpen(false)}
               disabled={applyMutation.isPending}
             >
-              Cancel
+              {m.common_cancel()}
             </Button>
             <Button
               type="button"
@@ -265,7 +276,7 @@ const SubtrackerSyncDialog = ({ monthId }: { monthId: string }) => {
                 applyMutation.isPending
               }
             >
-              {applyMutation.isPending ? "Syncing..." : "Apply Sync"}
+              {applyMutation.isPending ? m.subtracker_syncing() : m.subtracker_apply_sync()}
             </Button>
           </div>
         </div>
@@ -341,11 +352,11 @@ const BillDialog = ({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["budget", monthId] })
       queryClient.invalidateQueries({ queryKey: ["months"] })
-      toast.success(bill ? "Bill updated" : "Bill added")
+      toast.success(bill ? m.bills_updated_toast() : m.bills_added_toast())
       setOpen(false)
     },
     onError: (err) => {
-      toast.error(err instanceof Error ? err.message : "Failed to save bill")
+      toast.error(err instanceof Error ? err.message : m.bills_save_error())
     },
   })
 
@@ -354,7 +365,7 @@ const BillDialog = ({
       <DialogTrigger render={trigger} />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{bill ? "Edit Bill" : "Add Bill"}</DialogTitle>
+          <DialogTitle>{bill ? m.bills_edit() : m.bills_add()}</DialogTitle>
         </DialogHeader>
         <form
           onSubmit={(e) => {
@@ -364,18 +375,18 @@ const BillDialog = ({
         >
           <FieldGroup>
             <Field>
-              <FieldLabel htmlFor="bill-name">Name</FieldLabel>
+              <FieldLabel htmlFor="bill-name">{m.common_name()}</FieldLabel>
               <Input
                 id="bill-name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Rent, Internet, Insurance..."
+                placeholder={m.bills_name_placeholder()}
                 required
               />
             </Field>
             <div className="grid grid-cols-2 gap-3">
               <Field>
-                <FieldLabel htmlFor="bill-due">Due Day (1–31)</FieldLabel>
+                <FieldLabel htmlFor="bill-due">{m.common_due_day_label()}</FieldLabel>
                 <Input
                   id="bill-due"
                   type="number"
@@ -387,7 +398,7 @@ const BillDialog = ({
                 />
               </Field>
               <Field>
-                <FieldLabel htmlFor="bill-share">Share</FieldLabel>
+                <FieldLabel htmlFor="bill-share">{m.common_share()}</FieldLabel>
                 <Select
                   value={sharePercent}
                   items={sharePresets.map((p) => ({
@@ -412,11 +423,11 @@ const BillDialog = ({
               </Field>
             </div>
             <Field>
-              <FieldLabel htmlFor="bill-account">From Account</FieldLabel>
+              <FieldLabel htmlFor="bill-account">{m.common_from_account()}</FieldLabel>
               <Select
                 value={fromAccountId}
                 items={[
-                  { value: "none", label: "None" },
+                  { value: "none", label: m.common_none() },
                   ...accounts.map((a) => ({ value: String(a.id), label: a.name })),
                 ]}
                 onValueChange={(v) => {
@@ -427,7 +438,7 @@ const BillDialog = ({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">None</SelectItem>
+                  <SelectItem value="none">{m.common_none()}</SelectItem>
                   {accounts.map((a) => (
                     <SelectItem key={a.id} value={String(a.id)}>
                       {a.name}
@@ -437,7 +448,7 @@ const BillDialog = ({
               </Select>
             </Field>
             <Field>
-              <FieldLabel htmlFor="bill-budget">Budget (€)</FieldLabel>
+              <FieldLabel htmlFor="bill-budget">{m.common_budget_eur()}</FieldLabel>
               <Input
                 id="bill-budget"
                 inputMode="decimal"
@@ -454,10 +465,10 @@ const BillDialog = ({
                 onClick={() => setOpen(false)}
                 disabled={mutation.isPending}
               >
-                Cancel
+                {m.common_cancel()}
               </Button>
               <Button type="submit" disabled={!name.trim() || mutation.isPending}>
-                {mutation.isPending ? "Saving..." : "Save"}
+                {mutation.isPending ? m.common_saving() : m.common_save()}
               </Button>
             </div>
           </FieldGroup>
@@ -488,7 +499,7 @@ export const BillsCard = ({ monthId, bills, accounts, summary }: BillsCardProps)
       queryClient.invalidateQueries({ queryKey: ["budget", monthId] })
     },
     onError: (err) => {
-      toast.error(err instanceof Error ? err.message : "Failed to update bill")
+      toast.error(err instanceof Error ? err.message : m.bills_update_error())
     },
   })
 
@@ -497,14 +508,14 @@ export const BillsCard = ({ monthId, bills, accounts, summary }: BillsCardProps)
     mutationFn: (id: number) => deleteBill({ data: { id } }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["budget", monthId] })
-      toast.success("Bill deleted")
+      toast.success(m.bills_deleted_toast())
     },
   })
 
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between gap-2">
-        <CardTitle>Bills</CardTitle>
+        <CardTitle>{m.bills_title()}</CardTitle>
         <div className="flex items-center gap-2">
           {canSyncSubtracker && <SubtrackerSyncDialog monthId={monthId} />}
           <BillDialog
@@ -513,7 +524,7 @@ export const BillsCard = ({ monthId, bills, accounts, summary }: BillsCardProps)
             trigger={
               <Button variant="outline" size="sm">
                 <PlusIcon className="size-3.5" />
-                Add Bill
+                {m.bills_add()}
               </Button>
             }
           />
@@ -523,21 +534,21 @@ export const BillsCard = ({ monthId, bills, accounts, summary }: BillsCardProps)
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-10">Paid</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead className="w-14 text-center">Due</TableHead>
-              <TableHead>From</TableHead>
-              <TableHead>Share</TableHead>
-              <TableHead className="text-right">Budget</TableHead>
-              <TableHead className="text-right">Actual</TableHead>
-              <TableHead className="w-16 text-right">Actions</TableHead>
+              <TableHead className="w-10">{m.bills_paid()}</TableHead>
+              <TableHead>{m.common_name()}</TableHead>
+              <TableHead className="w-14 text-center">{m.bills_due()}</TableHead>
+              <TableHead>{m.bills_from()}</TableHead>
+              <TableHead>{m.common_share()}</TableHead>
+              <TableHead className="text-right">{m.common_budget()}</TableHead>
+              <TableHead className="text-right">{m.common_actual()}</TableHead>
+              <TableHead className="w-16 text-right">{m.common_actions()}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {bills.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={8} className="py-6 text-center text-xs text-muted-foreground">
-                  No bills for this month yet.
+                  {m.bills_empty()}
                 </TableCell>
               </TableRow>
             ) : (
@@ -550,7 +561,7 @@ export const BillsCard = ({ monthId, bills, accounts, summary }: BillsCardProps)
                     <TableCell>
                       <Checkbox
                         checked={bill.paid}
-                        aria-label={`Mark ${bill.name} as paid`}
+                        aria-label={m.bills_mark_paid_aria({ name: bill.name })}
                         onCheckedChange={(checked) => {
                           updateMutation.mutate({
                             id: bill.id,
@@ -618,7 +629,7 @@ export const BillsCard = ({ monthId, bills, accounts, summary }: BillsCardProps)
                           bill={bill}
                           accounts={accounts}
                           trigger={
-                            <Button variant="ghost" size="icon-sm" aria-label="Edit bill">
+                            <Button variant="ghost" size="icon-sm" aria-label={m.bills_edit_aria()}>
                               <EditIcon className="size-3.5" />
                             </Button>
                           }
@@ -626,7 +637,7 @@ export const BillsCard = ({ monthId, bills, accounts, summary }: BillsCardProps)
                         <Button
                           variant="ghost"
                           size="icon-sm"
-                          aria-label="Delete bill"
+                          aria-label={m.bills_delete_aria()}
                           onClick={() => deleteMutation.mutate(bill.id)}
                           disabled={deleteMutation.isPending}
                         >
@@ -642,7 +653,7 @@ export const BillsCard = ({ monthId, bills, accounts, summary }: BillsCardProps)
           {bills.length > 0 && (
             <TableFooter>
               <TableRow>
-                <TableCell colSpan={5}>Total</TableCell>
+                <TableCell colSpan={5}>{m.common_total()}</TableCell>
                 <TableCell className="text-right tabular-nums">
                   {formatCents(summary.bills.grossBudgetCents)}
                 </TableCell>

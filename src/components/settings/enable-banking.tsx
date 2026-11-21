@@ -24,6 +24,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { ebGetRedirectUrl, ebListBanks, listAccounts } from "@/lib/server/functions"
+import { m } from "@/paraglide/messages"
 
 type Bank = Awaited<ReturnType<typeof ebListBanks>>[0]
 
@@ -32,7 +33,7 @@ export const EnableBankingSettings = () => {
   const createRedirectUrlMutation = useMutation({
     mutationFn: () => {
       if (!selectedBank) {
-        throw new Error("No bank selected")
+        throw new Error(m.eb_no_bank_selected())
       }
       return ebGetRedirectUrl({
         data: selectedBank,
@@ -55,17 +56,17 @@ export const EnableBankingSettings = () => {
   return (
     <Card className="w-full">
       <CardHeader className="flex items-center justify-between">
-        <CardTitle>Enable Banking</CardTitle>
+        <CardTitle>{m.eb_title()}</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
-          <TableCaption>A list of all EnableBanking accounts configured</TableCaption>
+          <TableCaption>{m.eb_caption()}</TableCaption>
           <TableHeader className="sticky top-0">
             <TableRow>
-              <TableHead>Logo</TableHead>
-              <TableHead>Account Name</TableHead>
-              <TableHead>Institution</TableHead>
-              <TableHead className="w-16">Actions</TableHead>
+              <TableHead>{m.eb_col_logo()}</TableHead>
+              <TableHead>{m.eb_col_account_name()}</TableHead>
+              <TableHead>{m.eb_col_institution()}</TableHead>
+              <TableHead className="w-16">{m.common_actions()}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -75,7 +76,7 @@ export const EnableBankingSettings = () => {
                   {account.institutionLogo && (
                     <img
                       src={account.institutionLogo}
-                      alt={`${account.institutionName} logo`}
+                      alt={m.eb_logo_alt({ institution: account.institutionName })}
                       className="h-full max-h-8 w-full max-w-10 object-contain"
                     />
                   )}
@@ -104,11 +105,11 @@ export const EnableBankingSettings = () => {
           itemToStringLabel={(bank: Bank) => `${bank.name} (${bank.country})`}
         >
           <SelectTrigger className="ml-auto w-full max-w-48">
-            <SelectValue />
+            <SelectValue placeholder={m.eb_select_bank_placeholder()} />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectLabel>Banks</SelectLabel>
+              <SelectLabel>{m.eb_banks_label()}</SelectLabel>
               {banks.map((bank) => (
                 <SelectItem key={bank.name + bank.country} value={bank}>
                   {bank.name} ({bank.country})
@@ -121,7 +122,7 @@ export const EnableBankingSettings = () => {
           onClick={() => createRedirectUrlMutation.mutate()}
           disabled={createRedirectUrlMutation.isPending}
         >
-          Connect your bank account
+          {m.eb_connect_button()}
         </Button>
       </CardFooter>
     </Card>

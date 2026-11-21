@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { importEbAccountsFromJson } from "@/lib/server/functions"
+import { m } from "@/paraglide/messages"
 
 export const ImportEbAccountsButton = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -32,11 +33,11 @@ export const ImportEbAccountsButton = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger render={<Button variant="outline">Import JSON</Button>} />
+      <DialogTrigger render={<Button variant="outline">{m.eb_import_button()}</Button>} />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Import from eb.json</DialogTitle>
-          <DialogDescription>Paste the contents of your eb.json file.</DialogDescription>
+          <DialogTitle>{m.eb_import_title()}</DialogTitle>
+          <DialogDescription>{m.eb_import_desc()}</DialogDescription>
         </DialogHeader>
         <Textarea
           rows={14}
@@ -49,11 +50,11 @@ export const ImportEbAccountsButton = () => {
         />
         {mutation.isError && (
           <p className="text-xs text-destructive">
-            {mutation.error instanceof Error ? mutation.error.message : "Import failed"}
+            {mutation.error instanceof Error ? mutation.error.message : m.common_import_failed()}
           </p>
         )}
         <Button onClick={() => mutation.mutate()} disabled={!json.trim() || mutation.isPending}>
-          {mutation.isPending ? "Importing..." : "Import"}
+          {mutation.isPending ? m.common_importing() : m.common_import()}
         </Button>
       </DialogContent>
     </Dialog>

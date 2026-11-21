@@ -19,8 +19,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { MODES } from "@/lib/mapping/constant"
 import { getMapping } from "@/lib/server/functions"
+import { m } from "@/paraglide/messages"
+
+const getMappingModeName = (mode: string) => {
+  switch (mode) {
+    case "default":
+      return m.mapping_mode_default()
+    case "exact-name":
+      return m.mapping_mode_exact_name()
+    case "exact-name-price":
+      return m.mapping_mode_exact_name_price()
+    default:
+      return m.mapping_mode_unknown()
+  }
+}
 
 export const Mappings = () => {
   const { q } = useSearch({
@@ -36,38 +49,38 @@ export const Mappings = () => {
       if (!q) return data
       const lowerQ = q.toLowerCase()
       return data.filter(
-        (m) =>
-          m.fromName.toLowerCase().includes(lowerQ) ||
-          m.toName.toLowerCase().includes(lowerQ) ||
-          m.toCategoryLabel.toLowerCase().includes(lowerQ),
+        (item) =>
+          item.fromName.toLowerCase().includes(lowerQ) ||
+          item.toName.toLowerCase().includes(lowerQ) ||
+          item.toCategoryLabel.toLowerCase().includes(lowerQ),
       )
     },
   })
 
   if (mappingQuery.isLoading) {
-    return <div>Loading mapping...</div>
+    return <div>{m.mapping_loading()}</div>
   }
 
   if (mappingQuery.isError || !mappingQuery.data) {
     return (
       <div>
-        Error loading mapping:{" "}
-        {mappingQuery.error instanceof Error ? mappingQuery.error.message : "Unknown error"}
+        {m.mapping_load_error({
+          message:
+            mappingQuery.error instanceof Error
+              ? mappingQuery.error.message
+              : m.common_unknown_error(),
+        })}
       </div>
     )
-  }
-
-  const getMappingModeName = (mode: string) => {
-    return MODES.find((m) => m.value === mode)?.label ?? "Unknown mode"
   }
 
   return (
     <Card className="w-full">
       <CardHeader className="flex items-center justify-between">
-        <CardTitle>Mappings</CardTitle>
+        <CardTitle>{m.mapping_title()}</CardTitle>
         <Input
           type="text"
-          placeholder="Search mappings..."
+          placeholder={m.mapping_search_placeholder()}
           className="w-full max-w-60"
           value={q ?? ""}
           onChange={(e) => navigate({ search: { q: e.target.value } })}
@@ -76,17 +89,17 @@ export const Mappings = () => {
       <CardContent>
         <ScrollArea className="h-96 w-full">
           <Table>
-            <TableCaption>A list of all mappings configured</TableCaption>
+            <TableCaption>{m.mapping_table_caption()}</TableCaption>
             <TableHeader className="sticky top-0">
               <TableRow>
-                <TableHead>Mode</TableHead>
-                <TableHead>From Name</TableHead>
-                <TableHead>To Name</TableHead>
-                <TableHead>To Category</TableHead>
-                <TableHead>Default Share</TableHead>
-                <TableHead>From Price</TableHead>
-                <TableHead>Exclude</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead>{m.mapping_col_mode()}</TableHead>
+                <TableHead>{m.mapping_col_from_name()}</TableHead>
+                <TableHead>{m.mapping_col_to_name()}</TableHead>
+                <TableHead>{m.mapping_col_to_category()}</TableHead>
+                <TableHead>{m.common_default_share()}</TableHead>
+                <TableHead>{m.mapping_col_from_price()}</TableHead>
+                <TableHead>{m.mapping_col_exclude()}</TableHead>
+                <TableHead>{m.common_actions()}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -100,11 +113,11 @@ export const Mappings = () => {
                     {mapping.defaultSharePercent !== undefined ? (
                       <SharePill sharePercent={mapping.defaultSharePercent} />
                     ) : (
-                      <span className="text-muted-foreground">Auto</span>
+                      <span className="text-muted-foreground">{m.common_auto()}</span>
                     )}
                   </TableCell>
                   <TableCell>{mapping.fromPrice ?? "-"}</TableCell>
-                  <TableCell>{mapping.exclude ? "Yes" : "No"}</TableCell>
+                  <TableCell>{mapping.exclude ? m.common_yes() : m.common_no()}</TableCell>
                   <TableCell>
                     <EditMappingButton mapping={mapping} />
                     <DeleteMappingButton mapping={mapping} />

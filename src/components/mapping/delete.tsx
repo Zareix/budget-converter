@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog"
 import type { Mapping } from "@/lib/mapping/constant"
 import { deleteMapping } from "@/lib/server/functions"
+import { m } from "@/paraglide/messages"
 
 type Props = {
   mapping: Pick<Mapping, "id">
@@ -41,15 +42,15 @@ export const DeleteMappingButton = ({ mapping }: Props) => {
       />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete Mapping</DialogTitle>
-          <DialogDescription>Are you sure you want to delete this mapping?</DialogDescription>
+          <DialogTitle>{m.mapping_delete_title()}</DialogTitle>
+          <DialogDescription>{m.mapping_delete_desc()}</DialogDescription>
         </DialogHeader>
         <Button
           variant="destructive"
           onClick={() => deleteMappingMutation.mutate()}
           disabled={deleteMappingMutation.isPending}
         >
-          {deleteMappingMutation.isPending ? "Deleting..." : "Delete"}
+          {deleteMappingMutation.isPending ? m.common_deleting() : m.common_delete()}
         </Button>
       </DialogContent>
     </Dialog>

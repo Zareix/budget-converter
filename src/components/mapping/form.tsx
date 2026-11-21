@@ -15,41 +15,62 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { useSharePresets } from "@/hooks/use-share-presets"
-import type { Mapping } from "@/lib/mapping/constant"
+import type { Mapping, Mode } from "@/lib/mapping/constant"
 import { MODES } from "@/lib/mapping/constant"
 import { addMapping, editMapping, getCategories } from "@/lib/server/functions"
+import { m } from "@/paraglide/messages"
 
-const mappingFormSchema = v.variant("mode", [
-  v.object({
-    mode: v.picklist(["default", "exact-name"]),
-    fromName: v.pipe(
-      v.string("From name is required"),
-      v.minLength(1, "From name cannot be empty"),
-    ),
-    toName: v.pipe(v.string("To name is required"), v.minLength(1, "To name cannot be empty")),
-    toCategory: v.pipe(
-      v.string("To category is required"),
-      v.minLength(1, "To category cannot be empty"),
-    ),
-    exclude: v.boolean(),
-    defaultShareOption: v.string(),
-  }),
-  v.object({
-    mode: v.literal("exact-name-price"),
-    fromName: v.pipe(
-      v.string("From name is required"),
-      v.minLength(1, "From name cannot be empty"),
-    ),
-    toName: v.pipe(v.string("To name is required"), v.minLength(1, "To name cannot be empty")),
-    toCategory: v.pipe(
-      v.string("To category is required"),
-      v.minLength(1, "To category cannot be empty"),
-    ),
-    fromPrice: v.number(),
-    exclude: v.boolean(),
-    defaultShareOption: v.string(),
-  }),
-])
+const getModeLabel = (mode: Mode): string => {
+  switch (mode) {
+    case "default":
+      return m.mapping_mode_default()
+    case "exact-name":
+      return m.mapping_mode_exact_name()
+    case "exact-name-price":
+      return m.mapping_mode_exact_name_price()
+  }
+}
+
+const getMappingFormSchema = () =>
+  v.variant("mode", [
+    v.object({
+      mode: v.picklist(["default", "exact-name"]),
+      fromName: v.pipe(
+        v.string(m.mapping_validation_from_name_required()),
+        v.minLength(1, m.mapping_validation_from_name_empty()),
+      ),
+      toName: v.pipe(
+        v.string(m.mapping_validation_to_name_required()),
+        v.minLength(1, m.mapping_validation_to_name_empty()),
+      ),
+      toCategory: v.pipe(
+        v.string(m.mapping_validation_to_category_required()),
+        v.minLength(1, m.mapping_validation_to_category_empty()),
+      ),
+      exclude: v.boolean(),
+      defaultShareOption: v.string(),
+    }),
+    v.object({
+      mode: v.literal("exact-name-price"),
+      fromName: v.pipe(
+        v.string(m.mapping_validation_from_name_required()),
+        v.minLength(1, m.mapping_validation_from_name_empty()),
+      ),
+      toName: v.pipe(
+        v.string(m.mapping_validation_to_name_required()),
+        v.minLength(1, m.mapping_validation_to_name_empty()),
+      ),
+      toCategory: v.pipe(
+        v.string(m.mapping_validation_to_category_required()),
+        v.minLength(1, m.mapping_validation_to_category_empty()),
+      ),
+      fromPrice: v.number(),
+      exclude: v.boolean(),
+      defaultShareOption: v.string(),
+    }),
+  ])
+
+type MappingFormInput = v.InferInput<ReturnType<typeof getMappingFormSchema>>
 
 const toShareOption = (val: number | null | undefined): string => {
   if (val === null || val === undefined) return "auto"
@@ -74,11 +95,11 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
   const categories = categoriesQuery.data ?? []
   const { presets: sharePresets } = useSharePresets()
   const shareOptions = [
-    { value: "auto", label: "Auto (use payment method)" },
+    { value: "auto", label: m.mapping_form_share_auto() },
     ...sharePresets.map((p) => ({ value: String(p.percent), label: `${p.label} (${p.percent}%)` })),
   ]
 
-  const toPayload = (value: v.InferInput<typeof mappingFormSchema>) => {
+  const toPayload = (value: MappingFormInput) => {
     const defaultSharePercent = fromShareOption(value.defaultShareOption)
     if (value.mode === "exact-name-price") {
       return {
@@ -103,22 +124,21 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
 
   const addMappingMutation = useMutation({
     mutationKey: ["addMapping"],
-    mutationFn: async (data: v.InferInput<typeof mappingFormSchema>) =>
-      addMapping({ data: toPayload(data) }),
+    mutationFn: async (data: MappingFormInput) => addMapping({ data: toPayload(data) }),
     onSuccess: () => {
-      toast.success("Mapping created successfully")
+      toast.success(m.mapping_form_created_toast())
       queryClient.invalidateQueries({ queryKey: ["mapping"] })
       form.reset()
       onFinish?.()
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "Failed to create mapping")
+      toast.error(error instanceof Error ? error.message : m.mapping_form_create_error())
     },
   })
 
   const editMappingMutation = useMutation({
     mutationKey: ["editMapping"],
-    mutationFn: async (data: v.InferInput<typeof mappingFormSchema>) =>
+    mutationFn: async (data: MappingFormInput) =>
       editMapping({
         data: {
           id: previousValues!.id!,
@@ -126,13 +146,13 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
         },
       }),
     onSuccess: () => {
-      toast.success("Mapping edited successfully")
+      toast.success(m.mapping_form_edited_toast())
       queryClient.invalidateQueries({ queryKey: ["mapping"] })
       form.reset()
       onFinish?.()
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "Failed to edit mapping")
+      toast.error(error instanceof Error ? error.message : m.mapping_form_edit_error())
     },
   })
 
@@ -140,7 +160,7 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
 
   const form = useForm({
     validators: {
-      onSubmit: mappingFormSchema,
+      onSubmit: getMappingFormSchema(),
     },
     defaultValues: {
       mode: defaultValues?.mode ?? previousValues?.mode ?? "default",
@@ -152,7 +172,7 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
       defaultShareOption: toShareOption(
         defaultValues?.defaultSharePercent ?? previousValues?.defaultSharePercent,
       ),
-    } as v.InferInput<typeof mappingFormSchema>,
+    } as MappingFormInput,
     onSubmit: ({ value }) => {
       if (previousValues) {
         editMappingMutation.mutate(value)
@@ -175,7 +195,7 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
             const isInvalid = field.state.meta.isTouched && field.state.meta.errors.length > 0
             return (
               <Field data-invalid={isInvalid}>
-                <FieldLabel htmlFor="mode-select">Mode</FieldLabel>
+                <FieldLabel htmlFor="mode-select">{m.mapping_col_mode()}</FieldLabel>
                 <Select
                   name={field.name}
                   value={field.state.value}
@@ -186,27 +206,25 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
                   }}
                   items={MODES.map((mode) => ({
                     value: mode.value,
-                    label: mode.label,
+                    label: getModeLabel(mode.value),
                   }))}
                 >
                   <SelectTrigger id="mode-select" aria-invalid={isInvalid}>
-                    <SelectValue placeholder="Select matching mode" />
+                    <SelectValue placeholder={m.mapping_form_mode_placeholder()} />
                   </SelectTrigger>
                   <SelectContent>
                     {MODES.map((mode) => (
                       <SelectItem key={mode.value} value={mode.value}>
-                        {mode.label}
+                        {getModeLabel(mode.value)}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
                 <FieldDescription>
-                  {field.state.value === "default" &&
-                    "Matches if the transaction name contains this value"}
-                  {field.state.value === "exact-name" &&
-                    "Matches only if the transaction name is exactly this value"}
+                  {field.state.value === "default" && m.mapping_mode_default_desc()}
+                  {field.state.value === "exact-name" && m.mapping_mode_exact_name_desc()}
                   {field.state.value === "exact-name-price" &&
-                    "Matches only if both name and price match exactly"}
+                    m.mapping_mode_exact_name_price_desc()}
                 </FieldDescription>
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
@@ -219,7 +237,7 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
             const isInvalid = field.state.meta.isTouched && field.state.meta.errors.length > 0
             return (
               <Field data-invalid={isInvalid}>
-                <FieldLabel htmlFor="from-name">From Name (Source)</FieldLabel>
+                <FieldLabel htmlFor="from-name">{m.mapping_form_from_name()}</FieldLabel>
                 <Input
                   id="from-name"
                   name={field.name}
@@ -227,11 +245,9 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
                   onChange={(e) => field.handleChange(e.target.value)}
                   onBlur={field.handleBlur}
                   aria-invalid={isInvalid}
-                  placeholder="e.g., AMZN Mktp"
+                  placeholder={m.mapping_form_from_name_placeholder()}
                 />
-                <FieldDescription>
-                  The transaction name to match from your bank statement
-                </FieldDescription>
+                <FieldDescription>{m.mapping_form_from_name_desc()}</FieldDescription>
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
             )
@@ -243,7 +259,7 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
             const isInvalid = field.state.meta.isTouched && field.state.meta.errors.length > 0
             return (
               <Field data-invalid={isInvalid}>
-                <FieldLabel htmlFor="to-name">To Name (Target)</FieldLabel>
+                <FieldLabel htmlFor="to-name">{m.mapping_form_to_name()}</FieldLabel>
                 <Input
                   id="to-name"
                   name={field.name}
@@ -251,9 +267,9 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
                   onChange={(e) => field.handleChange(e.target.value)}
                   onBlur={field.handleBlur}
                   aria-invalid={isInvalid}
-                  placeholder="e.g., Amazon"
+                  placeholder={m.mapping_form_to_name_placeholder()}
                 />
-                <FieldDescription>The display name you want for this transaction</FieldDescription>
+                <FieldDescription>{m.mapping_form_to_name_desc()}</FieldDescription>
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
             )
@@ -265,7 +281,7 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
             const isInvalid = field.state.meta.isTouched && field.state.meta.errors.length > 0
             return (
               <Field data-invalid={isInvalid}>
-                <FieldLabel htmlFor="category-select">Category</FieldLabel>
+                <FieldLabel htmlFor="category-select">{m.common_category()}</FieldLabel>
                 <Select
                   name={field.name}
                   value={field.state.value}
@@ -280,7 +296,7 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
                   }))}
                 >
                   <SelectTrigger id="category-select" aria-invalid={isInvalid}>
-                    <SelectValue placeholder="Select a category" />
+                    <SelectValue placeholder={m.mapping_form_category_placeholder()} />
                   </SelectTrigger>
                   <SelectContent>
                     {categories.map((category) => (
@@ -290,7 +306,7 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
                     ))}
                   </SelectContent>
                 </Select>
-                <FieldDescription>The category to assign to this transaction</FieldDescription>
+                <FieldDescription>{m.mapping_form_category_desc()}</FieldDescription>
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
             )
@@ -300,7 +316,7 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
         <form.Field name="defaultShareOption">
           {(field) => (
             <Field>
-              <FieldLabel htmlFor="default-share-select">Default Share</FieldLabel>
+              <FieldLabel htmlFor="default-share-select">{m.common_default_share()}</FieldLabel>
               <Select
                 name={field.name}
                 value={field.state.value}
@@ -312,7 +328,7 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
                 items={shareOptions}
               >
                 <SelectTrigger id="default-share-select">
-                  <SelectValue placeholder="Auto (use payment method)" />
+                  <SelectValue placeholder={m.mapping_form_share_auto()} />
                 </SelectTrigger>
                 <SelectContent>
                   {shareOptions.map((opt) => (
@@ -322,9 +338,7 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
                   ))}
                 </SelectContent>
               </Select>
-              <FieldDescription>
-                Optional share override applied when importing matching transactions
-              </FieldDescription>
+              <FieldDescription>{m.mapping_form_share_desc()}</FieldDescription>
             </Field>
           )}
         </form.Field>
@@ -341,7 +355,7 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
                   const isInvalid = field.state.meta.isTouched && field.state.meta.errors.length > 0
                   return (
                     <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor="from-price">From Price</FieldLabel>
+                      <FieldLabel htmlFor="from-price">{m.mapping_col_from_price()}</FieldLabel>
                       <Input
                         id="from-price"
                         name={field.name}
@@ -352,11 +366,9 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
                         onChange={(e) => field.handleChange(Number.parseFloat(e.target.value))}
                         onBlur={field.handleBlur}
                         aria-invalid={isInvalid}
-                        placeholder="e.g., 19.99"
+                        placeholder={m.mapping_form_from_price_placeholder()}
                       />
-                      <FieldDescription>
-                        Required when using exact name + price mode
-                      </FieldDescription>
+                      <FieldDescription>{m.mapping_form_from_price_desc()}</FieldDescription>
                       {isInvalid && <FieldError errors={field.state.meta.errors} />}
                     </Field>
                   )
@@ -379,7 +391,7 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
                   onCheckedChange={field.handleChange}
                 />
                 <FieldLabel htmlFor={`exclude-${field.name}`} className="font-normal">
-                  Exclude from budget calculations
+                  {m.common_exclude_from_budget()}
                 </FieldLabel>
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
@@ -389,10 +401,14 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
 
         <div className="flex justify-end gap-2 pt-4">
           <Button type="button" variant="outline" onClick={() => form.reset()} disabled={isPending}>
-            Reset
+            {m.common_reset()}
           </Button>
           <Button type="submit" disabled={isPending}>
-            {isPending ? "Saving..." : previousValues ? "Save Changes" : "Create Mapping"}
+            {isPending
+              ? m.common_saving()
+              : previousValues
+                ? m.common_save_changes()
+                : m.mapping_create_button()}
           </Button>
         </div>
       </FieldGroup>

@@ -25,14 +25,16 @@ import { useTransactions } from "@/context/transactions-context"
 import type { Provider } from "@/lib/parsers"
 import { PROVIDERS } from "@/lib/parsers"
 import { fetchTransactions } from "@/lib/server/functions"
+import { m } from "@/paraglide/messages"
 
-const formSchema = v.object({
-  provider: v.picklist(PROVIDERS, "Please select a valid provider"),
-  file: v.pipe(
-    v.file("Please upload a valid CSV file"),
-    v.mimeType(["text/csv"], "Only CSV files are allowed"),
-  ),
-})
+const getFormSchema = () =>
+  v.object({
+    provider: v.picklist(PROVIDERS, m.parser_provider_invalid()),
+    file: v.pipe(
+      v.file(m.parser_file_invalid()),
+      v.mimeType(["text/csv"], m.parser_file_mime_invalid()),
+    ),
+  })
 
 export const ParserFormCard = () => {
   const { setTransactions, resetTransactions } = useTransactions()
@@ -48,13 +50,13 @@ export const ParserFormCard = () => {
       }),
     onSuccess: (data) => {
       setTransactions(data)
-      toast.success("File parsed successfully!", {
-        description: `Processed ${data.length || 0} transactions.`,
+      toast.success(m.parser_success_toast(), {
+        description: m.parser_success_desc({ count: data.length || 0 }),
         position: "bottom-right",
       })
     },
     onError: (error) => {
-      toast.error("Failed to parse file", {
+      toast.error(m.parser_error_toast(), {
         description: error.message,
         position: "bottom-right",
       })
@@ -67,11 +69,11 @@ export const ParserFormCard = () => {
       file: undefined as File | undefined,
     },
     validators: {
-      onSubmit: formSchema,
+      onSubmit: getFormSchema(),
     },
     onSubmit: ({ value }) => {
       if (!value.file) {
-        toast.error("No file selected")
+        toast.error(m.parser_no_file_toast())
         return
       }
 
@@ -87,11 +89,11 @@ export const ParserFormCard = () => {
           })
         }
         reader.onerror = () => {
-          toast.error("Failed to read file")
+          toast.error(m.parser_read_error_toast())
         }
         reader.readAsText(value.file)
       } catch {
-        toast.error("An error occurred while processing the file")
+        toast.error(m.parser_process_error_toast())
       }
     },
   })
@@ -118,10 +120,8 @@ export const ParserFormCard = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Parser</CardTitle>
-        <CardDescription>
-          Upload your CSV file and select your provider to convert your transactions.
-        </CardDescription>
+        <CardTitle>{m.parser_title()}</CardTitle>
+        <CardDescription>{m.parser_description()}</CardDescription>
       </CardHeader>
       <CardContent>
         <form
@@ -137,7 +137,7 @@ export const ParserFormCard = () => {
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor="provider-select">Provider</FieldLabel>
+                    <FieldLabel htmlFor="provider-select">{m.parser_provider_label()}</FieldLabel>
                     <Select
                       name={field.name}
                       value={field.state.value}
@@ -148,7 +148,7 @@ export const ParserFormCard = () => {
                       }}
                     >
                       <SelectTrigger id="provider-select" aria-invalid={isInvalid}>
-                        <SelectValue placeholder="Select a provider" />
+                        <SelectValue placeholder={m.parser_provider_placeholder()} />
                       </SelectTrigger>
                       <SelectContent>
                         {PROVIDERS.map((provider) => (
@@ -158,9 +158,7 @@ export const ParserFormCard = () => {
                         ))}
                       </SelectContent>
                     </Select>
-                    <FieldDescription>
-                      Choose the bank or service that generated your CSV file.
-                    </FieldDescription>
+                    <FieldDescription>{m.parser_provider_desc()}</FieldDescription>
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>
                 )
@@ -172,7 +170,7 @@ export const ParserFormCard = () => {
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor="file-upload">CSV File</FieldLabel>
+                    <FieldLabel htmlFor="file-upload">{m.parser_file_label()}</FieldLabel>
                     <Input
                       id="file-upload"
                       name={field.name}
@@ -188,13 +186,13 @@ export const ParserFormCard = () => {
                       }}
                       onBlur={field.handleBlur}
                     />
-                    <FieldDescription>
-                      Upload your transaction CSV file from your provider.
-                    </FieldDescription>
+                    <FieldDescription>{m.parser_file_desc()}</FieldDescription>
                     {field.state.value && (
                       <div className="mt-1 text-sm text-muted-foreground">
-                        Selected: {field.state.value.name} (
-                        {(field.state.value.size / 1024).toFixed(2)} KB)
+                        {m.parser_file_selected({
+                          name: field.state.value.name,
+                          sizeKb: (field.state.value.size / 1024).toFixed(2),
+                        })}
                       </div>
                     )}
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
@@ -213,14 +211,14 @@ export const ParserFormCard = () => {
             onClick={resetForm}
             disabled={parseFileWithProviderMutation.isPending}
           >
-            Reset
+            {m.common_reset()}
           </Button>
           <Button
             type="submit"
             form="parser-form"
             disabled={parseFileWithProviderMutation.isPending || !form.state.isValid}
           >
-            {parseFileWithProviderMutation.isPending ? "Processing..." : "Parse"}
+            {parseFileWithProviderMutation.isPending ? m.common_processing() : m.parser_submit()}
           </Button>
         </Field>
       </CardFooter>

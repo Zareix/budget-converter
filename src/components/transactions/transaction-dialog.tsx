@@ -26,6 +26,7 @@ import { useSharePresets } from "@/hooks/use-share-presets"
 import { formatCentsPlain, isValidMonthId, parseAmountToCents } from "@/lib/budget/calculations"
 import { addTransaction, updateTransaction } from "@/lib/server/budget"
 import { formatIsoDate } from "@/lib/utils"
+import { m } from "@/paraglide/messages"
 
 export type PersistedTransaction = {
   id: number
@@ -147,11 +148,11 @@ export const TransactionDialog = ({
       queryClient.invalidateQueries({ queryKey: ["transactions"] })
       queryClient.invalidateQueries({ queryKey: ["budget"] })
       queryClient.invalidateQueries({ queryKey: ["months"] })
-      toast.success(transaction ? "Transaction updated" : "Transaction added")
+      toast.success(transaction ? m.tx_updated_toast() : m.tx_added_toast())
       setOpen(false)
     },
     onError: (err) => {
-      toast.error(err instanceof Error ? err.message : "Failed to save transaction")
+      toast.error(err instanceof Error ? err.message : m.tx_save_error())
     },
   })
 
@@ -160,10 +161,8 @@ export const TransactionDialog = ({
       <DialogTrigger render={trigger} />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{transaction ? "Edit Transaction" : "Add Transaction"}</DialogTitle>
-          <DialogDescription>
-            Positive amounts are expenses; negative amounts are refunds.
-          </DialogDescription>
+          <DialogTitle>{transaction ? m.tx_edit() : m.tx_add()}</DialogTitle>
+          <DialogDescription>{m.tx_dialog_description()}</DialogDescription>
         </DialogHeader>
         <form
           onSubmit={(e) => {
@@ -174,7 +173,7 @@ export const TransactionDialog = ({
           <FieldGroup>
             <div className="grid grid-cols-2 gap-3">
               <Field>
-                <FieldLabel htmlFor="tx-date">Date</FieldLabel>
+                <FieldLabel htmlFor="tx-date">{m.common_date()}</FieldLabel>
                 <Input
                   id="tx-date"
                   type="date"
@@ -184,7 +183,7 @@ export const TransactionDialog = ({
                 />
               </Field>
               <Field>
-                <FieldLabel htmlFor="tx-month">Budget Month</FieldLabel>
+                <FieldLabel htmlFor="tx-month">{m.tx_budget_month()}</FieldLabel>
                 <Input
                   id="tx-month"
                   type="month"
@@ -196,19 +195,19 @@ export const TransactionDialog = ({
             </div>
 
             <Field>
-              <FieldLabel htmlFor="tx-name">Name</FieldLabel>
+              <FieldLabel htmlFor="tx-name">{m.common_name()}</FieldLabel>
               <Input
                 id="tx-name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Carrefour, Bakery, Cash..."
+                placeholder={m.tx_name_placeholder()}
                 required
               />
             </Field>
 
             <div className="grid grid-cols-2 gap-3">
               <Field>
-                <FieldLabel htmlFor="tx-amount">Amount (€)</FieldLabel>
+                <FieldLabel htmlFor="tx-amount">{m.tx_amount_eur()}</FieldLabel>
                 <Input
                   id="tx-amount"
                   inputMode="decimal"
@@ -217,10 +216,10 @@ export const TransactionDialog = ({
                   placeholder="12.50"
                   required
                 />
-                <FieldDescription>Use a minus sign for refunds (e.g. -15.00)</FieldDescription>
+                <FieldDescription>{m.tx_amount_hint()}</FieldDescription>
               </Field>
               <Field>
-                <FieldLabel htmlFor="tx-share">Share (%)</FieldLabel>
+                <FieldLabel htmlFor="tx-share">{m.tx_share_percent()}</FieldLabel>
                 <div className="flex flex-col gap-1.5">
                   <div className="flex flex-wrap gap-1">
                     {sharePresets.map((preset) => (
@@ -250,7 +249,7 @@ export const TransactionDialog = ({
 
             <div className="grid grid-cols-2 gap-3">
               <Field>
-                <FieldLabel htmlFor="tx-category">Category</FieldLabel>
+                <FieldLabel htmlFor="tx-category">{m.common_category()}</FieldLabel>
                 <Select
                   value={categorySlug}
                   items={categories.map((c) => ({ value: c.slug, label: c.label }))}
@@ -271,11 +270,11 @@ export const TransactionDialog = ({
                 </Select>
               </Field>
               <Field>
-                <FieldLabel htmlFor="tx-pm">Payment Method</FieldLabel>
+                <FieldLabel htmlFor="tx-pm">{m.common_payment_method()}</FieldLabel>
                 <Select
                   value={paymentMethodId}
                   items={[
-                    { value: "none", label: "None" },
+                    { value: "none", label: m.common_none() },
                     ...paymentMethods.map((pm) => ({ value: String(pm.id), label: pm.label })),
                   ]}
                   onValueChange={(v) => {
@@ -291,7 +290,7 @@ export const TransactionDialog = ({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">None</SelectItem>
+                    <SelectItem value="none">{m.common_none()}</SelectItem>
                     {paymentMethods.map((pm) => (
                       <SelectItem key={pm.id} value={String(pm.id)}>
                         {pm.label}
@@ -309,7 +308,7 @@ export const TransactionDialog = ({
                 onCheckedChange={(checked) => setExcluded(Boolean(checked))}
               />
               <FieldLabel htmlFor="tx-excluded" className="font-normal">
-                Exclude from budget calculations
+                {m.common_exclude_from_budget()}
               </FieldLabel>
             </Field>
 
@@ -320,10 +319,10 @@ export const TransactionDialog = ({
                 onClick={() => setOpen(false)}
                 disabled={mutation.isPending}
               >
-                Cancel
+                {m.common_cancel()}
               </Button>
               <Button type="submit" disabled={!name.trim() || mutation.isPending}>
-                {mutation.isPending ? "Saving..." : "Save"}
+                {mutation.isPending ? m.common_saving() : m.common_save()}
               </Button>
             </div>
           </FieldGroup>

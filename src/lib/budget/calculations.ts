@@ -1,3 +1,5 @@
+import { getLocale } from "@/paraglide/runtime"
+
 export type SharePresetLike = {
   label: string
   percent: number
@@ -55,8 +57,18 @@ export const parseAmountToCents = (raw: string): number => {
 
 export const centsToEuros = (cents: number): number => cents / 100
 
-export const formatCents = (cents: number, options?: { signed?: boolean }): string => {
-  const formatted = new Intl.NumberFormat("fr-FR", {
+const resolveIntlLocale = (locale?: string): string => {
+  const active = locale ?? getLocale()
+  if (active === "fr") return "fr-FR"
+  if (active === "en") return "en-US"
+  return active
+}
+
+export const formatCents = (
+  cents: number,
+  options?: { signed?: boolean; locale?: string },
+): string => {
+  const formatted = new Intl.NumberFormat(resolveIntlLocale(options?.locale), {
     style: "currency",
     currency: "EUR",
     minimumFractionDigits: 2,
@@ -86,17 +98,18 @@ export const shiftMonthId = (monthId: string, deltaMonths: number): string => {
   return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}`
 }
 
-export const formatMonthLabel = (monthId: string): string => {
+export const formatMonthLabel = (monthId: string, locale?: string): string => {
   if (!isValidMonthId(monthId)) return monthId
   const [yearStr, monthStr] = monthId.split("-")
   const date = new Date(
     Date.UTC(Number.parseInt(yearStr ?? "2026", 10), Number.parseInt(monthStr ?? "1", 10) - 1, 1),
   )
-  return new Intl.DateTimeFormat("en-US", {
+  const formatted = new Intl.DateTimeFormat(resolveIntlLocale(locale), {
     month: "long",
     year: "numeric",
     timeZone: "UTC",
   }).format(date)
+  return formatted.charAt(0).toUpperCase() + formatted.slice(1)
 }
 
 export type BillLike = {

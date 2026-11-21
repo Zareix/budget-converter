@@ -28,6 +28,7 @@ import {
 import type { MonthSummary } from "@/lib/budget/calculations"
 import { formatCents, formatCentsPlain, parseAmountToCents } from "@/lib/budget/calculations"
 import { addIncome, deleteIncome, updateIncome } from "@/lib/server/budget"
+import { m } from "@/paraglide/messages"
 
 type IncomeItem = {
   id: number
@@ -101,11 +102,11 @@ const IncomeDialog = ({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["budget", monthId] })
       queryClient.invalidateQueries({ queryKey: ["months"] })
-      toast.success(income ? "Income updated" : "Income added")
+      toast.success(income ? m.incomes_updated_toast() : m.incomes_added_toast())
       setOpen(false)
     },
     onError: (err) => {
-      toast.error(err instanceof Error ? err.message : "Failed to save income")
+      toast.error(err instanceof Error ? err.message : m.incomes_save_error())
     },
   })
 
@@ -114,7 +115,7 @@ const IncomeDialog = ({
       <DialogTrigger render={trigger} />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{income ? "Edit Income" : "Add Income"}</DialogTitle>
+          <DialogTitle>{income ? m.incomes_edit() : m.incomes_add()}</DialogTitle>
         </DialogHeader>
         <form
           onSubmit={(e) => {
@@ -124,27 +125,27 @@ const IncomeDialog = ({
         >
           <FieldGroup>
             <Field>
-              <FieldLabel htmlFor="income-name">Name</FieldLabel>
+              <FieldLabel htmlFor="income-name">{m.common_name()}</FieldLabel>
               <Input
                 id="income-name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Salary, Bonus..."
+                placeholder={m.incomes_name_placeholder()}
                 required
               />
             </Field>
             <Field>
-              <FieldLabel htmlFor="income-due">Due Date (optional)</FieldLabel>
+              <FieldLabel htmlFor="income-due">{m.incomes_due_date_optional()}</FieldLabel>
               <Input
                 id="income-due"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                placeholder="e.g. 2026-10-29 or 29/10"
+                placeholder={m.incomes_due_placeholder()}
               />
             </Field>
             <div className="grid grid-cols-2 gap-3">
               <Field>
-                <FieldLabel htmlFor="income-expected">Expected (€)</FieldLabel>
+                <FieldLabel htmlFor="income-expected">{m.incomes_expected_eur()}</FieldLabel>
                 <Input
                   id="income-expected"
                   inputMode="decimal"
@@ -155,13 +156,13 @@ const IncomeDialog = ({
                 />
               </Field>
               <Field>
-                <FieldLabel htmlFor="income-actual">Actual (€)</FieldLabel>
+                <FieldLabel htmlFor="income-actual">{m.common_actual_eur()}</FieldLabel>
                 <Input
                   id="income-actual"
                   inputMode="decimal"
                   value={actual}
                   onChange={(e) => setActual(e.target.value)}
-                  placeholder="Leave empty if pending"
+                  placeholder={m.common_leave_empty_if_pending()}
                 />
               </Field>
             </div>
@@ -172,10 +173,10 @@ const IncomeDialog = ({
                 onClick={() => setOpen(false)}
                 disabled={mutation.isPending}
               >
-                Cancel
+                {m.common_cancel()}
               </Button>
               <Button type="submit" disabled={!name.trim() || mutation.isPending}>
-                {mutation.isPending ? "Saving..." : "Save"}
+                {mutation.isPending ? m.common_saving() : m.common_save()}
               </Button>
             </div>
           </FieldGroup>
@@ -201,20 +202,20 @@ export const IncomesCard = ({ monthId, incomes, summary }: IncomesCardProps) => 
     mutationFn: (id: number) => deleteIncome({ data: { id } }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["budget", monthId] })
-      toast.success("Income deleted")
+      toast.success(m.incomes_deleted_toast())
     },
   })
 
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between gap-2">
-        <CardTitle>Incomes</CardTitle>
+        <CardTitle>{m.incomes_title()}</CardTitle>
         <IncomeDialog
           monthId={monthId}
           trigger={
             <Button variant="outline" size="sm">
               <PlusIcon className="size-3.5" />
-              Add Income
+              {m.incomes_add()}
             </Button>
           }
         />
@@ -223,18 +224,18 @@ export const IncomesCard = ({ monthId, incomes, summary }: IncomesCardProps) => 
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Due</TableHead>
-              <TableHead className="text-right">Expected</TableHead>
-              <TableHead className="text-right">Actual</TableHead>
-              <TableHead className="w-16 text-right">Actions</TableHead>
+              <TableHead>{m.common_name()}</TableHead>
+              <TableHead>{m.incomes_due()}</TableHead>
+              <TableHead className="text-right">{m.incomes_expected()}</TableHead>
+              <TableHead className="text-right">{m.common_actual()}</TableHead>
+              <TableHead className="w-16 text-right">{m.common_actions()}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {incomes.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} className="py-6 text-center text-xs text-muted-foreground">
-                  No incomes recorded for this month yet.
+                  {m.incomes_empty()}
                 </TableCell>
               </TableRow>
             ) : (
@@ -265,7 +266,7 @@ export const IncomesCard = ({ monthId, incomes, summary }: IncomesCardProps) => 
                         monthId={monthId}
                         income={inc}
                         trigger={
-                          <Button variant="ghost" size="icon-sm" aria-label="Edit income">
+                          <Button variant="ghost" size="icon-sm" aria-label={m.incomes_edit_aria()}>
                             <EditIcon className="size-3.5" />
                           </Button>
                         }
@@ -273,7 +274,7 @@ export const IncomesCard = ({ monthId, incomes, summary }: IncomesCardProps) => 
                       <Button
                         variant="ghost"
                         size="icon-sm"
-                        aria-label="Delete income"
+                        aria-label={m.incomes_delete_aria()}
                         onClick={() => deleteMutation.mutate(inc.id)}
                         disabled={deleteMutation.isPending}
                       >
@@ -288,7 +289,7 @@ export const IncomesCard = ({ monthId, incomes, summary }: IncomesCardProps) => 
           {incomes.length > 0 && (
             <TableFooter>
               <TableRow>
-                <TableCell colSpan={2}>Total</TableCell>
+                <TableCell colSpan={2}>{m.common_total()}</TableCell>
                 <TableCell className="text-right tabular-nums">
                   {formatCents(summary.income.budgetCents)}
                 </TableCell>

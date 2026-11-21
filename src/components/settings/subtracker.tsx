@@ -53,6 +53,7 @@ import {
   getSubtrackerStatus,
   testSubtrackerRule,
 } from "@/lib/server/budget"
+import { m } from "@/paraglide/messages"
 
 type RuleRow = Awaited<ReturnType<typeof getSubtrackerBillRules>>[number]
 type AccountRow = Awaited<ReturnType<typeof getAccounts>>[number]
@@ -117,7 +118,7 @@ const RuleForm = ({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["subtrackerRules"] })
       queryClient.invalidateQueries({ queryKey: ["subtrackerStatus"] })
-      toast.success(rule ? "Rule updated" : "Rule created")
+      toast.success(rule ? m.st_rule_updated_toast() : m.st_rule_created_toast())
       onFinish()
     },
   })
@@ -132,7 +133,7 @@ const RuleForm = ({
         },
       }),
     onError: (err) => {
-      toast.error(err instanceof Error ? err.message : "Test failed")
+      toast.error(err instanceof Error ? err.message : m.st_test_failed())
     },
   })
 
@@ -145,23 +146,23 @@ const RuleForm = ({
     >
       <FieldGroup>
         <Field>
-          <FieldLabel htmlFor="st-name">Bill Name</FieldLabel>
+          <FieldLabel htmlFor="st-name">{m.st_col_bill_name()}</FieldLabel>
           <Input
             id="st-name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Factures, Factures - Joint..."
+            placeholder={m.st_bill_name_placeholder()}
             required
           />
         </Field>
 
         <div className="grid grid-cols-2 gap-3">
           <Field>
-            <FieldLabel htmlFor="st-account">From Account</FieldLabel>
+            <FieldLabel htmlFor="st-account">{m.common_from_account()}</FieldLabel>
             <Select
               value={fromAccountId}
               items={[
-                { value: "none", label: "None" },
+                { value: "none", label: m.common_none() },
                 ...accounts.map((a) => ({ value: String(a.id), label: a.name })),
               ]}
               onValueChange={(v) => {
@@ -172,7 +173,7 @@ const RuleForm = ({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">None</SelectItem>
+                <SelectItem value="none">{m.common_none()}</SelectItem>
                 {accounts.map((a) => (
                   <SelectItem key={a.id} value={String(a.id)}>
                     {a.name}
@@ -182,7 +183,7 @@ const RuleForm = ({
             </Select>
           </Field>
           <Field>
-            <FieldLabel htmlFor="st-due">Due Day (1–31)</FieldLabel>
+            <FieldLabel htmlFor="st-due">{m.common_due_day_label()}</FieldLabel>
             <Input
               id="st-due"
               type="number"
@@ -196,7 +197,7 @@ const RuleForm = ({
         </div>
 
         <Field>
-          <FieldLabel htmlFor="st-share">Share</FieldLabel>
+          <FieldLabel htmlFor="st-share">{m.common_share()}</FieldLabel>
           <Select
             value={sharePercent}
             items={sharePresets.map((p) => ({
@@ -218,28 +219,26 @@ const RuleForm = ({
               ))}
             </SelectContent>
           </Select>
-          <FieldDescription>
-            Keep 100% if Subtracker already splits shared subscriptions per user.
-          </FieldDescription>
+          <FieldDescription>{m.st_share_desc()}</FieldDescription>
         </Field>
 
         <div className="grid grid-cols-2 gap-3">
           <Field>
-            <FieldLabel htmlFor="st-pms">Subtracker Payment Method IDs</FieldLabel>
+            <FieldLabel htmlFor="st-pms">{m.st_pm_ids_label()}</FieldLabel>
             <Input
               id="st-pms"
               value={paymentMethodIds}
               onChange={(e) => setPaymentMethodIds(e.target.value)}
-              placeholder="e.g. 1,2 (empty = all)"
+              placeholder={m.st_pm_ids_placeholder()}
             />
           </Field>
           <Field>
-            <FieldLabel htmlFor="st-cats">Subtracker Category IDs</FieldLabel>
+            <FieldLabel htmlFor="st-cats">{m.st_cat_ids_label()}</FieldLabel>
             <Input
               id="st-cats"
               value={categoryIds}
               onChange={(e) => setCategoryIds(e.target.value)}
-              placeholder="Optional, e.g. 1,3"
+              placeholder={m.st_cat_ids_placeholder()}
             />
           </Field>
         </div>
@@ -251,30 +250,30 @@ const RuleForm = ({
             onCheckedChange={(checked) => setEnabled(Boolean(checked))}
           />
           <FieldLabel htmlFor="st-enabled" className="font-normal">
-            Enabled for sync
+            {m.st_enabled_label()}
           </FieldLabel>
         </Field>
 
         {testMutation.data && (
           <div className="border bg-muted/40 p-2.5 text-xs">
             <div className="font-medium">
-              Subtracker response ({testMutation.data.currencyCode})
+              {m.st_response_title({ currency: testMutation.data.currencyCode })}
             </div>
             <div className="mt-1 grid grid-cols-3 gap-2 text-muted-foreground tabular-nums">
               <div>
-                This month:{" "}
+                {m.st_this_month()}{" "}
                 <strong className="text-foreground">
                   {formatCents(testMutation.data.totalThisMonthCents)}
                 </strong>
               </div>
               <div>
-                Next month:{" "}
+                {m.st_next_month()}{" "}
                 <strong className="text-foreground">
                   {formatCents(testMutation.data.expectedNextMonthCents)}
                 </strong>
               </div>
               <div>
-                Avg/mo:{" "}
+                {m.st_avg_mo()}{" "}
                 <strong className="text-foreground">
                   {formatCents(testMutation.data.totalPerMonthCents)}
                 </strong>
@@ -285,7 +284,9 @@ const RuleForm = ({
 
         {saveMutation.isError && (
           <p className="text-xs text-destructive">
-            {saveMutation.error instanceof Error ? saveMutation.error.message : "Failed to save"}
+            {saveMutation.error instanceof Error
+              ? saveMutation.error.message
+              : m.common_failed_to_save()}
           </p>
         )}
 
@@ -298,10 +299,10 @@ const RuleForm = ({
             onClick={() => testMutation.mutate()}
           >
             <FlaskConicalIcon className="size-3.5" />
-            {testMutation.isPending ? "Testing..." : "Test Query"}
+            {testMutation.isPending ? m.st_testing() : m.st_test_button()}
           </Button>
           <Button type="submit" disabled={!name.trim() || saveMutation.isPending}>
-            {saveMutation.isPending ? "Saving..." : "Save"}
+            {saveMutation.isPending ? m.common_saving() : m.common_save()}
           </Button>
         </div>
       </FieldGroup>
@@ -326,10 +327,8 @@ const RuleDialog = ({
       <DialogTrigger render={trigger} />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{rule ? "Edit Subtracker rule" : "Create Subtracker rule"}</DialogTitle>
-          <DialogDescription>
-            Map a filtered Subtracker stats query to a monthly Bill line.
-          </DialogDescription>
+          <DialogTitle>{rule ? m.st_edit_title() : m.st_create_title()}</DialogTitle>
+          <DialogDescription>{m.st_dialog_desc()}</DialogDescription>
         </DialogHeader>
         <RuleForm
           rule={rule}
@@ -351,7 +350,7 @@ const DeleteRuleButton = ({ rule }: { rule: RuleRow }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["subtrackerRules"] })
       queryClient.invalidateQueries({ queryKey: ["subtrackerStatus"] })
-      toast.success("Rule deleted")
+      toast.success(m.st_rule_deleted_toast())
       setOpen(false)
     },
   })
@@ -367,17 +366,15 @@ const DeleteRuleButton = ({ rule }: { rule: RuleRow }) => {
       />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete Subtracker Rule</DialogTitle>
-          <DialogDescription>
-            Delete "{rule.name}"? Existing bills in past months are kept as normal bills.
-          </DialogDescription>
+          <DialogTitle>{m.st_delete_title()}</DialogTitle>
+          <DialogDescription>{m.st_delete_desc({ name: rule.name })}</DialogDescription>
         </DialogHeader>
         <Button
           variant="destructive"
           onClick={() => mutation.mutate()}
           disabled={mutation.isPending}
         >
-          {mutation.isPending ? "Deleting..." : "Delete"}
+          {mutation.isPending ? m.common_deleting() : m.common_delete()}
         </Button>
       </DialogContent>
     </Dialog>
@@ -397,43 +394,40 @@ export const SubtrackerSettings = () => {
     <Card className="w-full">
       <CardHeader className="flex flex-row items-center justify-between gap-2">
         <div>
-          <CardTitle>Subtracker Bill Sync</CardTitle>
-          <CardDescription>
-            Sync recurring subscription totals from your Subtracker instance into monthly Bills.
-          </CardDescription>
+          <CardTitle>{m.st_title()}</CardTitle>
+          <CardDescription>{m.st_description()}</CardDescription>
         </div>
         <Badge variant={configured ? "default" : "outline"}>
-          {configured ? "Connected" : "Not configured"}
+          {configured ? m.st_status_connected() : m.st_status_not_configured()}
         </Badge>
       </CardHeader>
       <CardContent>
         {!configured && (
           <p className="mb-3 border border-dashed bg-muted/30 p-3 text-xs text-muted-foreground">
-            Set <code className="font-mono text-foreground">SUBTRACKER_URL</code> and{" "}
-            <code className="font-mono text-foreground">SUBTRACKER_API_KEY</code> in your
-            environment to enable syncing from <code className="font-mono">/api/stats</code>.
+            {m.st_env_hint_prefix()}{" "}
+            <code className="font-mono text-foreground">SUBTRACKER_URL</code> {m.st_env_hint_and()}{" "}
+            <code className="font-mono text-foreground">SUBTRACKER_API_KEY</code>{" "}
+            {m.st_env_hint_suffix()} <code className="font-mono">/api/stats</code>.
           </p>
         )}
 
         <Table>
-          <TableCaption>
-            Each enabled rule creates or updates one Bill row when syncing a month
-          </TableCaption>
+          <TableCaption>{m.st_caption()}</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead>Bill Name</TableHead>
-              <TableHead>From Account</TableHead>
-              <TableHead>Share</TableHead>
-              <TableHead>PM IDs</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="w-24 text-right">Actions</TableHead>
+              <TableHead>{m.st_col_bill_name()}</TableHead>
+              <TableHead>{m.common_from_account()}</TableHead>
+              <TableHead>{m.common_share()}</TableHead>
+              <TableHead>{m.st_col_pm_ids()}</TableHead>
+              <TableHead>{m.common_status()}</TableHead>
+              <TableHead className="w-24 text-right">{m.common_actions()}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {(rulesQuery.data ?? []).length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="py-6 text-center text-xs text-muted-foreground">
-                  No Subtracker rules configured yet.
+                  {m.st_empty()}
                 </TableCell>
               </TableRow>
             ) : (
@@ -449,12 +443,12 @@ export const SubtrackerSettings = () => {
                       <SharePill sharePercent={rule.sharePercent} />
                     </TableCell>
                     <TableCell className="font-mono text-xs text-muted-foreground">
-                      {rule.paymentMethodIds ?? "All"}
+                      {rule.paymentMethodIds ?? m.common_all()}
                       {rule.categoryIds ? ` (cat: ${rule.categoryIds})` : ""}
                     </TableCell>
                     <TableCell>
                       <Badge variant={rule.enabled ? "secondary" : "outline"}>
-                        {rule.enabled ? "Active" : "Paused"}
+                        {rule.enabled ? m.common_active() : m.common_paused()}
                       </Badge>
                     </TableCell>
                     <TableCell>
@@ -486,7 +480,7 @@ export const SubtrackerSettings = () => {
           trigger={
             <Button variant="outline">
               <PlusIcon />
-              Create Sync Rule
+              {m.st_create_button()}
             </Button>
           }
         />

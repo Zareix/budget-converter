@@ -4,6 +4,8 @@ import {
   computeMonthSummary,
   computeShareCents,
   cycleSharePercent,
+  formatCents,
+  formatMonthLabel,
   getShareLabel,
   parseAmountToCents,
   shiftMonthId,
@@ -57,6 +59,12 @@ describe("helpers", () => {
     expect(cycleSharePercent(0, custom)).toBe(100)
     expect(getShareLabel(60, custom)).toBe("60/40")
     expect(getShareLabel(33, custom)).toBe("33%")
+  })
+  test("formatMonthLabel and formatCents respect locale", () => {
+    expect(formatMonthLabel("2026-11", "en")).toBe("November 2026")
+    expect(formatMonthLabel("2026-11", "fr")).toBe("Novembre 2026")
+    expect(formatCents(1250, { locale: "en" })).toBe("€12.50")
+    expect(formatCents(1250, { locale: "fr" }).replace(/\s/g, " ")).toBe("12,50 €")
   })
 })
 

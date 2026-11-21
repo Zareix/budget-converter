@@ -3,6 +3,7 @@ import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { MonthSummary } from "@/lib/budget/calculations"
 import { formatCents } from "@/lib/budget/calculations"
+import { m } from "@/paraglide/messages"
 
 type CategoryItem = {
   slug: string
@@ -121,9 +122,21 @@ const DonutWithCenter = ({
 
 export const ChartsCard = ({ summary, categories }: ChartsCardProps) => {
   const budgetSlices: Array<SliceDatum> = [
-    { name: "Bills", value: summary.bills.budgetCents, color: BUDGET_SLICE_COLORS.bills },
-    { name: "Expenses", value: summary.expenses.budgetCents, color: BUDGET_SLICE_COLORS.expenses },
-    { name: "Savings", value: summary.savings.budgetCents, color: BUDGET_SLICE_COLORS.savings },
+    {
+      name: m.charts_slice_bills(),
+      value: summary.bills.budgetCents,
+      color: BUDGET_SLICE_COLORS.bills,
+    },
+    {
+      name: m.charts_slice_expenses(),
+      value: summary.expenses.budgetCents,
+      color: BUDGET_SLICE_COLORS.expenses,
+    },
+    {
+      name: m.charts_slice_savings(),
+      value: summary.savings.budgetCents,
+      color: BUDGET_SLICE_COLORS.savings,
+    },
   ].filter((s) => s.value > 0)
 
   const expenseSlices: Array<SliceDatum> = categories
@@ -141,19 +154,19 @@ export const ChartsCard = ({ summary, categories }: ChartsCardProps) => {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       <DonutWithCenter
-        title="Monthly Budget"
+        title={m.charts_monthly_budget()}
         data={budgetSlices}
-        centerLabel="Remaining"
+        centerLabel={m.charts_remaining()}
         centerValue={formatCents(summary.remaining.budgetCents)}
         centerNegative={summary.remaining.budgetCents < 0}
-        emptyText="Add bills, envelopes, or savings to see your budget breakdown."
+        emptyText={m.charts_empty_budget()}
       />
       <DonutWithCenter
-        title="Monthly Expenses"
+        title={m.charts_monthly_expenses()}
         data={expenseSlices}
-        centerLabel="Total Spent"
+        centerLabel={m.charts_total_spent()}
         centerValue={formatCents(summary.expenses.actualCents)}
-        emptyText="No expenses recorded for this month yet."
+        emptyText={m.charts_empty_expenses()}
       />
     </div>
   )

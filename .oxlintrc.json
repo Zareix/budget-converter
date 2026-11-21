@@ -20,7 +20,9 @@
     ".output",
     "src/components/editor/yaml.worker.js",
     "src/components/ui",
-    "src/components/auth"
+    "src/components/auth",
+    "src/paraglide",
+    "project.inlang"
   ],
   "rules": {},
   "overrides": [

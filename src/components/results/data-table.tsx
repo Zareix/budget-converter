@@ -29,6 +29,8 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import type { Transaction } from "@/lib/parsers"
+import { m } from "@/paraglide/messages"
+import { getLocale } from "@/paraglide/runtime"
 
 interface DataTableProps {
   columns: Array<ColumnDef<typeof resultTableFeatures, Transaction>>
@@ -40,21 +42,22 @@ interface DataTableProps {
   reset: () => void
 }
 
-const months: Array<{ value: number; label: string }> = [
-  { value: 0, label: "All months" },
-  { value: 1, label: "January" },
-  { value: 2, label: "February" },
-  { value: 3, label: "March" },
-  { value: 4, label: "April" },
-  { value: 5, label: "May" },
-  { value: 6, label: "June" },
-  { value: 7, label: "July" },
-  { value: 8, label: "August" },
-  { value: 9, label: "September" },
-  { value: 10, label: "October" },
-  { value: 11, label: "November" },
-  { value: 12, label: "December" },
-]
+const getLocalizedMonths = (): Array<{ value: number; label: string }> => {
+  const formatter = new Intl.DateTimeFormat(getLocale() === "fr" ? "fr-FR" : "en-US", {
+    month: "long",
+    timeZone: "UTC",
+  })
+  return [
+    { value: 0, label: m.results_all_months() },
+    ...Array.from({ length: 12 }, (_, idx) => {
+      const name = formatter.format(new Date(Date.UTC(2026, idx, 1)))
+      return {
+        value: idx + 1,
+        label: name.charAt(0).toUpperCase() + name.slice(1),
+      }
+    }),
+  ]
+}
 
 export function DataTable({
   columns,
@@ -65,6 +68,7 @@ export function DataTable({
   handleCopyAsCSV,
   reset,
 }: DataTableProps) {
+  const months = getLocalizedMonths()
   const [sorting, setSorting] = React.useState<SortingState>([{ id: "date", desc: true }])
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({})
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -115,7 +119,7 @@ export function DataTable({
             }}
           >
             <SelectTrigger className="w-45">
-              <SelectValue placeholder="Month" />
+              <SelectValue placeholder={m.common_month()} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
@@ -142,7 +146,7 @@ export function DataTable({
           </Select>
 
           <span className="text-xs text-muted-foreground">
-            {selectedRows.length} selected for import
+            {m.results_selected_for_import({ count: selectedRows.length })}
           </span>
         </div>
 
@@ -182,7 +186,7 @@ export function DataTable({
               ) : (
                 <TableRow>
                   <TableCell colSpan={columns.length} className="h-24 text-center">
-                    No results.
+                    {m.results_no_results()}
                   </TableCell>
                 </TableRow>
               )}
@@ -192,14 +196,16 @@ export function DataTable({
       </CardContent>
       <CardFooter className="flex flex-wrap gap-2">
         <Button type="button" variant="outline" onClick={reset} disabled={isImporting}>
-          Reset
+          {m.common_reset()}
         </Button>
         <Button
           type="button"
           onClick={() => handleImport(selectedRows)}
           disabled={isImporting || selectedRows.length === 0}
         >
-          {isImporting ? "Importing..." : `Import to Budget (${selectedRows.length})`}
+          {isImporting
+            ? m.common_importing()
+            : m.results_import_button({ count: selectedRows.length })}
         </Button>
         <Button
           type="button"
@@ -207,7 +213,7 @@ export function DataTable({
           onClick={() => handleCopyAsCSV(selectedRows)}
           disabled={selectedRows.length === 0}
         >
-          Copy CSV
+          {m.results_copy_csv()}
         </Button>
       </CardFooter>
     </>

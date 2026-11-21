@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select"
 import { formatMonthLabel, isValidMonthId, shiftMonthId } from "@/lib/budget/calculations"
 import { cloneMonth, createMonth, listMonths } from "@/lib/server/budget"
+import { m } from "@/paraglide/messages"
 
 type MonthHeaderProps = {
   monthId: string
@@ -45,7 +46,7 @@ export const MonthHeader = ({ monthId, onSelectMonth, rightSlot }: MonthHeaderPr
       const next = shiftMonthId(monthId, 1)
       setTargetMonth(next)
       const defaultSource =
-        existingMonths.find((m) => m.id === monthId)?.id ?? existingMonths[0]?.id ?? "none"
+        existingMonths.find((item) => item.id === monthId)?.id ?? existingMonths[0]?.id ?? "none"
       setSourceMonth(defaultSource)
     }
   }
@@ -54,7 +55,7 @@ export const MonthHeader = ({ monthId, onSelectMonth, rightSlot }: MonthHeaderPr
     mutationKey: ["createOrCloneMonth"],
     mutationFn: async () => {
       if (!isValidMonthId(targetMonth)) {
-        throw new Error("Please choose a valid month (YYYY-MM)")
+        throw new Error(m.month_invalid_error())
       }
       if (sourceMonth && sourceMonth !== "none") {
         return cloneMonth({ data: { sourceMonthId: sourceMonth, targetMonthId: targetMonth } })
@@ -66,14 +67,17 @@ export const MonthHeader = ({ monthId, onSelectMonth, rightSlot }: MonthHeaderPr
       queryClient.invalidateQueries({ queryKey: ["budget", targetMonth] })
       toast.success(
         sourceMonth !== "none"
-          ? `Cloned ${formatMonthLabel(sourceMonth)} → ${formatMonthLabel(targetMonth)}`
-          : `Created ${formatMonthLabel(targetMonth)}`,
+          ? m.month_cloned_toast({
+              source: formatMonthLabel(sourceMonth),
+              target: formatMonthLabel(targetMonth),
+            })
+          : m.month_created_toast({ target: formatMonthLabel(targetMonth) }),
       )
       setDialogOpen(false)
       onSelectMonth(targetMonth)
     },
     onError: (err) => {
-      toast.error(err instanceof Error ? err.message : "Failed to create month")
+      toast.error(err instanceof Error ? err.message : m.month_create_error())
     },
   })
 
@@ -85,7 +89,7 @@ export const MonthHeader = ({ monthId, onSelectMonth, rightSlot }: MonthHeaderPr
             type="button"
             variant="ghost"
             size="icon-sm"
-            aria-label="Previous month"
+            aria-label={m.month_previous()}
             onClick={() => onSelectMonth(shiftMonthId(monthId, -1))}
           >
             <ChevronLeftIcon className="size-4" />
@@ -97,7 +101,7 @@ export const MonthHeader = ({ monthId, onSelectMonth, rightSlot }: MonthHeaderPr
             type="button"
             variant="ghost"
             size="icon-sm"
-            aria-label="Next month"
+            aria-label={m.month_next()}
             onClick={() => onSelectMonth(shiftMonthId(monthId, 1))}
           >
             <ChevronRightIcon className="size-4" />
@@ -109,17 +113,14 @@ export const MonthHeader = ({ monthId, onSelectMonth, rightSlot }: MonthHeaderPr
             render={
               <Button variant="outline" size="sm">
                 <CopyPlusIcon className="size-3.5" />
-                New / Clone Month
+                {m.month_new_or_clone_button()}
               </Button>
             }
           />
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>New or Clone Month</DialogTitle>
-              <DialogDescription>
-                Create a blank budget month or clone bills, incomes, savings, and category targets
-                from an existing month.
-              </DialogDescription>
+              <DialogTitle>{m.month_dialog_title()}</DialogTitle>
+              <DialogDescription>{m.month_dialog_description()}</DialogDescription>
             </DialogHeader>
             <form
               onSubmit={(e) => {
@@ -129,7 +130,7 @@ export const MonthHeader = ({ monthId, onSelectMonth, rightSlot }: MonthHeaderPr
             >
               <FieldGroup>
                 <Field>
-                  <FieldLabel htmlFor="target-month">Target Month</FieldLabel>
+                  <FieldLabel htmlFor="target-month">{m.month_target_label()}</FieldLabel>
                   <Input
                     id="target-month"
                     type="month"
@@ -138,14 +139,14 @@ export const MonthHeader = ({ monthId, onSelectMonth, rightSlot }: MonthHeaderPr
                   />
                 </Field>
                 <Field>
-                  <FieldLabel htmlFor="source-month">Clone From</FieldLabel>
+                  <FieldLabel htmlFor="source-month">{m.month_clone_from_label()}</FieldLabel>
                   <Select
                     value={sourceMonth}
                     items={[
-                      { value: "none", label: "Start blank" },
-                      ...existingMonths.map((m) => ({
-                        value: m.id,
-                        label: formatMonthLabel(m.id),
+                      { value: "none", label: m.month_start_blank() },
+                      ...existingMonths.map((item) => ({
+                        value: item.id,
+                        label: formatMonthLabel(item.id),
                       })),
                     ]}
                     onValueChange={(val) => {
@@ -156,18 +157,15 @@ export const MonthHeader = ({ monthId, onSelectMonth, rightSlot }: MonthHeaderPr
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="none">Start blank</SelectItem>
-                      {existingMonths.map((m) => (
-                        <SelectItem key={m.id} value={m.id}>
-                          {formatMonthLabel(m.id)}
+                      <SelectItem value="none">{m.month_start_blank()}</SelectItem>
+                      {existingMonths.map((item) => (
+                        <SelectItem key={item.id} value={item.id}>
+                          {formatMonthLabel(item.id)}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-                  <FieldDescription>
-                    Cloned bills start unpaid with empty actuals; incomes and savings copy their
-                    targets.
-                  </FieldDescription>
+                  <FieldDescription>{m.month_clone_description()}</FieldDescription>
                 </Field>
                 <div className="flex justify-end gap-2 pt-2">
                   <Button
@@ -176,17 +174,17 @@ export const MonthHeader = ({ monthId, onSelectMonth, rightSlot }: MonthHeaderPr
                     onClick={() => setDialogOpen(false)}
                     disabled={createOrCloneMutation.isPending}
                   >
-                    Cancel
+                    {m.common_cancel()}
                   </Button>
                   <Button
                     type="submit"
                     disabled={!isValidMonthId(targetMonth) || createOrCloneMutation.isPending}
                   >
                     {createOrCloneMutation.isPending
-                      ? "Creating..."
+                      ? m.month_creating()
                       : sourceMonth !== "none"
-                        ? "Clone Month"
-                        : "Create Month"}
+                        ? m.month_clone_submit()
+                        : m.month_create_submit()}
                   </Button>
                 </div>
               </FieldGroup>
