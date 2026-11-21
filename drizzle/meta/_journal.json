@@ -50,6 +50,20 @@
       "when": 1795296890755,
       "tag": "0006_curious_whizzer",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1795298197982,
+      "tag": "0007_shocking_bullseye",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1795299160382,
+      "tag": "0008_previous_phalanx",
+      "breakpoints": true
     }
   ]
 }

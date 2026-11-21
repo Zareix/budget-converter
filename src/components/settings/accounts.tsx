@@ -80,6 +80,8 @@ const AccountForm = ({ account, onFinish }: { account?: AccountRow; onFinish: ()
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["accounts"] })
       queryClient.invalidateQueries({ queryKey: ["budget"] })
+      queryClient.invalidateQueries({ queryKey: ["assets"] })
+      queryClient.invalidateQueries({ queryKey: ["investments"] })
       toast.success(account ? m.accounts_updated_toast() : m.accounts_created_toast())
       onFinish()
     },
@@ -192,6 +194,8 @@ const DeleteAccountButton = ({ account }: { account: AccountRow }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["accounts"] })
       queryClient.invalidateQueries({ queryKey: ["budget"] })
+      queryClient.invalidateQueries({ queryKey: ["assets"] })
+      queryClient.invalidateQueries({ queryKey: ["investments"] })
       setIsOpen(false)
     },
   })

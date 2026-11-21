@@ -21,6 +21,104 @@
 /** @typedef {{}} Accounts_Updated_ToastInputs */
 /** @typedef {{}} App_Not_FoundInputs */
 /** @typedef {{}} App_TitleInputs */
+/** @typedef {{}} Asset_Class_BondInputs */
+/** @typedef {{}} Asset_Class_CryptoInputs */
+/** @typedef {{}} Asset_Class_EtfInputs */
+/** @typedef {{}} Asset_Class_Euro_FundInputs */
+/** @typedef {{}} Asset_Class_OtherInputs */
+/** @typedef {{}} Asset_Class_ScpiInputs */
+/** @typedef {{}} Asset_Class_StockInputs */
+/** @typedef {{}} Assets_Account_Add_TitleInputs */
+/** @typedef {{}} Assets_Account_Added_ToastInputs */
+/** @typedef {{ color: NonNullable<unknown> }} Assets_Account_Choose_ColorInputs */
+/** @typedef {{}} Assets_Account_Delete_ErrorInputs */
+/** @typedef {{}} Assets_Account_Deleted_ToastInputs */
+/** @typedef {{}} Assets_Account_Dialog_DescInputs */
+/** @typedef {{}} Assets_Account_Edit_TitleInputs */
+/** @typedef {{ slug: NonNullable<unknown> }} Assets_Account_IdentifierInputs */
+/** @typedef {{}} Assets_Account_Name_PlaceholderInputs */
+/** @typedef {{}} Assets_Account_Updated_ToastInputs */
+/** @typedef {{}} Assets_Add_AccountInputs */
+/** @typedef {{}} Assets_Add_Savings_AccountInputs */
+/** @typedef {{}} Assets_Badge_MissingInputs */
+/** @typedef {{ name: NonNullable<unknown> }} Assets_Bulk_Balance_AriaInputs */
+/** @typedef {{}} Assets_Bulk_Copy_Prev_TitleInputs */
+/** @typedef {{}} Assets_Bulk_DescInputs */
+/** @typedef {{ name: NonNullable<unknown> }} Assets_Bulk_Note_AriaInputs */
+/** @typedef {{}} Assets_Bulk_Note_PlaceholderInputs */
+/** @typedef {{}} Assets_Bulk_PrefillInputs */
+/** @typedef {{ month: NonNullable<unknown>, amount: NonNullable<unknown> }} Assets_Bulk_Prev_LabelInputs */
+/** @typedef {{}} Assets_Bulk_Save_ErrorInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Assets_Bulk_Save_ManyInputs */
+/** @typedef {{}} Assets_Bulk_Save_OneInputs */
+/** @typedef {{ count: NonNullable<unknown>, month: NonNullable<unknown> }} Assets_Bulk_Saved_ToastInputs */
+/** @typedef {{ month: NonNullable<unknown> }} Assets_Bulk_Saved_Toast_OneInputs */
+/** @typedef {{ month: NonNullable<unknown> }} Assets_Bulk_TitleInputs */
+/** @typedef {{ name: NonNullable<unknown> }} Assets_Carry_Over_AriaInputs */
+/** @typedef {{}} Assets_Carry_Over_ErrorInputs */
+/** @typedef {{}} Assets_Carry_Over_PreviousInputs */
+/** @typedef {{ amount: NonNullable<unknown> }} Assets_Carry_Over_TitleInputs */
+/** @typedef {{ count: NonNullable<unknown>, month: NonNullable<unknown> }} Assets_Carry_Over_ToastInputs */
+/** @typedef {{ month: NonNullable<unknown> }} Assets_Carry_Over_Toast_OneInputs */
+/** @typedef {{}} Assets_Chart_AllocationInputs */
+/** @typedef {{}} Assets_Chart_Empty_AllocationInputs */
+/** @typedef {{}} Assets_Chart_Empty_EvolutionInputs */
+/** @typedef {{}} Assets_Chart_EvolutionInputs */
+/** @typedef {{}} Assets_Chart_Mode_AccountsInputs */
+/** @typedef {{}} Assets_Chart_Mode_TotalInputs */
+/** @typedef {{}} Assets_Chart_Total_SavingsInputs */
+/** @typedef {{}} Assets_Clear_Balance_ErrorInputs */
+/** @typedef {{}} Assets_Col_AccountInputs */
+/** @typedef {{ month: NonNullable<unknown> }} Assets_Col_BalanceInputs */
+/** @typedef {{}} Assets_Col_ChangeInputs */
+/** @typedef {{}} Assets_Col_NoteInputs */
+/** @typedef {{}} Assets_Col_PreviousInputs */
+/** @typedef {{}} Assets_CopyingInputs */
+/** @typedef {{}} Assets_Current_MonthInputs */
+/** @typedef {{}} Assets_Delete_Account_AriaInputs */
+/** @typedef {{}} Assets_Delete_Confirm_DescInputs */
+/** @typedef {{ name: NonNullable<unknown> }} Assets_Delete_Confirm_TitleInputs */
+/** @typedef {{}} Assets_Edit_Account_AriaInputs */
+/** @typedef {{}} Assets_Empty_DescInputs */
+/** @typedef {{}} Assets_Empty_TitleInputs */
+/** @typedef {{}} Assets_Enter_PlaceholderInputs */
+/** @typedef {{ amount: NonNullable<unknown> }} Assets_Estimated_PrefixInputs */
+/** @typedef {{}} Assets_Fill_BalancesInputs */
+/** @typedef {{}} Assets_Fill_Balances_CtaInputs */
+/** @typedef {{}} Assets_History_Carried_OverInputs */
+/** @typedef {{}} Assets_History_HintInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Assets_History_Missing_TitleInputs */
+/** @typedef {{}} Assets_History_TitleInputs */
+/** @typedef {{ month: NonNullable<unknown> }} Assets_Kpi_All_UpdatedInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Assets_Kpi_Carried_OverInputs */
+/** @typedef {{}} Assets_Kpi_Carried_Over_OneInputs */
+/** @typedef {{}} Assets_Kpi_From_SnapshotsInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Assets_Kpi_Missing_ManyInputs */
+/** @typedef {{}} Assets_Kpi_Missing_OneInputs */
+/** @typedef {{}} Assets_Kpi_No_BalancesInputs */
+/** @typedef {{}} Assets_Kpi_No_PrevInputs */
+/** @typedef {{ amount: NonNullable<unknown> }} Assets_Kpi_Prev_ValueInputs */
+/** @typedef {{}} Assets_Kpi_StatusInputs */
+/** @typedef {{ month: NonNullable<unknown> }} Assets_Kpi_TotalInputs */
+/** @typedef {{}} Assets_Kpi_Vs_PreviousInputs */
+/** @typedef {{ message: NonNullable<unknown> }} Assets_Load_ErrorInputs */
+/** @typedef {{}} Assets_LoadingInputs */
+/** @typedef {{ month: NonNullable<unknown> }} Assets_Missing_AllInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Assets_Missing_MoreInputs */
+/** @typedef {{ month: NonNullable<unknown>, missing: NonNullable<unknown>, total: NonNullable<unknown> }} Assets_Missing_PartialInputs */
+/** @typedef {{ month: NonNullable<unknown>, missing: NonNullable<unknown>, total: NonNullable<unknown> }} Assets_Missing_Partial_OneInputs */
+/** @typedef {{}} Assets_Missing_Please_FillInputs */
+/** @typedef {{}} Assets_Note_Disabled_TitleInputs */
+/** @typedef {{}} Assets_Note_Edit_TitleInputs */
+/** @typedef {{}} Assets_Note_PlaceholderInputs */
+/** @typedef {{}} Assets_Save_Balance_ErrorInputs */
+/** @typedef {{}} Assets_Tab_InvestmentsInputs */
+/** @typedef {{}} Assets_Tab_OverviewInputs */
+/** @typedef {{}} Assets_Tab_SavingsInputs */
+/** @typedef {{ updated: NonNullable<unknown>, total: NonNullable<unknown>, month: NonNullable<unknown> }} Assets_Table_Recorded_CountInputs */
+/** @typedef {{}} Assets_Table_TitleInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Assets_Total_Carried_OverInputs */
+/** @typedef {{}} Assets_Total_Carried_Over_OneInputs */
 /** @typedef {{}} Bills_AddInputs */
 /** @typedef {{}} Bills_Added_ToastInputs */
 /** @typedef {{}} Bills_Delete_AriaInputs */
@@ -161,6 +259,122 @@
 /** @typedef {{}} Incomes_Save_ErrorInputs */
 /** @typedef {{}} Incomes_TitleInputs */
 /** @typedef {{}} Incomes_Updated_ToastInputs */
+/** @typedef {{}} Inv_Account_Added_ToastInputs */
+/** @typedef {{}} Inv_Account_Delete_Confirm_DescInputs */
+/** @typedef {{ name: NonNullable<unknown> }} Inv_Account_Delete_Confirm_TitleInputs */
+/** @typedef {{}} Inv_Account_Deleted_ToastInputs */
+/** @typedef {{}} Inv_Account_Dialog_DescInputs */
+/** @typedef {{}} Inv_Account_Name_PlaceholderInputs */
+/** @typedef {{}} Inv_Account_Updated_ToastInputs */
+/** @typedef {{}} Inv_Add_AccountInputs */
+/** @typedef {{}} Inv_Add_OperationInputs */
+/** @typedef {{}} Inv_All_AccountsInputs */
+/** @typedef {{}} Inv_Chart_AllocationInputs */
+/** @typedef {{}} Inv_Chart_By_AccountInputs */
+/** @typedef {{}} Inv_Chart_By_ClassInputs */
+/** @typedef {{}} Inv_Chart_By_SecurityInputs */
+/** @typedef {{}} Inv_Chart_EmptyInputs */
+/** @typedef {{}} Inv_Chart_Empty_AllocationInputs */
+/** @typedef {{}} Inv_Chart_EvolutionInputs */
+/** @typedef {{}} Inv_Chart_InvestedInputs */
+/** @typedef {{}} Inv_Chart_ValueInputs */
+/** @typedef {{}} Inv_Col_AccountInputs */
+/** @typedef {{}} Inv_Col_Avg_CostInputs */
+/** @typedef {{}} Inv_Col_PnlInputs */
+/** @typedef {{}} Inv_Col_PriceInputs */
+/** @typedef {{}} Inv_Col_QuantityInputs */
+/** @typedef {{}} Inv_Col_SecurityInputs */
+/** @typedef {{}} Inv_Col_ValueInputs */
+/** @typedef {{}} Inv_Col_WeightInputs */
+/** @typedef {{}} Inv_Edit_AccountInputs */
+/** @typedef {{}} Inv_Edit_OperationInputs */
+/** @typedef {{}} Inv_Empty_Accounts_DescInputs */
+/** @typedef {{}} Inv_Empty_Accounts_TitleInputs */
+/** @typedef {{}} Inv_Empty_Positions_DescInputs */
+/** @typedef {{}} Inv_Empty_Positions_TitleInputs */
+/** @typedef {{}} Inv_Fortuneo_Change_TickerInputs */
+/** @typedef {{}} Inv_Fortuneo_Choose_FileInputs */
+/** @typedef {{}} Inv_Fortuneo_Dialog_DescInputs */
+/** @typedef {{}} Inv_Fortuneo_Dialog_TitleInputs */
+/** @typedef {{}} Inv_Fortuneo_Dropdown_ItemInputs */
+/** @typedef {{}} Inv_Fortuneo_File_LabelInputs */
+/** @typedef {{}} Inv_Fortuneo_Import_ButtonInputs */
+/** @typedef {{}} Inv_Fortuneo_Import_ErrorInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Inv_Fortuneo_Import_SubmitInputs */
+/** @typedef {{ imported: NonNullable<unknown> }} Inv_Fortuneo_Imported_ToastInputs */
+/** @typedef {{ imported: NonNullable<unknown>, skipped: NonNullable<unknown> }} Inv_Fortuneo_Imported_With_Skipped_ToastInputs */
+/** @typedef {{}} Inv_Fortuneo_Mapping_TitleInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Inv_Fortuneo_Ops_CountInputs */
+/** @typedef {{}} Inv_Fortuneo_Parse_ErrorInputs */
+/** @typedef {{}} Inv_Fortuneo_ParsingInputs */
+/** @typedef {{}} Inv_Fortuneo_Preview_TitleInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Inv_Fortuneo_Skipped_Non_TradesInputs */
+/** @typedef {{ rows: NonNullable<unknown>, securities: NonNullable<unknown> }} Inv_Fortuneo_SummaryInputs */
+/** @typedef {{}} Inv_Fortuneo_UnmatchedInputs */
+/** @typedef {{}} Inv_Kpi_Day_ChangeInputs */
+/** @typedef {{}} Inv_Kpi_Day_Change_NaInputs */
+/** @typedef {{}} Inv_Kpi_InvestedInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Inv_Kpi_Positions_CountInputs */
+/** @typedef {{ realized: NonNullable<unknown>, dividends: NonNullable<unknown> }} Inv_Kpi_Realized_DividendsInputs */
+/** @typedef {{}} Inv_Kpi_Total_ValueInputs */
+/** @typedef {{}} Inv_Kpi_UnrealizedInputs */
+/** @typedef {{ message: NonNullable<unknown> }} Inv_Load_ErrorInputs */
+/** @typedef {{}} Inv_LoadingInputs */
+/** @typedef {{}} Inv_Manual_BadgeInputs */
+/** @typedef {{}} Inv_Manual_Price_ErrorInputs */
+/** @typedef {{}} Inv_Manual_Price_UpdatedInputs */
+/** @typedef {{}} Inv_No_Quote_BadgeInputs */
+/** @typedef {{}} Inv_Op_Account_LabelInputs */
+/** @typedef {{}} Inv_Op_Amount_Eur_LabelInputs */
+/** @typedef {{}} Inv_Op_Asset_Class_LabelInputs */
+/** @typedef {{}} Inv_Op_Date_LabelInputs */
+/** @typedef {{}} Inv_Op_Dialog_DescInputs */
+/** @typedef {{}} Inv_Op_Euro_Fund_HintInputs */
+/** @typedef {{}} Inv_Op_Fees_LabelInputs */
+/** @typedef {{}} Inv_Op_Isin_OptionalInputs */
+/** @typedef {{}} Inv_Op_Manual_Name_LabelInputs */
+/** @typedef {{}} Inv_Op_Manual_Name_PlaceholderInputs */
+/** @typedef {{}} Inv_Op_Mode_ExistingInputs */
+/** @typedef {{}} Inv_Op_Mode_ManualInputs */
+/** @typedef {{}} Inv_Op_Mode_SearchInputs */
+/** @typedef {{}} Inv_Op_No_ResultsInputs */
+/** @typedef {{}} Inv_Op_Note_LabelInputs */
+/** @typedef {{}} Inv_Op_Note_PlaceholderInputs */
+/** @typedef {{}} Inv_Op_Quantity_LabelInputs */
+/** @typedef {{}} Inv_Op_Search_PlaceholderInputs */
+/** @typedef {{}} Inv_Op_SearchingInputs */
+/** @typedef {{}} Inv_Op_Security_LabelInputs */
+/** @typedef {{}} Inv_Op_Select_Security_PlaceholderInputs */
+/** @typedef {{}} Inv_Op_Selected_SecurityInputs */
+/** @typedef {{}} Inv_Op_Total_Eur_HintInputs */
+/** @typedef {{}} Inv_Op_Total_Eur_LabelInputs */
+/** @typedef {{}} Inv_Op_Type_LabelInputs */
+/** @typedef {{ currency: NonNullable<unknown> }} Inv_Op_Unit_Price_LabelInputs */
+/** @typedef {{}} Inv_Positions_TitleInputs */
+/** @typedef {{ name: NonNullable<unknown> }} Inv_Quick_Buy_TitleInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Inv_Quotes_Missing_BannerInputs */
+/** @typedef {{ time: NonNullable<unknown> }} Inv_Quotes_Updated_AtInputs */
+/** @typedef {{}} Inv_Refresh_ErrorInputs */
+/** @typedef {{ updated: NonNullable<unknown>, failed: NonNullable<unknown> }} Inv_Refresh_Partial_ToastInputs */
+/** @typedef {{}} Inv_Refresh_QuotesInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Inv_Refresh_ToastInputs */
+/** @typedef {{}} Inv_RefreshingInputs */
+/** @typedef {{}} Inv_Tx_Added_ToastInputs */
+/** @typedef {{}} Inv_Tx_Col_DateInputs */
+/** @typedef {{}} Inv_Tx_Col_FeesInputs */
+/** @typedef {{}} Inv_Tx_Col_NoteInputs */
+/** @typedef {{}} Inv_Tx_Col_Total_EurInputs */
+/** @typedef {{}} Inv_Tx_Col_TypeInputs */
+/** @typedef {{}} Inv_Tx_Col_Unit_PriceInputs */
+/** @typedef {{}} Inv_Tx_Delete_ErrorInputs */
+/** @typedef {{}} Inv_Tx_Deleted_ToastInputs */
+/** @typedef {{}} Inv_Tx_EmptyInputs */
+/** @typedef {{}} Inv_Tx_TitleInputs */
+/** @typedef {{}} Inv_Tx_Type_BuyInputs */
+/** @typedef {{}} Inv_Tx_Type_DividendInputs */
+/** @typedef {{}} Inv_Tx_Type_InterestInputs */
+/** @typedef {{}} Inv_Tx_Type_SellInputs */
+/** @typedef {{}} Inv_Tx_Updated_ToastInputs */
 /** @typedef {{}} Mapping_Col_ExcludeInputs */
 /** @typedef {{}} Mapping_Col_From_NameInputs */
 /** @typedef {{}} Mapping_Col_From_PriceInputs */
@@ -238,12 +452,30 @@
 /** @typedef {{}} Month_PreviousInputs */
 /** @typedef {{}} Month_Start_BlankInputs */
 /** @typedef {{}} Month_Target_LabelInputs */
+/** @typedef {{}} Nav_AssetsInputs */
 /** @typedef {{}} Nav_BudgetInputs */
 /** @typedef {{}} Nav_ImportInputs */
 /** @typedef {{}} Nav_LanguageInputs */
 /** @typedef {{}} Nav_SettingsInputs */
 /** @typedef {{}} Nav_Switch_LanguageInputs */
 /** @typedef {{}} Nav_TransactionsInputs */
+/** @typedef {{}} Overview_Allocation_EmptyInputs */
+/** @typedef {{}} Overview_Allocation_TitleInputs */
+/** @typedef {{}} Overview_Class_CashInputs */
+/** @typedef {{}} Overview_Evolution_EmptyInputs */
+/** @typedef {{}} Overview_Evolution_TitleInputs */
+/** @typedef {{}} Overview_Go_To_SavingsInputs */
+/** @typedef {{ amount: NonNullable<unknown> }} Overview_Invested_SubInputs */
+/** @typedef {{}} Overview_InvestmentsInputs */
+/** @typedef {{ percent: NonNullable<unknown> }} Overview_Investments_SubInputs */
+/** @typedef {{}} Overview_Liquid_SavingsInputs */
+/** @typedef {{ percent: NonNullable<unknown> }} Overview_Liquid_Savings_SubInputs */
+/** @typedef {{ count: NonNullable<unknown>, month: NonNullable<unknown> }} Overview_Missing_Snapshots_NoticeInputs */
+/** @typedef {{}} Overview_Mode_ClassesInputs */
+/** @typedef {{}} Overview_Mode_EnvelopesInputs */
+/** @typedef {{}} Overview_Net_WorthInputs */
+/** @typedef {{}} Overview_Net_Worth_SubInputs */
+/** @typedef {{}} Overview_Unrealized_GainInputs */
 /** @typedef {{}} Parser_DescriptionInputs */
 /** @typedef {{}} Parser_Error_ToastInputs */
 /** @typedef {{}} Parser_File_DescInputs */
@@ -522,6 +754,398 @@ export const app_not_found = /** @type {(inputs: App_Not_FoundInputs) => Localiz
 
 export const app_title = /** @type {(inputs: App_TitleInputs) => LocalizedString} */ () => {
 	return /** @type {LocalizedString} */ (`Budget`)
+};
+
+export const asset_class_bond = /** @type {(inputs: Asset_Class_BondInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Bond`)
+};
+
+export const asset_class_crypto = /** @type {(inputs: Asset_Class_CryptoInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Crypto`)
+};
+
+export const asset_class_etf = /** @type {(inputs: Asset_Class_EtfInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`ETF`)
+};
+
+export const asset_class_euro_fund = /** @type {(inputs: Asset_Class_Euro_FundInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Euro Fund`)
+};
+
+export const asset_class_other = /** @type {(inputs: Asset_Class_OtherInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Other`)
+};
+
+export const asset_class_scpi = /** @type {(inputs: Asset_Class_ScpiInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`SCPI`)
+};
+
+export const asset_class_stock = /** @type {(inputs: Asset_Class_StockInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Stock`)
+};
+
+export const assets_account_add_title = /** @type {(inputs: Assets_Account_Add_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Add Savings Account`)
+};
+
+export const assets_account_added_toast = /** @type {(inputs: Assets_Account_Added_ToastInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Savings account added`)
+};
+
+export const assets_account_choose_color = /** @type {(inputs: Assets_Account_Choose_ColorInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Choose color ${i?.color}`)
+};
+
+export const assets_account_delete_error = /** @type {(inputs: Assets_Account_Delete_ErrorInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Failed to delete account`)
+};
+
+export const assets_account_deleted_toast = /** @type {(inputs: Assets_Account_Deleted_ToastInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Savings account deleted`)
+};
+
+export const assets_account_dialog_desc = /** @type {(inputs: Assets_Account_Dialog_DescInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Track livrets, Revolut pockets, or cash-equivalent savings accounts via monthly snapshots.`)
+};
+
+export const assets_account_edit_title = /** @type {(inputs: Assets_Account_Edit_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Edit Savings Account`)
+};
+
+export const assets_account_identifier = /** @type {(inputs: Assets_Account_IdentifierInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Identifier: ${i?.slug}`)
+};
+
+export const assets_account_name_placeholder = /** @type {(inputs: Assets_Account_Name_PlaceholderInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Revolut - Pocket Travel, SG - Livret A, Linxea - Fonds Euros...`)
+};
+
+export const assets_account_updated_toast = /** @type {(inputs: Assets_Account_Updated_ToastInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Savings account updated`)
+};
+
+export const assets_add_account = /** @type {(inputs: Assets_Add_AccountInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Add Account`)
+};
+
+export const assets_add_savings_account = /** @type {(inputs: Assets_Add_Savings_AccountInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Add Savings Account`)
+};
+
+export const assets_badge_missing = /** @type {(inputs: Assets_Badge_MissingInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Missing`)
+};
+
+export const assets_bulk_balance_aria = /** @type {(inputs: Assets_Bulk_Balance_AriaInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Balance for ${i?.name}`)
+};
+
+export const assets_bulk_copy_prev_title = /** @type {(inputs: Assets_Bulk_Copy_Prev_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Click to copy previous balance`)
+};
+
+export const assets_bulk_desc = /** @type {(inputs: Assets_Bulk_DescInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Enter the current balance for each savings account. Leave a field blank to skip it for now.`)
+};
+
+export const assets_bulk_note_aria = /** @type {(inputs: Assets_Bulk_Note_AriaInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Note for ${i?.name}`)
+};
+
+export const assets_bulk_note_placeholder = /** @type {(inputs: Assets_Bulk_Note_PlaceholderInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Optional note (e.g. interest, transfer)`)
+};
+
+export const assets_bulk_prefill = /** @type {(inputs: Assets_Bulk_PrefillInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Pre-fill empty from previous`)
+};
+
+export const assets_bulk_prev_label = /** @type {(inputs: Assets_Bulk_Prev_LabelInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Prev (${i?.month}): ${i?.amount}`)
+};
+
+export const assets_bulk_save_error = /** @type {(inputs: Assets_Bulk_Save_ErrorInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Failed to save snapshots`)
+};
+
+export const assets_bulk_save_many = /** @type {(inputs: Assets_Bulk_Save_ManyInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Save ${i?.count} balances`)
+};
+
+export const assets_bulk_save_one = /** @type {(inputs: Assets_Bulk_Save_OneInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Save 1 balance`)
+};
+
+export const assets_bulk_saved_toast = /** @type {(inputs: Assets_Bulk_Saved_ToastInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Saved ${i?.count} snapshots for ${i?.month}`)
+};
+
+export const assets_bulk_saved_toast_one = /** @type {(inputs: Assets_Bulk_Saved_Toast_OneInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Saved 1 snapshot for ${i?.month}`)
+};
+
+export const assets_bulk_title = /** @type {(inputs: Assets_Bulk_TitleInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Fill Balances — ${i?.month}`)
+};
+
+export const assets_carry_over_aria = /** @type {(inputs: Assets_Carry_Over_AriaInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Carry over previous balance for ${i?.name}`)
+};
+
+export const assets_carry_over_error = /** @type {(inputs: Assets_Carry_Over_ErrorInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Failed to carry over balances`)
+};
+
+export const assets_carry_over_previous = /** @type {(inputs: Assets_Carry_Over_PreviousInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Carry over previous`)
+};
+
+export const assets_carry_over_title = /** @type {(inputs: Assets_Carry_Over_TitleInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Carry over ${i?.amount}`)
+};
+
+export const assets_carry_over_toast = /** @type {(inputs: Assets_Carry_Over_ToastInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Carried over ${i?.count} balances to ${i?.month}`)
+};
+
+export const assets_carry_over_toast_one = /** @type {(inputs: Assets_Carry_Over_Toast_OneInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Carried over 1 balance to ${i?.month}`)
+};
+
+export const assets_chart_allocation = /** @type {(inputs: Assets_Chart_AllocationInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Allocation`)
+};
+
+export const assets_chart_empty_allocation = /** @type {(inputs: Assets_Chart_Empty_AllocationInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Add balances to see your allocation across savings accounts.`)
+};
+
+export const assets_chart_empty_evolution = /** @type {(inputs: Assets_Chart_Empty_EvolutionInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Record your first balance snapshot to see your savings evolution over time.`)
+};
+
+export const assets_chart_evolution = /** @type {(inputs: Assets_Chart_EvolutionInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Savings Evolution`)
+};
+
+export const assets_chart_mode_accounts = /** @type {(inputs: Assets_Chart_Mode_AccountsInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`By Account`)
+};
+
+export const assets_chart_mode_total = /** @type {(inputs: Assets_Chart_Mode_TotalInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Total`)
+};
+
+export const assets_chart_total_savings = /** @type {(inputs: Assets_Chart_Total_SavingsInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Total Savings`)
+};
+
+export const assets_clear_balance_error = /** @type {(inputs: Assets_Clear_Balance_ErrorInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Failed to clear balance`)
+};
+
+export const assets_col_account = /** @type {(inputs: Assets_Col_AccountInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Account`)
+};
+
+export const assets_col_balance = /** @type {(inputs: Assets_Col_BalanceInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Balance (${i?.month})`)
+};
+
+export const assets_col_change = /** @type {(inputs: Assets_Col_ChangeInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Change`)
+};
+
+export const assets_col_note = /** @type {(inputs: Assets_Col_NoteInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Note`)
+};
+
+export const assets_col_previous = /** @type {(inputs: Assets_Col_PreviousInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Previous`)
+};
+
+export const assets_copying = /** @type {(inputs: Assets_CopyingInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Copying...`)
+};
+
+export const assets_current_month = /** @type {(inputs: Assets_Current_MonthInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Current Month`)
+};
+
+export const assets_delete_account_aria = /** @type {(inputs: Assets_Delete_Account_AriaInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Delete account`)
+};
+
+export const assets_delete_confirm_desc = /** @type {(inputs: Assets_Delete_Confirm_DescInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`This will permanently delete this savings account and all of its recorded balance snapshots.`)
+};
+
+export const assets_delete_confirm_title = /** @type {(inputs: Assets_Delete_Confirm_TitleInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Delete "${i?.name}"?`)
+};
+
+export const assets_edit_account_aria = /** @type {(inputs: Assets_Edit_Account_AriaInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Edit account`)
+};
+
+export const assets_empty_desc = /** @type {(inputs: Assets_Empty_DescInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Add your Livret A, Revolut Pockets, or cash-equivalent savings accounts to record periodic balance snapshots and track your evolution over time.`)
+};
+
+export const assets_empty_title = /** @type {(inputs: Assets_Empty_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`No savings accounts tracked yet`)
+};
+
+export const assets_enter_placeholder = /** @type {(inputs: Assets_Enter_PlaceholderInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Enter...`)
+};
+
+export const assets_estimated_prefix = /** @type {(inputs: Assets_Estimated_PrefixInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`est. ${i?.amount}`)
+};
+
+export const assets_fill_balances = /** @type {(inputs: Assets_Fill_BalancesInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Fill Balances`)
+};
+
+export const assets_fill_balances_cta = /** @type {(inputs: Assets_Fill_Balances_CtaInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Fill balances`)
+};
+
+export const assets_history_carried_over = /** @type {(inputs: Assets_History_Carried_OverInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Carried over`)
+};
+
+export const assets_history_hint = /** @type {(inputs: Assets_History_HintInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Italic values are carried over from an earlier snapshot. Click a month to edit.`)
+};
+
+export const assets_history_missing_title = /** @type {(inputs: Assets_History_Missing_TitleInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`${i?.count} account(s) not updated this month`)
+};
+
+export const assets_history_title = /** @type {(inputs: Assets_History_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Snapshot History`)
+};
+
+export const assets_kpi_all_updated = /** @type {(inputs: Assets_Kpi_All_UpdatedInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`All accounts updated for ${i?.month}`)
+};
+
+export const assets_kpi_carried_over = /** @type {(inputs: Assets_Kpi_Carried_OverInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Includes ${i?.count} carried-over balances`)
+};
+
+export const assets_kpi_carried_over_one = /** @type {(inputs: Assets_Kpi_Carried_Over_OneInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Includes 1 carried-over balance`)
+};
+
+export const assets_kpi_from_snapshots = /** @type {(inputs: Assets_Kpi_From_SnapshotsInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Based on recorded snapshots`)
+};
+
+export const assets_kpi_missing_many = /** @type {(inputs: Assets_Kpi_Missing_ManyInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`${i?.count} accounts missing a snapshot`)
+};
+
+export const assets_kpi_missing_one = /** @type {(inputs: Assets_Kpi_Missing_OneInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`1 account missing a snapshot`)
+};
+
+export const assets_kpi_no_balances = /** @type {(inputs: Assets_Kpi_No_BalancesInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`No balances recorded yet`)
+};
+
+export const assets_kpi_no_prev = /** @type {(inputs: Assets_Kpi_No_PrevInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`No earlier month to compare`)
+};
+
+export const assets_kpi_prev_value = /** @type {(inputs: Assets_Kpi_Prev_ValueInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Previous month: ${i?.amount}`)
+};
+
+export const assets_kpi_status = /** @type {(inputs: Assets_Kpi_StatusInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Snapshot Status`)
+};
+
+export const assets_kpi_total = /** @type {(inputs: Assets_Kpi_TotalInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Total Savings (${i?.month})`)
+};
+
+export const assets_kpi_vs_previous = /** @type {(inputs: Assets_Kpi_Vs_PreviousInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`vs Previous Month`)
+};
+
+export const assets_load_error = /** @type {(inputs: Assets_Load_ErrorInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Failed to load assets: ${i?.message}`)
+};
+
+export const assets_loading = /** @type {(inputs: Assets_LoadingInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Loading assets...`)
+};
+
+export const assets_missing_all = /** @type {(inputs: Assets_Missing_AllInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`No balance snapshots recorded for ${i?.month} yet.`)
+};
+
+export const assets_missing_more = /** @type {(inputs: Assets_Missing_MoreInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`+${i?.count} more`)
+};
+
+export const assets_missing_partial = /** @type {(inputs: Assets_Missing_PartialInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Missing ${i?.month} balance snapshots (${i?.missing}/${i?.total}).`)
+};
+
+export const assets_missing_partial_one = /** @type {(inputs: Assets_Missing_Partial_OneInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Missing ${i?.month} balance snapshot (${i?.missing}/${i?.total}).`)
+};
+
+export const assets_missing_please_fill = /** @type {(inputs: Assets_Missing_Please_FillInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Please fill in:`)
+};
+
+export const assets_note_disabled_title = /** @type {(inputs: Assets_Note_Disabled_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Record a balance first to add a note`)
+};
+
+export const assets_note_edit_title = /** @type {(inputs: Assets_Note_Edit_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Click to edit note`)
+};
+
+export const assets_note_placeholder = /** @type {(inputs: Assets_Note_PlaceholderInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Add note...`)
+};
+
+export const assets_save_balance_error = /** @type {(inputs: Assets_Save_Balance_ErrorInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Failed to save balance`)
+};
+
+export const assets_tab_investments = /** @type {(inputs: Assets_Tab_InvestmentsInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Investments`)
+};
+
+export const assets_tab_overview = /** @type {(inputs: Assets_Tab_OverviewInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Overview`)
+};
+
+export const assets_tab_savings = /** @type {(inputs: Assets_Tab_SavingsInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Savings`)
+};
+
+export const assets_table_recorded_count = /** @type {(inputs: Assets_Table_Recorded_CountInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`(${i?.updated}/${i?.total} recorded for ${i?.month})`)
+};
+
+export const assets_table_title = /** @type {(inputs: Assets_Table_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Savings Accounts`)
+};
+
+export const assets_total_carried_over = /** @type {(inputs: Assets_Total_Carried_OverInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`(incl. ${i?.count} carried over)`)
+};
+
+export const assets_total_carried_over_one = /** @type {(inputs: Assets_Total_Carried_Over_OneInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`(incl. 1 carried over)`)
 };
 
 export const bills_add = /** @type {(inputs: Bills_AddInputs) => LocalizedString} */ () => {
@@ -1084,6 +1708,470 @@ export const incomes_updated_toast = /** @type {(inputs: Incomes_Updated_ToastIn
 	return /** @type {LocalizedString} */ (`Income updated`)
 };
 
+export const inv_account_added_toast = /** @type {(inputs: Inv_Account_Added_ToastInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Investment account added`)
+};
+
+export const inv_account_delete_confirm_desc = /** @type {(inputs: Inv_Account_Delete_Confirm_DescInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`This will permanently delete this investment account and all of its recorded operations.`)
+};
+
+export const inv_account_delete_confirm_title = /** @type {(inputs: Inv_Account_Delete_Confirm_TitleInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Delete "${i?.name}"?`)
+};
+
+export const inv_account_deleted_toast = /** @type {(inputs: Inv_Account_Deleted_ToastInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Investment account deleted`)
+};
+
+export const inv_account_dialog_desc = /** @type {(inputs: Inv_Account_Dialog_DescInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Track PEA, CTO, Assurance-Vie, or brokerage accounts.`)
+};
+
+export const inv_account_name_placeholder = /** @type {(inputs: Inv_Account_Name_PlaceholderInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Fortuneo - CTO, Fortuneo - PEA, Linxea - Assurance Vie...`)
+};
+
+export const inv_account_updated_toast = /** @type {(inputs: Inv_Account_Updated_ToastInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Investment account updated`)
+};
+
+export const inv_add_account = /** @type {(inputs: Inv_Add_AccountInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Add Investment Account`)
+};
+
+export const inv_add_operation = /** @type {(inputs: Inv_Add_OperationInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Add Operation`)
+};
+
+export const inv_all_accounts = /** @type {(inputs: Inv_All_AccountsInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`All Accounts`)
+};
+
+export const inv_chart_allocation = /** @type {(inputs: Inv_Chart_AllocationInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Allocation`)
+};
+
+export const inv_chart_by_account = /** @type {(inputs: Inv_Chart_By_AccountInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`By Account`)
+};
+
+export const inv_chart_by_class = /** @type {(inputs: Inv_Chart_By_ClassInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`By Class`)
+};
+
+export const inv_chart_by_security = /** @type {(inputs: Inv_Chart_By_SecurityInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`By Holding`)
+};
+
+export const inv_chart_empty = /** @type {(inputs: Inv_Chart_EmptyInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Record your first investment operation to see portfolio evolution over time.`)
+};
+
+export const inv_chart_empty_allocation = /** @type {(inputs: Inv_Chart_Empty_AllocationInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Add positions to see your portfolio allocation.`)
+};
+
+export const inv_chart_evolution = /** @type {(inputs: Inv_Chart_EvolutionInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Value vs Invested`)
+};
+
+export const inv_chart_invested = /** @type {(inputs: Inv_Chart_InvestedInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Net Invested`)
+};
+
+export const inv_chart_value = /** @type {(inputs: Inv_Chart_ValueInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Portfolio Value`)
+};
+
+export const inv_col_account = /** @type {(inputs: Inv_Col_AccountInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Account`)
+};
+
+export const inv_col_avg_cost = /** @type {(inputs: Inv_Col_Avg_CostInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Avg Cost`)
+};
+
+export const inv_col_pnl = /** @type {(inputs: Inv_Col_PnlInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`P&L`)
+};
+
+export const inv_col_price = /** @type {(inputs: Inv_Col_PriceInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Price`)
+};
+
+export const inv_col_quantity = /** @type {(inputs: Inv_Col_QuantityInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Qty`)
+};
+
+export const inv_col_security = /** @type {(inputs: Inv_Col_SecurityInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Security`)
+};
+
+export const inv_col_value = /** @type {(inputs: Inv_Col_ValueInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Value`)
+};
+
+export const inv_col_weight = /** @type {(inputs: Inv_Col_WeightInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Weight`)
+};
+
+export const inv_edit_account = /** @type {(inputs: Inv_Edit_AccountInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Edit Investment Account`)
+};
+
+export const inv_edit_operation = /** @type {(inputs: Inv_Edit_OperationInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Edit Operation`)
+};
+
+export const inv_empty_accounts_desc = /** @type {(inputs: Inv_Empty_Accounts_DescInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Add your PEA, CTO, or Assurance-Vie account to track ETFs, stocks, and Euro Funds with live Yahoo Finance quotes.`)
+};
+
+export const inv_empty_accounts_title = /** @type {(inputs: Inv_Empty_Accounts_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`No investment accounts configured yet`)
+};
+
+export const inv_empty_positions_desc = /** @type {(inputs: Inv_Empty_Positions_DescInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Record a first purchase or initialize an existing position to start tracking your portfolio value and performance.`)
+};
+
+export const inv_empty_positions_title = /** @type {(inputs: Inv_Empty_Positions_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`No positions recorded yet`)
+};
+
+export const inv_fortuneo_change_ticker = /** @type {(inputs: Inv_Fortuneo_Change_TickerInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Search other`)
+};
+
+export const inv_fortuneo_choose_file = /** @type {(inputs: Inv_Fortuneo_Choose_FileInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Choose .zip or .csv file`)
+};
+
+export const inv_fortuneo_dialog_desc = /** @type {(inputs: Inv_Fortuneo_Dialog_DescInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Upload the ZIP or CSV file downloaded from Fortuneo (HistoriqueOperationsBourse). Duplicates are skipped automatically.`)
+};
+
+export const inv_fortuneo_dialog_title = /** @type {(inputs: Inv_Fortuneo_Dialog_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Import Fortuneo Export`)
+};
+
+export const inv_fortuneo_dropdown_item = /** @type {(inputs: Inv_Fortuneo_Dropdown_ItemInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Fortuneo (ZIP / CSV)`)
+};
+
+export const inv_fortuneo_file_label = /** @type {(inputs: Inv_Fortuneo_File_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Fortuneo ZIP / CSV file`)
+};
+
+export const inv_fortuneo_import_button = /** @type {(inputs: Inv_Fortuneo_Import_ButtonInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Import Fortuneo`)
+};
+
+export const inv_fortuneo_import_error = /** @type {(inputs: Inv_Fortuneo_Import_ErrorInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Failed to import operations`)
+};
+
+export const inv_fortuneo_import_submit = /** @type {(inputs: Inv_Fortuneo_Import_SubmitInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Import ${i?.count} operation(s)`)
+};
+
+export const inv_fortuneo_imported_toast = /** @type {(inputs: Inv_Fortuneo_Imported_ToastInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Imported ${i?.imported} operation(s)`)
+};
+
+export const inv_fortuneo_imported_with_skipped_toast = /** @type {(inputs: Inv_Fortuneo_Imported_With_Skipped_ToastInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Imported ${i?.imported} operation(s), skipped ${i?.skipped} duplicate(s)`)
+};
+
+export const inv_fortuneo_mapping_title = /** @type {(inputs: Inv_Fortuneo_Mapping_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Match Fortuneo labels to Yahoo Finance tickers`)
+};
+
+export const inv_fortuneo_ops_count = /** @type {(inputs: Inv_Fortuneo_Ops_CountInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`${i?.count} op.`)
+};
+
+export const inv_fortuneo_parse_error = /** @type {(inputs: Inv_Fortuneo_Parse_ErrorInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Failed to parse Fortuneo file`)
+};
+
+export const inv_fortuneo_parsing = /** @type {(inputs: Inv_Fortuneo_ParsingInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Reading file & matching tickers...`)
+};
+
+export const inv_fortuneo_preview_title = /** @type {(inputs: Inv_Fortuneo_Preview_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Operations preview`)
+};
+
+export const inv_fortuneo_skipped_non_trades = /** @type {(inputs: Inv_Fortuneo_Skipped_Non_TradesInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`(${i?.count} non-trade row(s) ignored)`)
+};
+
+export const inv_fortuneo_summary = /** @type {(inputs: Inv_Fortuneo_SummaryInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`${i?.rows} operation(s) detected across ${i?.securities} security(ies)`)
+};
+
+export const inv_fortuneo_unmatched = /** @type {(inputs: Inv_Fortuneo_UnmatchedInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`No match found — search ticker`)
+};
+
+export const inv_kpi_day_change = /** @type {(inputs: Inv_Kpi_Day_ChangeInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Daily Change`)
+};
+
+export const inv_kpi_day_change_na = /** @type {(inputs: Inv_Kpi_Day_Change_NaInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`No live quote delta yet`)
+};
+
+export const inv_kpi_invested = /** @type {(inputs: Inv_Kpi_InvestedInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Net Invested`)
+};
+
+export const inv_kpi_positions_count = /** @type {(inputs: Inv_Kpi_Positions_CountInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`${i?.count} open position(s)`)
+};
+
+export const inv_kpi_realized_dividends = /** @type {(inputs: Inv_Kpi_Realized_DividendsInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Realized: ${i?.realized} · Div.: ${i?.dividends}`)
+};
+
+export const inv_kpi_total_value = /** @type {(inputs: Inv_Kpi_Total_ValueInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Portfolio Value`)
+};
+
+export const inv_kpi_unrealized = /** @type {(inputs: Inv_Kpi_UnrealizedInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Unrealized P&L`)
+};
+
+export const inv_load_error = /** @type {(inputs: Inv_Load_ErrorInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Failed to load investments: ${i?.message}`)
+};
+
+export const inv_loading = /** @type {(inputs: Inv_LoadingInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Loading investments...`)
+};
+
+export const inv_manual_badge = /** @type {(inputs: Inv_Manual_BadgeInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Manual`)
+};
+
+export const inv_manual_price_error = /** @type {(inputs: Inv_Manual_Price_ErrorInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Failed to update price`)
+};
+
+export const inv_manual_price_updated = /** @type {(inputs: Inv_Manual_Price_UpdatedInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Manual price updated`)
+};
+
+export const inv_no_quote_badge = /** @type {(inputs: Inv_No_Quote_BadgeInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`No quote`)
+};
+
+export const inv_op_account_label = /** @type {(inputs: Inv_Op_Account_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Account`)
+};
+
+export const inv_op_amount_eur_label = /** @type {(inputs: Inv_Op_Amount_Eur_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Amount (€)`)
+};
+
+export const inv_op_asset_class_label = /** @type {(inputs: Inv_Op_Asset_Class_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Asset Class`)
+};
+
+export const inv_op_date_label = /** @type {(inputs: Inv_Op_Date_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Date`)
+};
+
+export const inv_op_dialog_desc = /** @type {(inputs: Inv_Op_Dialog_DescInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Record a buy, sell, dividend, or initialize an existing position.`)
+};
+
+export const inv_op_euro_fund_hint = /** @type {(inputs: Inv_Op_Euro_Fund_HintInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`For a Euro Fund, simply enter each monthly deposit as Buy and annual returns as Interest.`)
+};
+
+export const inv_op_fees_label = /** @type {(inputs: Inv_Op_Fees_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Fees (€)`)
+};
+
+export const inv_op_isin_optional = /** @type {(inputs: Inv_Op_Isin_OptionalInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`ISIN (optional)`)
+};
+
+export const inv_op_manual_name_label = /** @type {(inputs: Inv_Op_Manual_Name_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Asset Name`)
+};
+
+export const inv_op_manual_name_placeholder = /** @type {(inputs: Inv_Op_Manual_Name_PlaceholderInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`e.g. Linxea Fonds Euros, SCPI Remake Live...`)
+};
+
+export const inv_op_mode_existing = /** @type {(inputs: Inv_Op_Mode_ExistingInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Existing security`)
+};
+
+export const inv_op_mode_manual = /** @type {(inputs: Inv_Op_Mode_ManualInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Manual asset (Euro Fund / SCPI)`)
+};
+
+export const inv_op_mode_search = /** @type {(inputs: Inv_Op_Mode_SearchInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Search Yahoo Finance`)
+};
+
+export const inv_op_no_results = /** @type {(inputs: Inv_Op_No_ResultsInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`No matching securities found.`)
+};
+
+export const inv_op_note_label = /** @type {(inputs: Inv_Op_Note_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Note (optional)`)
+};
+
+export const inv_op_note_placeholder = /** @type {(inputs: Inv_Op_Note_PlaceholderInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`e.g. Monthly DCA, Initial position...`)
+};
+
+export const inv_op_quantity_label = /** @type {(inputs: Inv_Op_Quantity_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Quantity`)
+};
+
+export const inv_op_search_placeholder = /** @type {(inputs: Inv_Op_Search_PlaceholderInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Search ticker, name or ISIN (e.g. CW8.PA, WPEA.PA, AAPL)...`)
+};
+
+export const inv_op_searching = /** @type {(inputs: Inv_Op_SearchingInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Searching...`)
+};
+
+export const inv_op_security_label = /** @type {(inputs: Inv_Op_Security_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Security`)
+};
+
+export const inv_op_select_security_placeholder = /** @type {(inputs: Inv_Op_Select_Security_PlaceholderInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Select a security`)
+};
+
+export const inv_op_selected_security = /** @type {(inputs: Inv_Op_Selected_SecurityInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Selected`)
+};
+
+export const inv_op_total_eur_hint = /** @type {(inputs: Inv_Op_Total_Eur_HintInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Auto-computed from quantity × price + fees (editable for FX / exact broker total).`)
+};
+
+export const inv_op_total_eur_label = /** @type {(inputs: Inv_Op_Total_Eur_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Total Net Paid / Received (€)`)
+};
+
+export const inv_op_type_label = /** @type {(inputs: Inv_Op_Type_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Operation Type`)
+};
+
+export const inv_op_unit_price_label = /** @type {(inputs: Inv_Op_Unit_Price_LabelInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Unit Price (${i?.currency})`)
+};
+
+export const inv_positions_title = /** @type {(inputs: Inv_Positions_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Holdings`)
+};
+
+export const inv_quick_buy_title = /** @type {(inputs: Inv_Quick_Buy_TitleInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Add buy/sell operation for ${i?.name}`)
+};
+
+export const inv_quotes_missing_banner = /** @type {(inputs: Inv_Quotes_Missing_BannerInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`${i?.count} position(s) have no cached market price yet (valued at cost basis). Click Refresh Quotes to fetch live prices.`)
+};
+
+export const inv_quotes_updated_at = /** @type {(inputs: Inv_Quotes_Updated_AtInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Quotes: ${i?.time}`)
+};
+
+export const inv_refresh_error = /** @type {(inputs: Inv_Refresh_ErrorInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Failed to refresh quotes`)
+};
+
+export const inv_refresh_partial_toast = /** @type {(inputs: Inv_Refresh_Partial_ToastInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Updated ${i?.updated} quote(s), ${i?.failed} failed`)
+};
+
+export const inv_refresh_quotes = /** @type {(inputs: Inv_Refresh_QuotesInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Refresh Quotes`)
+};
+
+export const inv_refresh_toast = /** @type {(inputs: Inv_Refresh_ToastInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Updated ${i?.count} market quote(s)`)
+};
+
+export const inv_refreshing = /** @type {(inputs: Inv_RefreshingInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Refreshing...`)
+};
+
+export const inv_tx_added_toast = /** @type {(inputs: Inv_Tx_Added_ToastInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Operation recorded`)
+};
+
+export const inv_tx_col_date = /** @type {(inputs: Inv_Tx_Col_DateInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Date`)
+};
+
+export const inv_tx_col_fees = /** @type {(inputs: Inv_Tx_Col_FeesInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Fees`)
+};
+
+export const inv_tx_col_note = /** @type {(inputs: Inv_Tx_Col_NoteInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Note`)
+};
+
+export const inv_tx_col_total_eur = /** @type {(inputs: Inv_Tx_Col_Total_EurInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Total (€)`)
+};
+
+export const inv_tx_col_type = /** @type {(inputs: Inv_Tx_Col_TypeInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Type`)
+};
+
+export const inv_tx_col_unit_price = /** @type {(inputs: Inv_Tx_Col_Unit_PriceInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Unit Price`)
+};
+
+export const inv_tx_delete_error = /** @type {(inputs: Inv_Tx_Delete_ErrorInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Failed to delete operation`)
+};
+
+export const inv_tx_deleted_toast = /** @type {(inputs: Inv_Tx_Deleted_ToastInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Operation deleted`)
+};
+
+export const inv_tx_empty = /** @type {(inputs: Inv_Tx_EmptyInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`No operations recorded yet.`)
+};
+
+export const inv_tx_title = /** @type {(inputs: Inv_Tx_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Operations Log`)
+};
+
+export const inv_tx_type_buy = /** @type {(inputs: Inv_Tx_Type_BuyInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Buy`)
+};
+
+export const inv_tx_type_dividend = /** @type {(inputs: Inv_Tx_Type_DividendInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Dividend`)
+};
+
+export const inv_tx_type_interest = /** @type {(inputs: Inv_Tx_Type_InterestInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Interest`)
+};
+
+export const inv_tx_type_sell = /** @type {(inputs: Inv_Tx_Type_SellInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Sell`)
+};
+
+export const inv_tx_updated_toast = /** @type {(inputs: Inv_Tx_Updated_ToastInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Operation updated`)
+};
+
 export const mapping_col_exclude = /** @type {(inputs: Mapping_Col_ExcludeInputs) => LocalizedString} */ () => {
 	return /** @type {LocalizedString} */ (`Exclude`)
 };
@@ -1392,6 +2480,10 @@ export const month_target_label = /** @type {(inputs: Month_Target_LabelInputs) 
 	return /** @type {LocalizedString} */ (`Target Month`)
 };
 
+export const nav_assets = /** @type {(inputs: Nav_AssetsInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Assets`)
+};
+
 export const nav_budget = /** @type {(inputs: Nav_BudgetInputs) => LocalizedString} */ () => {
 	return /** @type {LocalizedString} */ (`Budget`)
 };
@@ -1414,6 +2506,74 @@ export const nav_switch_language = /** @type {(inputs: Nav_Switch_LanguageInputs
 
 export const nav_transactions = /** @type {(inputs: Nav_TransactionsInputs) => LocalizedString} */ () => {
 	return /** @type {LocalizedString} */ (`Transactions`)
+};
+
+export const overview_allocation_empty = /** @type {(inputs: Overview_Allocation_EmptyInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Add savings balances or investment positions to see your allocation.`)
+};
+
+export const overview_allocation_title = /** @type {(inputs: Overview_Allocation_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Global Allocation`)
+};
+
+export const overview_class_cash = /** @type {(inputs: Overview_Class_CashInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Cash & Savings`)
+};
+
+export const overview_evolution_empty = /** @type {(inputs: Overview_Evolution_EmptyInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Record savings snapshots or investment orders to see your net worth over time.`)
+};
+
+export const overview_evolution_title = /** @type {(inputs: Overview_Evolution_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Net Worth Evolution`)
+};
+
+export const overview_go_to_savings = /** @type {(inputs: Overview_Go_To_SavingsInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Update savings`)
+};
+
+export const overview_invested_sub = /** @type {(inputs: Overview_Invested_SubInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Invested: ${i?.amount}`)
+};
+
+export const overview_investments = /** @type {(inputs: Overview_InvestmentsInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Investments`)
+};
+
+export const overview_investments_sub = /** @type {(inputs: Overview_Investments_SubInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`${i?.percent}% of total assets`)
+};
+
+export const overview_liquid_savings = /** @type {(inputs: Overview_Liquid_SavingsInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Liquid Savings`)
+};
+
+export const overview_liquid_savings_sub = /** @type {(inputs: Overview_Liquid_Savings_SubInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`${i?.percent}% of total assets`)
+};
+
+export const overview_missing_snapshots_notice = /** @type {(inputs: Overview_Missing_Snapshots_NoticeInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`${i?.count} savings account(s) missing a snapshot for ${i?.month}.`)
+};
+
+export const overview_mode_classes = /** @type {(inputs: Overview_Mode_ClassesInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`By Class`)
+};
+
+export const overview_mode_envelopes = /** @type {(inputs: Overview_Mode_EnvelopesInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`By Account`)
+};
+
+export const overview_net_worth = /** @type {(inputs: Overview_Net_WorthInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Total Net Worth`)
+};
+
+export const overview_net_worth_sub = /** @type {(inputs: Overview_Net_Worth_SubInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Savings + Investments (excl. checking)`)
+};
+
+export const overview_unrealized_gain = /** @type {(inputs: Overview_Unrealized_GainInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Unrealized Gain`)
 };
 
 export const parser_description = /** @type {(inputs: Parser_DescriptionInputs) => LocalizedString} */ () => {
