@@ -3,6 +3,23 @@ import { index, integer, real, sqliteTable, text, uniqueIndex } from "drizzle-or
 export const ACCOUNT_TYPES = ["checking", "savings", "joint", "investment", "other"] as const
 export type AccountType = (typeof ACCOUNT_TYPES)[number]
 
+export const ASSET_CLASSES = [
+  "etf",
+  "stock",
+  "bond",
+  "scpi",
+  "euro_fund",
+  "crypto",
+  "other",
+] as const
+export type AssetClass = (typeof ASSET_CLASSES)[number]
+
+export const PRICING_MODES = ["yahoo", "manual"] as const
+export type PricingMode = (typeof PRICING_MODES)[number]
+
+export const INVESTMENT_TX_TYPES = ["buy", "sell", "dividend"] as const
+export type InvestmentTxType = (typeof INVESTMENT_TX_TYPES)[number]
+
 export const ebAccounts = sqliteTable("eb_accounts", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
@@ -197,5 +214,67 @@ export const accountSnapshots = sqliteTable(
   (table) => [
     uniqueIndex("account_snapshots_account_month_unique").on(table.accountId, table.monthId),
     index("account_snapshots_month_idx").on(table.monthId),
+  ],
+)
+
+export const securities = sqliteTable("securities", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  symbol: text("symbol").notNull().unique(),
+  isin: text("isin"),
+  name: text("name").notNull(),
+  assetClass: text("asset_class", { enum: ASSET_CLASSES }).notNull().default("etf"),
+  currency: text("currency").notNull().default("EUR"),
+  pricingMode: text("pricing_mode", { enum: PRICING_MODES }).notNull().default("yahoo"),
+  manualPriceCents: integer("manual_price_cents"),
+  updatedAt: text("updated_at").notNull(),
+})
+
+export const investmentTransactions = sqliteTable(
+  "investment_transactions",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    accountId: integer("account_id")
+      .notNull()
+      .references(() => accounts.id, { onDelete: "cascade" }),
+    securityId: integer("security_id")
+      .notNull()
+      .references(() => securities.id, { onDelete: "cascade" }),
+    type: text("type", { enum: INVESTMENT_TX_TYPES }).notNull(),
+    date: text("date").notNull(), // ISO "YYYY-MM-DD"
+    quantity: real("quantity").notNull(),
+    unitPriceCents: integer("unit_price_cents").notNull(),
+    feesCents: integer("fees_cents").notNull().default(0),
+    totalEurCents: integer("total_eur_cents").notNull(),
+    note: text("note"),
+    createdAt: text("created_at").notNull(),
+  },
+  (table) => [
+    index("investment_tx_account_date_idx").on(table.accountId, table.date),
+    index("investment_tx_security_date_idx").on(table.securityId, table.date),
+  ],
+)
+
+export const securityQuotes = sqliteTable("security_quotes", {
+  symbol: text("symbol").primaryKey(),
+  currency: text("currency").notNull(),
+  price: real("price").notNull(),
+  previousClose: real("previous_close"),
+  changePercent: real("change_percent"),
+  fetchedAt: text("fetched_at").notNull(),
+})
+
+export const securityMonthlyPrices = sqliteTable(
+  "security_monthly_prices",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    symbol: text("symbol").notNull(),
+    monthId: text("month_id").notNull(), // "YYYY-MM"
+    closePrice: real("close_price").notNull(),
+    currency: text("currency").notNull(),
+    fetchedAt: text("fetched_at").notNull(),
+  },
+  (table) => [
+    uniqueIndex("security_monthly_prices_symbol_month_unique").on(table.symbol, table.monthId),
+    index("security_monthly_prices_month_idx").on(table.monthId),
   ],
 )
