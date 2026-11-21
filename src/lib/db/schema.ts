@@ -181,3 +181,21 @@ export const savings = sqliteTable(
   },
   (table) => [index("savings_month_idx").on(table.monthId)],
 )
+
+export const accountSnapshots = sqliteTable(
+  "account_snapshots",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    accountId: integer("account_id")
+      .notNull()
+      .references(() => accounts.id, { onDelete: "cascade" }),
+    monthId: text("month_id").notNull(), // "YYYY-MM", e.g. "2026-11"
+    balanceCents: integer("balance_cents").notNull(),
+    note: text("note"),
+    updatedAt: text("updated_at").notNull(),
+  },
+  (table) => [
+    uniqueIndex("account_snapshots_account_month_unique").on(table.accountId, table.monthId),
+    index("account_snapshots_month_idx").on(table.monthId),
+  ],
+)

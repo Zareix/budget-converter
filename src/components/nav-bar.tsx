@@ -4,6 +4,7 @@ import {
   DownloadIcon,
   EuroIcon,
   GlobeIcon,
+  LandmarkIcon,
   PieChartIcon,
   SettingsIcon,
 } from "lucide-react"
@@ -32,6 +33,7 @@ export const NavBar = () => {
   const navItems = [
     { to: "/", label: m.nav_budget(), icon: PieChartIcon, exact: true },
     { to: "/transactions", label: m.nav_transactions(), icon: ArrowLeftRightIcon, exact: false },
+    { to: "/assets", label: m.nav_assets(), icon: LandmarkIcon, exact: false },
     { to: "/import", label: m.nav_import(), icon: DownloadIcon, exact: false },
     { to: "/settings", label: m.nav_settings(), icon: SettingsIcon, exact: false },
   ] as const

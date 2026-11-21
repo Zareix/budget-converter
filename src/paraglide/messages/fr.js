@@ -21,6 +21,94 @@
 /** @typedef {{}} Accounts_Updated_ToastInputs */
 /** @typedef {{}} App_Not_FoundInputs */
 /** @typedef {{}} App_TitleInputs */
+/** @typedef {{}} Assets_Account_Add_TitleInputs */
+/** @typedef {{}} Assets_Account_Added_ToastInputs */
+/** @typedef {{ color: NonNullable<unknown> }} Assets_Account_Choose_ColorInputs */
+/** @typedef {{}} Assets_Account_Delete_ErrorInputs */
+/** @typedef {{}} Assets_Account_Deleted_ToastInputs */
+/** @typedef {{}} Assets_Account_Dialog_DescInputs */
+/** @typedef {{}} Assets_Account_Edit_TitleInputs */
+/** @typedef {{ slug: NonNullable<unknown> }} Assets_Account_IdentifierInputs */
+/** @typedef {{}} Assets_Account_Name_PlaceholderInputs */
+/** @typedef {{}} Assets_Account_Updated_ToastInputs */
+/** @typedef {{}} Assets_Add_AccountInputs */
+/** @typedef {{}} Assets_Add_Savings_AccountInputs */
+/** @typedef {{}} Assets_Badge_MissingInputs */
+/** @typedef {{ name: NonNullable<unknown> }} Assets_Bulk_Balance_AriaInputs */
+/** @typedef {{}} Assets_Bulk_Copy_Prev_TitleInputs */
+/** @typedef {{}} Assets_Bulk_DescInputs */
+/** @typedef {{ name: NonNullable<unknown> }} Assets_Bulk_Note_AriaInputs */
+/** @typedef {{}} Assets_Bulk_Note_PlaceholderInputs */
+/** @typedef {{}} Assets_Bulk_PrefillInputs */
+/** @typedef {{ month: NonNullable<unknown>, amount: NonNullable<unknown> }} Assets_Bulk_Prev_LabelInputs */
+/** @typedef {{}} Assets_Bulk_Save_ErrorInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Assets_Bulk_Save_ManyInputs */
+/** @typedef {{}} Assets_Bulk_Save_OneInputs */
+/** @typedef {{ count: NonNullable<unknown>, month: NonNullable<unknown> }} Assets_Bulk_Saved_ToastInputs */
+/** @typedef {{ month: NonNullable<unknown> }} Assets_Bulk_Saved_Toast_OneInputs */
+/** @typedef {{ month: NonNullable<unknown> }} Assets_Bulk_TitleInputs */
+/** @typedef {{ name: NonNullable<unknown> }} Assets_Carry_Over_AriaInputs */
+/** @typedef {{}} Assets_Carry_Over_ErrorInputs */
+/** @typedef {{}} Assets_Carry_Over_PreviousInputs */
+/** @typedef {{ amount: NonNullable<unknown> }} Assets_Carry_Over_TitleInputs */
+/** @typedef {{ count: NonNullable<unknown>, month: NonNullable<unknown> }} Assets_Carry_Over_ToastInputs */
+/** @typedef {{ month: NonNullable<unknown> }} Assets_Carry_Over_Toast_OneInputs */
+/** @typedef {{}} Assets_Chart_AllocationInputs */
+/** @typedef {{}} Assets_Chart_Empty_AllocationInputs */
+/** @typedef {{}} Assets_Chart_Empty_EvolutionInputs */
+/** @typedef {{}} Assets_Chart_EvolutionInputs */
+/** @typedef {{}} Assets_Chart_Mode_AccountsInputs */
+/** @typedef {{}} Assets_Chart_Mode_TotalInputs */
+/** @typedef {{}} Assets_Chart_Total_SavingsInputs */
+/** @typedef {{}} Assets_Clear_Balance_ErrorInputs */
+/** @typedef {{}} Assets_Col_AccountInputs */
+/** @typedef {{ month: NonNullable<unknown> }} Assets_Col_BalanceInputs */
+/** @typedef {{}} Assets_Col_ChangeInputs */
+/** @typedef {{}} Assets_Col_NoteInputs */
+/** @typedef {{}} Assets_Col_PreviousInputs */
+/** @typedef {{}} Assets_CopyingInputs */
+/** @typedef {{}} Assets_Current_MonthInputs */
+/** @typedef {{}} Assets_Delete_Account_AriaInputs */
+/** @typedef {{}} Assets_Delete_Confirm_DescInputs */
+/** @typedef {{ name: NonNullable<unknown> }} Assets_Delete_Confirm_TitleInputs */
+/** @typedef {{}} Assets_Edit_Account_AriaInputs */
+/** @typedef {{}} Assets_Empty_DescInputs */
+/** @typedef {{}} Assets_Empty_TitleInputs */
+/** @typedef {{}} Assets_Enter_PlaceholderInputs */
+/** @typedef {{ amount: NonNullable<unknown> }} Assets_Estimated_PrefixInputs */
+/** @typedef {{}} Assets_Fill_BalancesInputs */
+/** @typedef {{}} Assets_Fill_Balances_CtaInputs */
+/** @typedef {{}} Assets_History_Carried_OverInputs */
+/** @typedef {{}} Assets_History_HintInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Assets_History_Missing_TitleInputs */
+/** @typedef {{}} Assets_History_TitleInputs */
+/** @typedef {{ month: NonNullable<unknown> }} Assets_Kpi_All_UpdatedInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Assets_Kpi_Carried_OverInputs */
+/** @typedef {{}} Assets_Kpi_Carried_Over_OneInputs */
+/** @typedef {{}} Assets_Kpi_From_SnapshotsInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Assets_Kpi_Missing_ManyInputs */
+/** @typedef {{}} Assets_Kpi_Missing_OneInputs */
+/** @typedef {{}} Assets_Kpi_No_BalancesInputs */
+/** @typedef {{}} Assets_Kpi_No_PrevInputs */
+/** @typedef {{ amount: NonNullable<unknown> }} Assets_Kpi_Prev_ValueInputs */
+/** @typedef {{}} Assets_Kpi_StatusInputs */
+/** @typedef {{ month: NonNullable<unknown> }} Assets_Kpi_TotalInputs */
+/** @typedef {{}} Assets_Kpi_Vs_PreviousInputs */
+/** @typedef {{ message: NonNullable<unknown> }} Assets_Load_ErrorInputs */
+/** @typedef {{}} Assets_LoadingInputs */
+/** @typedef {{ month: NonNullable<unknown> }} Assets_Missing_AllInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Assets_Missing_MoreInputs */
+/** @typedef {{ month: NonNullable<unknown>, missing: NonNullable<unknown>, total: NonNullable<unknown> }} Assets_Missing_PartialInputs */
+/** @typedef {{ month: NonNullable<unknown>, missing: NonNullable<unknown>, total: NonNullable<unknown> }} Assets_Missing_Partial_OneInputs */
+/** @typedef {{}} Assets_Missing_Please_FillInputs */
+/** @typedef {{}} Assets_Note_Disabled_TitleInputs */
+/** @typedef {{}} Assets_Note_Edit_TitleInputs */
+/** @typedef {{}} Assets_Note_PlaceholderInputs */
+/** @typedef {{}} Assets_Save_Balance_ErrorInputs */
+/** @typedef {{ updated: NonNullable<unknown>, total: NonNullable<unknown>, month: NonNullable<unknown> }} Assets_Table_Recorded_CountInputs */
+/** @typedef {{}} Assets_Table_TitleInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Assets_Total_Carried_OverInputs */
+/** @typedef {{}} Assets_Total_Carried_Over_OneInputs */
 /** @typedef {{}} Bills_AddInputs */
 /** @typedef {{}} Bills_Added_ToastInputs */
 /** @typedef {{}} Bills_Delete_AriaInputs */
@@ -238,6 +326,7 @@
 /** @typedef {{}} Month_PreviousInputs */
 /** @typedef {{}} Month_Start_BlankInputs */
 /** @typedef {{}} Month_Target_LabelInputs */
+/** @typedef {{}} Nav_AssetsInputs */
 /** @typedef {{}} Nav_BudgetInputs */
 /** @typedef {{}} Nav_ImportInputs */
 /** @typedef {{}} Nav_LanguageInputs */
@@ -522,6 +611,358 @@ export const app_not_found = /** @type {(inputs: App_Not_FoundInputs) => Localiz
 
 export const app_title = /** @type {(inputs: App_TitleInputs) => LocalizedString} */ () => {
 	return /** @type {LocalizedString} */ (`Budget`)
+};
+
+export const assets_account_add_title = /** @type {(inputs: Assets_Account_Add_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Ajouter un compte d'épargne`)
+};
+
+export const assets_account_added_toast = /** @type {(inputs: Assets_Account_Added_ToastInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Compte d'épargne ajouté`)
+};
+
+export const assets_account_choose_color = /** @type {(inputs: Assets_Account_Choose_ColorInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Choisir la couleur ${i?.color}`)
+};
+
+export const assets_account_delete_error = /** @type {(inputs: Assets_Account_Delete_ErrorInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Impossible de supprimer le compte`)
+};
+
+export const assets_account_deleted_toast = /** @type {(inputs: Assets_Account_Deleted_ToastInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Compte d'épargne supprimé`)
+};
+
+export const assets_account_dialog_desc = /** @type {(inputs: Assets_Account_Dialog_DescInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Suivez vos livrets, Pockets Revolut ou fonds euros via des relevés mensuels.`)
+};
+
+export const assets_account_edit_title = /** @type {(inputs: Assets_Account_Edit_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Modifier le compte d'épargne`)
+};
+
+export const assets_account_identifier = /** @type {(inputs: Assets_Account_IdentifierInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Identifiant : ${i?.slug}`)
+};
+
+export const assets_account_name_placeholder = /** @type {(inputs: Assets_Account_Name_PlaceholderInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Revolut - Pocket Voyage, SG - Livret A, Linxea - Fonds Euros...`)
+};
+
+export const assets_account_updated_toast = /** @type {(inputs: Assets_Account_Updated_ToastInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Compte d'épargne mis à jour`)
+};
+
+export const assets_add_account = /** @type {(inputs: Assets_Add_AccountInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Ajouter un compte`)
+};
+
+export const assets_add_savings_account = /** @type {(inputs: Assets_Add_Savings_AccountInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Ajouter un compte d'épargne`)
+};
+
+export const assets_badge_missing = /** @type {(inputs: Assets_Badge_MissingInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Manquant`)
+};
+
+export const assets_bulk_balance_aria = /** @type {(inputs: Assets_Bulk_Balance_AriaInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Solde pour ${i?.name}`)
+};
+
+export const assets_bulk_copy_prev_title = /** @type {(inputs: Assets_Bulk_Copy_Prev_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Cliquer pour copier le solde précédent`)
+};
+
+export const assets_bulk_desc = /** @type {(inputs: Assets_Bulk_DescInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Saisissez le solde actuel de chaque compte d'épargne. Laissez vide pour passer un compte.`)
+};
+
+export const assets_bulk_note_aria = /** @type {(inputs: Assets_Bulk_Note_AriaInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Note pour ${i?.name}`)
+};
+
+export const assets_bulk_note_placeholder = /** @type {(inputs: Assets_Bulk_Note_PlaceholderInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Note optionnelle (ex. intérêts, virement)`)
+};
+
+export const assets_bulk_prefill = /** @type {(inputs: Assets_Bulk_PrefillInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Pré-remplir les champs vides`)
+};
+
+export const assets_bulk_prev_label = /** @type {(inputs: Assets_Bulk_Prev_LabelInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Préc. (${i?.month}) : ${i?.amount}`)
+};
+
+export const assets_bulk_save_error = /** @type {(inputs: Assets_Bulk_Save_ErrorInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Impossible d'enregistrer les relevés`)
+};
+
+export const assets_bulk_save_many = /** @type {(inputs: Assets_Bulk_Save_ManyInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Enregistrer ${i?.count} soldes`)
+};
+
+export const assets_bulk_save_one = /** @type {(inputs: Assets_Bulk_Save_OneInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Enregistrer 1 solde`)
+};
+
+export const assets_bulk_saved_toast = /** @type {(inputs: Assets_Bulk_Saved_ToastInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`${i?.count} relevés enregistrés pour ${i?.month}`)
+};
+
+export const assets_bulk_saved_toast_one = /** @type {(inputs: Assets_Bulk_Saved_Toast_OneInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`1 relevé enregistré pour ${i?.month}`)
+};
+
+export const assets_bulk_title = /** @type {(inputs: Assets_Bulk_TitleInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Renseigner les soldes — ${i?.month}`)
+};
+
+export const assets_carry_over_aria = /** @type {(inputs: Assets_Carry_Over_AriaInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Reporter le solde précédent pour ${i?.name}`)
+};
+
+export const assets_carry_over_error = /** @type {(inputs: Assets_Carry_Over_ErrorInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Impossible de reporter les soldes`)
+};
+
+export const assets_carry_over_previous = /** @type {(inputs: Assets_Carry_Over_PreviousInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Reporter le précédent`)
+};
+
+export const assets_carry_over_title = /** @type {(inputs: Assets_Carry_Over_TitleInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Reporter ${i?.amount}`)
+};
+
+export const assets_carry_over_toast = /** @type {(inputs: Assets_Carry_Over_ToastInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`${i?.count} soldes reportés sur ${i?.month}`)
+};
+
+export const assets_carry_over_toast_one = /** @type {(inputs: Assets_Carry_Over_Toast_OneInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`1 solde reporté sur ${i?.month}`)
+};
+
+export const assets_chart_allocation = /** @type {(inputs: Assets_Chart_AllocationInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Répartition`)
+};
+
+export const assets_chart_empty_allocation = /** @type {(inputs: Assets_Chart_Empty_AllocationInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Ajoutez des soldes pour voir la répartition entre vos comptes d'épargne.`)
+};
+
+export const assets_chart_empty_evolution = /** @type {(inputs: Assets_Chart_Empty_EvolutionInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Enregistrez votre premier relevé de solde pour suivre l'évolution de votre épargne.`)
+};
+
+export const assets_chart_evolution = /** @type {(inputs: Assets_Chart_EvolutionInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Évolution de l'épargne`)
+};
+
+export const assets_chart_mode_accounts = /** @type {(inputs: Assets_Chart_Mode_AccountsInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Par compte`)
+};
+
+export const assets_chart_mode_total = /** @type {(inputs: Assets_Chart_Mode_TotalInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Total`)
+};
+
+export const assets_chart_total_savings = /** @type {(inputs: Assets_Chart_Total_SavingsInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Épargne totale`)
+};
+
+export const assets_clear_balance_error = /** @type {(inputs: Assets_Clear_Balance_ErrorInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Impossible d'effacer le solde`)
+};
+
+export const assets_col_account = /** @type {(inputs: Assets_Col_AccountInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Compte`)
+};
+
+export const assets_col_balance = /** @type {(inputs: Assets_Col_BalanceInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Solde (${i?.month})`)
+};
+
+export const assets_col_change = /** @type {(inputs: Assets_Col_ChangeInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Variation`)
+};
+
+export const assets_col_note = /** @type {(inputs: Assets_Col_NoteInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Note`)
+};
+
+export const assets_col_previous = /** @type {(inputs: Assets_Col_PreviousInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Précédent`)
+};
+
+export const assets_copying = /** @type {(inputs: Assets_CopyingInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Copie...`)
+};
+
+export const assets_current_month = /** @type {(inputs: Assets_Current_MonthInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Mois en cours`)
+};
+
+export const assets_delete_account_aria = /** @type {(inputs: Assets_Delete_Account_AriaInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Supprimer le compte`)
+};
+
+export const assets_delete_confirm_desc = /** @type {(inputs: Assets_Delete_Confirm_DescInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Cela supprimera définitivement ce compte d'épargne ainsi que tous ses relevés de solde.`)
+};
+
+export const assets_delete_confirm_title = /** @type {(inputs: Assets_Delete_Confirm_TitleInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Supprimer « ${i?.name} » ?`)
+};
+
+export const assets_edit_account_aria = /** @type {(inputs: Assets_Edit_Account_AriaInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Modifier le compte`)
+};
+
+export const assets_empty_desc = /** @type {(inputs: Assets_Empty_DescInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Ajoutez votre Livret A, vos Pockets Revolut ou vos fonds euros pour enregistrer des relevés périodiques et suivre leur évolution dans le temps.`)
+};
+
+export const assets_empty_title = /** @type {(inputs: Assets_Empty_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Aucun compte d'épargne suivi`)
+};
+
+export const assets_enter_placeholder = /** @type {(inputs: Assets_Enter_PlaceholderInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Saisir...`)
+};
+
+export const assets_estimated_prefix = /** @type {(inputs: Assets_Estimated_PrefixInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`est. ${i?.amount}`)
+};
+
+export const assets_fill_balances = /** @type {(inputs: Assets_Fill_BalancesInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Saisir les soldes`)
+};
+
+export const assets_fill_balances_cta = /** @type {(inputs: Assets_Fill_Balances_CtaInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Renseigner les soldes`)
+};
+
+export const assets_history_carried_over = /** @type {(inputs: Assets_History_Carried_OverInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Reporté`)
+};
+
+export const assets_history_hint = /** @type {(inputs: Assets_History_HintInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Les valeurs en italique sont reportées d'un relevé antérieur. Cliquez sur un mois pour le modifier.`)
+};
+
+export const assets_history_missing_title = /** @type {(inputs: Assets_History_Missing_TitleInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`${i?.count} compte(s) non mis à jour ce mois-ci`)
+};
+
+export const assets_history_title = /** @type {(inputs: Assets_History_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Historique des relevés`)
+};
+
+export const assets_kpi_all_updated = /** @type {(inputs: Assets_Kpi_All_UpdatedInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Tous les comptes sont à jour pour ${i?.month}`)
+};
+
+export const assets_kpi_carried_over = /** @type {(inputs: Assets_Kpi_Carried_OverInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Inclut ${i?.count} soldes reportés`)
+};
+
+export const assets_kpi_carried_over_one = /** @type {(inputs: Assets_Kpi_Carried_Over_OneInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Inclut 1 solde reporté`)
+};
+
+export const assets_kpi_from_snapshots = /** @type {(inputs: Assets_Kpi_From_SnapshotsInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Basé sur les relevés enregistrés`)
+};
+
+export const assets_kpi_missing_many = /** @type {(inputs: Assets_Kpi_Missing_ManyInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`${i?.count} comptes sans relevé`)
+};
+
+export const assets_kpi_missing_one = /** @type {(inputs: Assets_Kpi_Missing_OneInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`1 compte sans relevé`)
+};
+
+export const assets_kpi_no_balances = /** @type {(inputs: Assets_Kpi_No_BalancesInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Aucun solde enregistré`)
+};
+
+export const assets_kpi_no_prev = /** @type {(inputs: Assets_Kpi_No_PrevInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Aucun mois précédent à comparer`)
+};
+
+export const assets_kpi_prev_value = /** @type {(inputs: Assets_Kpi_Prev_ValueInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Mois précédent : ${i?.amount}`)
+};
+
+export const assets_kpi_status = /** @type {(inputs: Assets_Kpi_StatusInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Statut des relevés`)
+};
+
+export const assets_kpi_total = /** @type {(inputs: Assets_Kpi_TotalInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Épargne totale (${i?.month})`)
+};
+
+export const assets_kpi_vs_previous = /** @type {(inputs: Assets_Kpi_Vs_PreviousInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`vs mois précédent`)
+};
+
+export const assets_load_error = /** @type {(inputs: Assets_Load_ErrorInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Impossible de charger les actifs : ${i?.message}`)
+};
+
+export const assets_loading = /** @type {(inputs: Assets_LoadingInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Chargement des actifs...`)
+};
+
+export const assets_missing_all = /** @type {(inputs: Assets_Missing_AllInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Aucun relevé de solde enregistré pour ${i?.month}.`)
+};
+
+export const assets_missing_more = /** @type {(inputs: Assets_Missing_MoreInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`+${i?.count} autres`)
+};
+
+export const assets_missing_partial = /** @type {(inputs: Assets_Missing_PartialInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Relevés de solde manquants pour ${i?.month} (${i?.missing}/${i?.total}).`)
+};
+
+export const assets_missing_partial_one = /** @type {(inputs: Assets_Missing_Partial_OneInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`Relevé de solde manquant pour ${i?.month} (${i?.missing}/${i?.total}).`)
+};
+
+export const assets_missing_please_fill = /** @type {(inputs: Assets_Missing_Please_FillInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Merci de renseigner :`)
+};
+
+export const assets_note_disabled_title = /** @type {(inputs: Assets_Note_Disabled_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Enregistrez d'abord un solde pour ajouter une note`)
+};
+
+export const assets_note_edit_title = /** @type {(inputs: Assets_Note_Edit_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Cliquer pour modifier la note`)
+};
+
+export const assets_note_placeholder = /** @type {(inputs: Assets_Note_PlaceholderInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Ajouter une note...`)
+};
+
+export const assets_save_balance_error = /** @type {(inputs: Assets_Save_Balance_ErrorInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Impossible d'enregistrer le solde`)
+};
+
+export const assets_table_recorded_count = /** @type {(inputs: Assets_Table_Recorded_CountInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`(${i?.updated}/${i?.total} renseignés pour ${i?.month})`)
+};
+
+export const assets_table_title = /** @type {(inputs: Assets_Table_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Comptes d'épargne`)
+};
+
+export const assets_total_carried_over = /** @type {(inputs: Assets_Total_Carried_OverInputs) => LocalizedString} */ (i) => {
+	return /** @type {LocalizedString} */ (`(dont ${i?.count} reportés)`)
+};
+
+export const assets_total_carried_over_one = /** @type {(inputs: Assets_Total_Carried_Over_OneInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`(dont 1 reporté)`)
 };
 
 export const bills_add = /** @type {(inputs: Bills_AddInputs) => LocalizedString} */ () => {
@@ -1390,6 +1831,10 @@ export const month_start_blank = /** @type {(inputs: Month_Start_BlankInputs) =>
 
 export const month_target_label = /** @type {(inputs: Month_Target_LabelInputs) => LocalizedString} */ () => {
 	return /** @type {LocalizedString} */ (`Mois cible`)
+};
+
+export const nav_assets = /** @type {(inputs: Nav_AssetsInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Actifs`)
 };
 
 export const nav_budget = /** @type {(inputs: Nav_BudgetInputs) => LocalizedString} */ () => {

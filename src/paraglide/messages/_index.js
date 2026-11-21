@@ -23,6 +23,94 @@ import { getLocale, experimentalStaticLocale } from "../runtime.js"
 /** @typedef {{}} Accounts_Updated_ToastInputs */
 /** @typedef {{}} App_Not_FoundInputs */
 /** @typedef {{}} App_TitleInputs */
+/** @typedef {{}} Assets_Account_Add_TitleInputs */
+/** @typedef {{}} Assets_Account_Added_ToastInputs */
+/** @typedef {{ color: NonNullable<unknown> }} Assets_Account_Choose_ColorInputs */
+/** @typedef {{}} Assets_Account_Delete_ErrorInputs */
+/** @typedef {{}} Assets_Account_Deleted_ToastInputs */
+/** @typedef {{}} Assets_Account_Dialog_DescInputs */
+/** @typedef {{}} Assets_Account_Edit_TitleInputs */
+/** @typedef {{ slug: NonNullable<unknown> }} Assets_Account_IdentifierInputs */
+/** @typedef {{}} Assets_Account_Name_PlaceholderInputs */
+/** @typedef {{}} Assets_Account_Updated_ToastInputs */
+/** @typedef {{}} Assets_Add_AccountInputs */
+/** @typedef {{}} Assets_Add_Savings_AccountInputs */
+/** @typedef {{}} Assets_Badge_MissingInputs */
+/** @typedef {{ name: NonNullable<unknown> }} Assets_Bulk_Balance_AriaInputs */
+/** @typedef {{}} Assets_Bulk_Copy_Prev_TitleInputs */
+/** @typedef {{}} Assets_Bulk_DescInputs */
+/** @typedef {{ name: NonNullable<unknown> }} Assets_Bulk_Note_AriaInputs */
+/** @typedef {{}} Assets_Bulk_Note_PlaceholderInputs */
+/** @typedef {{}} Assets_Bulk_PrefillInputs */
+/** @typedef {{ month: NonNullable<unknown>, amount: NonNullable<unknown> }} Assets_Bulk_Prev_LabelInputs */
+/** @typedef {{}} Assets_Bulk_Save_ErrorInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Assets_Bulk_Save_ManyInputs */
+/** @typedef {{}} Assets_Bulk_Save_OneInputs */
+/** @typedef {{ count: NonNullable<unknown>, month: NonNullable<unknown> }} Assets_Bulk_Saved_ToastInputs */
+/** @typedef {{ month: NonNullable<unknown> }} Assets_Bulk_Saved_Toast_OneInputs */
+/** @typedef {{ month: NonNullable<unknown> }} Assets_Bulk_TitleInputs */
+/** @typedef {{ name: NonNullable<unknown> }} Assets_Carry_Over_AriaInputs */
+/** @typedef {{}} Assets_Carry_Over_ErrorInputs */
+/** @typedef {{}} Assets_Carry_Over_PreviousInputs */
+/** @typedef {{ amount: NonNullable<unknown> }} Assets_Carry_Over_TitleInputs */
+/** @typedef {{ count: NonNullable<unknown>, month: NonNullable<unknown> }} Assets_Carry_Over_ToastInputs */
+/** @typedef {{ month: NonNullable<unknown> }} Assets_Carry_Over_Toast_OneInputs */
+/** @typedef {{}} Assets_Chart_AllocationInputs */
+/** @typedef {{}} Assets_Chart_Empty_AllocationInputs */
+/** @typedef {{}} Assets_Chart_Empty_EvolutionInputs */
+/** @typedef {{}} Assets_Chart_EvolutionInputs */
+/** @typedef {{}} Assets_Chart_Mode_AccountsInputs */
+/** @typedef {{}} Assets_Chart_Mode_TotalInputs */
+/** @typedef {{}} Assets_Chart_Total_SavingsInputs */
+/** @typedef {{}} Assets_Clear_Balance_ErrorInputs */
+/** @typedef {{}} Assets_Col_AccountInputs */
+/** @typedef {{ month: NonNullable<unknown> }} Assets_Col_BalanceInputs */
+/** @typedef {{}} Assets_Col_ChangeInputs */
+/** @typedef {{}} Assets_Col_NoteInputs */
+/** @typedef {{}} Assets_Col_PreviousInputs */
+/** @typedef {{}} Assets_CopyingInputs */
+/** @typedef {{}} Assets_Current_MonthInputs */
+/** @typedef {{}} Assets_Delete_Account_AriaInputs */
+/** @typedef {{}} Assets_Delete_Confirm_DescInputs */
+/** @typedef {{ name: NonNullable<unknown> }} Assets_Delete_Confirm_TitleInputs */
+/** @typedef {{}} Assets_Edit_Account_AriaInputs */
+/** @typedef {{}} Assets_Empty_DescInputs */
+/** @typedef {{}} Assets_Empty_TitleInputs */
+/** @typedef {{}} Assets_Enter_PlaceholderInputs */
+/** @typedef {{ amount: NonNullable<unknown> }} Assets_Estimated_PrefixInputs */
+/** @typedef {{}} Assets_Fill_BalancesInputs */
+/** @typedef {{}} Assets_Fill_Balances_CtaInputs */
+/** @typedef {{}} Assets_History_Carried_OverInputs */
+/** @typedef {{}} Assets_History_HintInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Assets_History_Missing_TitleInputs */
+/** @typedef {{}} Assets_History_TitleInputs */
+/** @typedef {{ month: NonNullable<unknown> }} Assets_Kpi_All_UpdatedInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Assets_Kpi_Carried_OverInputs */
+/** @typedef {{}} Assets_Kpi_Carried_Over_OneInputs */
+/** @typedef {{}} Assets_Kpi_From_SnapshotsInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Assets_Kpi_Missing_ManyInputs */
+/** @typedef {{}} Assets_Kpi_Missing_OneInputs */
+/** @typedef {{}} Assets_Kpi_No_BalancesInputs */
+/** @typedef {{}} Assets_Kpi_No_PrevInputs */
+/** @typedef {{ amount: NonNullable<unknown> }} Assets_Kpi_Prev_ValueInputs */
+/** @typedef {{}} Assets_Kpi_StatusInputs */
+/** @typedef {{ month: NonNullable<unknown> }} Assets_Kpi_TotalInputs */
+/** @typedef {{}} Assets_Kpi_Vs_PreviousInputs */
+/** @typedef {{ message: NonNullable<unknown> }} Assets_Load_ErrorInputs */
+/** @typedef {{}} Assets_LoadingInputs */
+/** @typedef {{ month: NonNullable<unknown> }} Assets_Missing_AllInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Assets_Missing_MoreInputs */
+/** @typedef {{ month: NonNullable<unknown>, missing: NonNullable<unknown>, total: NonNullable<unknown> }} Assets_Missing_PartialInputs */
+/** @typedef {{ month: NonNullable<unknown>, missing: NonNullable<unknown>, total: NonNullable<unknown> }} Assets_Missing_Partial_OneInputs */
+/** @typedef {{}} Assets_Missing_Please_FillInputs */
+/** @typedef {{}} Assets_Note_Disabled_TitleInputs */
+/** @typedef {{}} Assets_Note_Edit_TitleInputs */
+/** @typedef {{}} Assets_Note_PlaceholderInputs */
+/** @typedef {{}} Assets_Save_Balance_ErrorInputs */
+/** @typedef {{ updated: NonNullable<unknown>, total: NonNullable<unknown>, month: NonNullable<unknown> }} Assets_Table_Recorded_CountInputs */
+/** @typedef {{}} Assets_Table_TitleInputs */
+/** @typedef {{ count: NonNullable<unknown> }} Assets_Total_Carried_OverInputs */
+/** @typedef {{}} Assets_Total_Carried_Over_OneInputs */
 /** @typedef {{}} Bills_AddInputs */
 /** @typedef {{}} Bills_Added_ToastInputs */
 /** @typedef {{}} Bills_Delete_AriaInputs */
@@ -240,6 +328,7 @@ import { getLocale, experimentalStaticLocale } from "../runtime.js"
 /** @typedef {{}} Month_PreviousInputs */
 /** @typedef {{}} Month_Start_BlankInputs */
 /** @typedef {{}} Month_Target_LabelInputs */
+/** @typedef {{}} Nav_AssetsInputs */
 /** @typedef {{}} Nav_BudgetInputs */
 /** @typedef {{}} Nav_ImportInputs */
 /** @typedef {{}} Nav_LanguageInputs */
@@ -735,6 +824,1238 @@ export const app_title = /** @type {((inputs?: App_TitleInputs, options?: { loca
 	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
 	if (locale === "fr") return __fr.app_title(inputs)
 	return __en.app_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Add Savings Account" |
+*
+* @param {Assets_Account_Add_TitleInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_account_add_title = /** @type {((inputs?: Assets_Account_Add_TitleInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Account_Add_TitleInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_account_add_title(inputs)
+	return __en.assets_account_add_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Savings account added" |
+*
+* @param {Assets_Account_Added_ToastInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_account_added_toast = /** @type {((inputs?: Assets_Account_Added_ToastInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Account_Added_ToastInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_account_added_toast(inputs)
+	return __en.assets_account_added_toast(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Choose color {color}" |
+*
+* @param {Assets_Account_Choose_ColorInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_account_choose_color = /** @type {((inputs: Assets_Account_Choose_ColorInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Account_Choose_ColorInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_account_choose_color(inputs)
+	return __en.assets_account_choose_color(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Failed to delete account" |
+*
+* @param {Assets_Account_Delete_ErrorInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_account_delete_error = /** @type {((inputs?: Assets_Account_Delete_ErrorInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Account_Delete_ErrorInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_account_delete_error(inputs)
+	return __en.assets_account_delete_error(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Savings account deleted" |
+*
+* @param {Assets_Account_Deleted_ToastInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_account_deleted_toast = /** @type {((inputs?: Assets_Account_Deleted_ToastInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Account_Deleted_ToastInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_account_deleted_toast(inputs)
+	return __en.assets_account_deleted_toast(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Track livrets, Revolut pockets, or cash-equivalent savings accounts via monthly snapshots." |
+*
+* @param {Assets_Account_Dialog_DescInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_account_dialog_desc = /** @type {((inputs?: Assets_Account_Dialog_DescInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Account_Dialog_DescInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_account_dialog_desc(inputs)
+	return __en.assets_account_dialog_desc(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Edit Savings Account" |
+*
+* @param {Assets_Account_Edit_TitleInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_account_edit_title = /** @type {((inputs?: Assets_Account_Edit_TitleInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Account_Edit_TitleInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_account_edit_title(inputs)
+	return __en.assets_account_edit_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Identifier: {slug}" |
+*
+* @param {Assets_Account_IdentifierInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_account_identifier = /** @type {((inputs: Assets_Account_IdentifierInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Account_IdentifierInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_account_identifier(inputs)
+	return __en.assets_account_identifier(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Revolut - Pocket Travel, SG - Livret A, Linxea - Fonds Euros..." |
+*
+* @param {Assets_Account_Name_PlaceholderInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_account_name_placeholder = /** @type {((inputs?: Assets_Account_Name_PlaceholderInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Account_Name_PlaceholderInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_account_name_placeholder(inputs)
+	return __en.assets_account_name_placeholder(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Savings account updated" |
+*
+* @param {Assets_Account_Updated_ToastInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_account_updated_toast = /** @type {((inputs?: Assets_Account_Updated_ToastInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Account_Updated_ToastInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_account_updated_toast(inputs)
+	return __en.assets_account_updated_toast(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Add Account" |
+*
+* @param {Assets_Add_AccountInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_add_account = /** @type {((inputs?: Assets_Add_AccountInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Add_AccountInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_add_account(inputs)
+	return __en.assets_add_account(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Add Savings Account" |
+*
+* @param {Assets_Add_Savings_AccountInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_add_savings_account = /** @type {((inputs?: Assets_Add_Savings_AccountInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Add_Savings_AccountInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_add_savings_account(inputs)
+	return __en.assets_add_savings_account(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Missing" |
+*
+* @param {Assets_Badge_MissingInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_badge_missing = /** @type {((inputs?: Assets_Badge_MissingInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Badge_MissingInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_badge_missing(inputs)
+	return __en.assets_badge_missing(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Balance for {name}" |
+*
+* @param {Assets_Bulk_Balance_AriaInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_bulk_balance_aria = /** @type {((inputs: Assets_Bulk_Balance_AriaInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Bulk_Balance_AriaInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_bulk_balance_aria(inputs)
+	return __en.assets_bulk_balance_aria(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Click to copy previous balance" |
+*
+* @param {Assets_Bulk_Copy_Prev_TitleInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_bulk_copy_prev_title = /** @type {((inputs?: Assets_Bulk_Copy_Prev_TitleInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Bulk_Copy_Prev_TitleInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_bulk_copy_prev_title(inputs)
+	return __en.assets_bulk_copy_prev_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Enter the current balance for each savings account. Leave a field blank to skip it for now." |
+*
+* @param {Assets_Bulk_DescInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_bulk_desc = /** @type {((inputs?: Assets_Bulk_DescInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Bulk_DescInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_bulk_desc(inputs)
+	return __en.assets_bulk_desc(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Note for {name}" |
+*
+* @param {Assets_Bulk_Note_AriaInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_bulk_note_aria = /** @type {((inputs: Assets_Bulk_Note_AriaInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Bulk_Note_AriaInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_bulk_note_aria(inputs)
+	return __en.assets_bulk_note_aria(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Optional note (e.g. interest, transfer)" |
+*
+* @param {Assets_Bulk_Note_PlaceholderInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_bulk_note_placeholder = /** @type {((inputs?: Assets_Bulk_Note_PlaceholderInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Bulk_Note_PlaceholderInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_bulk_note_placeholder(inputs)
+	return __en.assets_bulk_note_placeholder(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Pre-fill empty from previous" |
+*
+* @param {Assets_Bulk_PrefillInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_bulk_prefill = /** @type {((inputs?: Assets_Bulk_PrefillInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Bulk_PrefillInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_bulk_prefill(inputs)
+	return __en.assets_bulk_prefill(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Prev ({month}): {amount}" |
+*
+* @param {Assets_Bulk_Prev_LabelInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_bulk_prev_label = /** @type {((inputs: Assets_Bulk_Prev_LabelInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Bulk_Prev_LabelInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_bulk_prev_label(inputs)
+	return __en.assets_bulk_prev_label(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Failed to save snapshots" |
+*
+* @param {Assets_Bulk_Save_ErrorInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_bulk_save_error = /** @type {((inputs?: Assets_Bulk_Save_ErrorInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Bulk_Save_ErrorInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_bulk_save_error(inputs)
+	return __en.assets_bulk_save_error(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Save {count} balances" |
+*
+* @param {Assets_Bulk_Save_ManyInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_bulk_save_many = /** @type {((inputs: Assets_Bulk_Save_ManyInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Bulk_Save_ManyInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_bulk_save_many(inputs)
+	return __en.assets_bulk_save_many(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Save 1 balance" |
+*
+* @param {Assets_Bulk_Save_OneInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_bulk_save_one = /** @type {((inputs?: Assets_Bulk_Save_OneInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Bulk_Save_OneInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_bulk_save_one(inputs)
+	return __en.assets_bulk_save_one(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Saved {count} snapshots for {month}" |
+*
+* @param {Assets_Bulk_Saved_ToastInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_bulk_saved_toast = /** @type {((inputs: Assets_Bulk_Saved_ToastInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Bulk_Saved_ToastInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_bulk_saved_toast(inputs)
+	return __en.assets_bulk_saved_toast(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Saved 1 snapshot for {month}" |
+*
+* @param {Assets_Bulk_Saved_Toast_OneInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_bulk_saved_toast_one = /** @type {((inputs: Assets_Bulk_Saved_Toast_OneInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Bulk_Saved_Toast_OneInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_bulk_saved_toast_one(inputs)
+	return __en.assets_bulk_saved_toast_one(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Fill Balances — {month}" |
+*
+* @param {Assets_Bulk_TitleInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_bulk_title = /** @type {((inputs: Assets_Bulk_TitleInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Bulk_TitleInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_bulk_title(inputs)
+	return __en.assets_bulk_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Carry over previous balance for {name}" |
+*
+* @param {Assets_Carry_Over_AriaInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_carry_over_aria = /** @type {((inputs: Assets_Carry_Over_AriaInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Carry_Over_AriaInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_carry_over_aria(inputs)
+	return __en.assets_carry_over_aria(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Failed to carry over balances" |
+*
+* @param {Assets_Carry_Over_ErrorInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_carry_over_error = /** @type {((inputs?: Assets_Carry_Over_ErrorInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Carry_Over_ErrorInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_carry_over_error(inputs)
+	return __en.assets_carry_over_error(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Carry over previous" |
+*
+* @param {Assets_Carry_Over_PreviousInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_carry_over_previous = /** @type {((inputs?: Assets_Carry_Over_PreviousInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Carry_Over_PreviousInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_carry_over_previous(inputs)
+	return __en.assets_carry_over_previous(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Carry over {amount}" |
+*
+* @param {Assets_Carry_Over_TitleInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_carry_over_title = /** @type {((inputs: Assets_Carry_Over_TitleInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Carry_Over_TitleInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_carry_over_title(inputs)
+	return __en.assets_carry_over_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Carried over {count} balances to {month}" |
+*
+* @param {Assets_Carry_Over_ToastInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_carry_over_toast = /** @type {((inputs: Assets_Carry_Over_ToastInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Carry_Over_ToastInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_carry_over_toast(inputs)
+	return __en.assets_carry_over_toast(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Carried over 1 balance to {month}" |
+*
+* @param {Assets_Carry_Over_Toast_OneInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_carry_over_toast_one = /** @type {((inputs: Assets_Carry_Over_Toast_OneInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Carry_Over_Toast_OneInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_carry_over_toast_one(inputs)
+	return __en.assets_carry_over_toast_one(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Allocation" |
+*
+* @param {Assets_Chart_AllocationInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_chart_allocation = /** @type {((inputs?: Assets_Chart_AllocationInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Chart_AllocationInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_chart_allocation(inputs)
+	return __en.assets_chart_allocation(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Add balances to see your allocation across savings accounts." |
+*
+* @param {Assets_Chart_Empty_AllocationInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_chart_empty_allocation = /** @type {((inputs?: Assets_Chart_Empty_AllocationInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Chart_Empty_AllocationInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_chart_empty_allocation(inputs)
+	return __en.assets_chart_empty_allocation(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Record your first balance snapshot to see your savings evolution over time." |
+*
+* @param {Assets_Chart_Empty_EvolutionInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_chart_empty_evolution = /** @type {((inputs?: Assets_Chart_Empty_EvolutionInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Chart_Empty_EvolutionInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_chart_empty_evolution(inputs)
+	return __en.assets_chart_empty_evolution(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Savings Evolution" |
+*
+* @param {Assets_Chart_EvolutionInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_chart_evolution = /** @type {((inputs?: Assets_Chart_EvolutionInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Chart_EvolutionInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_chart_evolution(inputs)
+	return __en.assets_chart_evolution(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "By Account" |
+*
+* @param {Assets_Chart_Mode_AccountsInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_chart_mode_accounts = /** @type {((inputs?: Assets_Chart_Mode_AccountsInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Chart_Mode_AccountsInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_chart_mode_accounts(inputs)
+	return __en.assets_chart_mode_accounts(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Total" |
+*
+* @param {Assets_Chart_Mode_TotalInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_chart_mode_total = /** @type {((inputs?: Assets_Chart_Mode_TotalInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Chart_Mode_TotalInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_chart_mode_total(inputs)
+	return __en.assets_chart_mode_total(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Total Savings" |
+*
+* @param {Assets_Chart_Total_SavingsInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_chart_total_savings = /** @type {((inputs?: Assets_Chart_Total_SavingsInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Chart_Total_SavingsInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_chart_total_savings(inputs)
+	return __en.assets_chart_total_savings(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Failed to clear balance" |
+*
+* @param {Assets_Clear_Balance_ErrorInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_clear_balance_error = /** @type {((inputs?: Assets_Clear_Balance_ErrorInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Clear_Balance_ErrorInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_clear_balance_error(inputs)
+	return __en.assets_clear_balance_error(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Account" |
+*
+* @param {Assets_Col_AccountInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_col_account = /** @type {((inputs?: Assets_Col_AccountInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Col_AccountInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_col_account(inputs)
+	return __en.assets_col_account(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Balance ({month})" |
+*
+* @param {Assets_Col_BalanceInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_col_balance = /** @type {((inputs: Assets_Col_BalanceInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Col_BalanceInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_col_balance(inputs)
+	return __en.assets_col_balance(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Change" |
+*
+* @param {Assets_Col_ChangeInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_col_change = /** @type {((inputs?: Assets_Col_ChangeInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Col_ChangeInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_col_change(inputs)
+	return __en.assets_col_change(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Note" |
+*
+* @param {Assets_Col_NoteInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_col_note = /** @type {((inputs?: Assets_Col_NoteInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Col_NoteInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_col_note(inputs)
+	return __en.assets_col_note(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Previous" |
+*
+* @param {Assets_Col_PreviousInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_col_previous = /** @type {((inputs?: Assets_Col_PreviousInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Col_PreviousInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_col_previous(inputs)
+	return __en.assets_col_previous(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Copying..." |
+*
+* @param {Assets_CopyingInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_copying = /** @type {((inputs?: Assets_CopyingInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_CopyingInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_copying(inputs)
+	return __en.assets_copying(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Current Month" |
+*
+* @param {Assets_Current_MonthInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_current_month = /** @type {((inputs?: Assets_Current_MonthInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Current_MonthInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_current_month(inputs)
+	return __en.assets_current_month(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Delete account" |
+*
+* @param {Assets_Delete_Account_AriaInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_delete_account_aria = /** @type {((inputs?: Assets_Delete_Account_AriaInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Delete_Account_AriaInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_delete_account_aria(inputs)
+	return __en.assets_delete_account_aria(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "This will permanently delete this savings account and all of its recorded balance snapshots." |
+*
+* @param {Assets_Delete_Confirm_DescInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_delete_confirm_desc = /** @type {((inputs?: Assets_Delete_Confirm_DescInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Delete_Confirm_DescInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_delete_confirm_desc(inputs)
+	return __en.assets_delete_confirm_desc(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Delete \"{name}\"?" |
+*
+* @param {Assets_Delete_Confirm_TitleInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_delete_confirm_title = /** @type {((inputs: Assets_Delete_Confirm_TitleInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Delete_Confirm_TitleInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_delete_confirm_title(inputs)
+	return __en.assets_delete_confirm_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Edit account" |
+*
+* @param {Assets_Edit_Account_AriaInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_edit_account_aria = /** @type {((inputs?: Assets_Edit_Account_AriaInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Edit_Account_AriaInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_edit_account_aria(inputs)
+	return __en.assets_edit_account_aria(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Add your Livret A, Revolut Pockets, or cash-equivalent savings accounts to record periodic balance snapshots and track your evolution over time." |
+*
+* @param {Assets_Empty_DescInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_empty_desc = /** @type {((inputs?: Assets_Empty_DescInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Empty_DescInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_empty_desc(inputs)
+	return __en.assets_empty_desc(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "No savings accounts tracked yet" |
+*
+* @param {Assets_Empty_TitleInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_empty_title = /** @type {((inputs?: Assets_Empty_TitleInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Empty_TitleInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_empty_title(inputs)
+	return __en.assets_empty_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Enter..." |
+*
+* @param {Assets_Enter_PlaceholderInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_enter_placeholder = /** @type {((inputs?: Assets_Enter_PlaceholderInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Enter_PlaceholderInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_enter_placeholder(inputs)
+	return __en.assets_enter_placeholder(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "est. {amount}" |
+*
+* @param {Assets_Estimated_PrefixInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_estimated_prefix = /** @type {((inputs: Assets_Estimated_PrefixInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Estimated_PrefixInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_estimated_prefix(inputs)
+	return __en.assets_estimated_prefix(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Fill Balances" |
+*
+* @param {Assets_Fill_BalancesInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_fill_balances = /** @type {((inputs?: Assets_Fill_BalancesInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Fill_BalancesInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_fill_balances(inputs)
+	return __en.assets_fill_balances(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Fill balances" |
+*
+* @param {Assets_Fill_Balances_CtaInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_fill_balances_cta = /** @type {((inputs?: Assets_Fill_Balances_CtaInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Fill_Balances_CtaInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_fill_balances_cta(inputs)
+	return __en.assets_fill_balances_cta(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Carried over" |
+*
+* @param {Assets_History_Carried_OverInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_history_carried_over = /** @type {((inputs?: Assets_History_Carried_OverInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_History_Carried_OverInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_history_carried_over(inputs)
+	return __en.assets_history_carried_over(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Italic values are carried over from an earlier snapshot. Click a month to edit." |
+*
+* @param {Assets_History_HintInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_history_hint = /** @type {((inputs?: Assets_History_HintInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_History_HintInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_history_hint(inputs)
+	return __en.assets_history_hint(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "{count} account(s) not updated this month" |
+*
+* @param {Assets_History_Missing_TitleInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_history_missing_title = /** @type {((inputs: Assets_History_Missing_TitleInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_History_Missing_TitleInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_history_missing_title(inputs)
+	return __en.assets_history_missing_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Snapshot History" |
+*
+* @param {Assets_History_TitleInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_history_title = /** @type {((inputs?: Assets_History_TitleInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_History_TitleInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_history_title(inputs)
+	return __en.assets_history_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "All accounts updated for {month}" |
+*
+* @param {Assets_Kpi_All_UpdatedInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_kpi_all_updated = /** @type {((inputs: Assets_Kpi_All_UpdatedInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Kpi_All_UpdatedInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_kpi_all_updated(inputs)
+	return __en.assets_kpi_all_updated(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Includes {count} carried-over balances" |
+*
+* @param {Assets_Kpi_Carried_OverInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_kpi_carried_over = /** @type {((inputs: Assets_Kpi_Carried_OverInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Kpi_Carried_OverInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_kpi_carried_over(inputs)
+	return __en.assets_kpi_carried_over(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Includes 1 carried-over balance" |
+*
+* @param {Assets_Kpi_Carried_Over_OneInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_kpi_carried_over_one = /** @type {((inputs?: Assets_Kpi_Carried_Over_OneInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Kpi_Carried_Over_OneInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_kpi_carried_over_one(inputs)
+	return __en.assets_kpi_carried_over_one(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Based on recorded snapshots" |
+*
+* @param {Assets_Kpi_From_SnapshotsInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_kpi_from_snapshots = /** @type {((inputs?: Assets_Kpi_From_SnapshotsInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Kpi_From_SnapshotsInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_kpi_from_snapshots(inputs)
+	return __en.assets_kpi_from_snapshots(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "{count} accounts missing a snapshot" |
+*
+* @param {Assets_Kpi_Missing_ManyInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_kpi_missing_many = /** @type {((inputs: Assets_Kpi_Missing_ManyInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Kpi_Missing_ManyInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_kpi_missing_many(inputs)
+	return __en.assets_kpi_missing_many(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "1 account missing a snapshot" |
+*
+* @param {Assets_Kpi_Missing_OneInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_kpi_missing_one = /** @type {((inputs?: Assets_Kpi_Missing_OneInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Kpi_Missing_OneInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_kpi_missing_one(inputs)
+	return __en.assets_kpi_missing_one(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "No balances recorded yet" |
+*
+* @param {Assets_Kpi_No_BalancesInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_kpi_no_balances = /** @type {((inputs?: Assets_Kpi_No_BalancesInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Kpi_No_BalancesInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_kpi_no_balances(inputs)
+	return __en.assets_kpi_no_balances(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "No earlier month to compare" |
+*
+* @param {Assets_Kpi_No_PrevInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_kpi_no_prev = /** @type {((inputs?: Assets_Kpi_No_PrevInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Kpi_No_PrevInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_kpi_no_prev(inputs)
+	return __en.assets_kpi_no_prev(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Previous month: {amount}" |
+*
+* @param {Assets_Kpi_Prev_ValueInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_kpi_prev_value = /** @type {((inputs: Assets_Kpi_Prev_ValueInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Kpi_Prev_ValueInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_kpi_prev_value(inputs)
+	return __en.assets_kpi_prev_value(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Snapshot Status" |
+*
+* @param {Assets_Kpi_StatusInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_kpi_status = /** @type {((inputs?: Assets_Kpi_StatusInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Kpi_StatusInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_kpi_status(inputs)
+	return __en.assets_kpi_status(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Total Savings ({month})" |
+*
+* @param {Assets_Kpi_TotalInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_kpi_total = /** @type {((inputs: Assets_Kpi_TotalInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Kpi_TotalInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_kpi_total(inputs)
+	return __en.assets_kpi_total(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "vs Previous Month" |
+*
+* @param {Assets_Kpi_Vs_PreviousInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_kpi_vs_previous = /** @type {((inputs?: Assets_Kpi_Vs_PreviousInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Kpi_Vs_PreviousInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_kpi_vs_previous(inputs)
+	return __en.assets_kpi_vs_previous(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Failed to load assets: {message}" |
+*
+* @param {Assets_Load_ErrorInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_load_error = /** @type {((inputs: Assets_Load_ErrorInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Load_ErrorInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_load_error(inputs)
+	return __en.assets_load_error(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Loading assets..." |
+*
+* @param {Assets_LoadingInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_loading = /** @type {((inputs?: Assets_LoadingInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_LoadingInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_loading(inputs)
+	return __en.assets_loading(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "No balance snapshots recorded for {month} yet." |
+*
+* @param {Assets_Missing_AllInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_missing_all = /** @type {((inputs: Assets_Missing_AllInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Missing_AllInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_missing_all(inputs)
+	return __en.assets_missing_all(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "+{count} more" |
+*
+* @param {Assets_Missing_MoreInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_missing_more = /** @type {((inputs: Assets_Missing_MoreInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Missing_MoreInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_missing_more(inputs)
+	return __en.assets_missing_more(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Missing {month} balance snapshots ({missing}/{total})." |
+*
+* @param {Assets_Missing_PartialInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_missing_partial = /** @type {((inputs: Assets_Missing_PartialInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Missing_PartialInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_missing_partial(inputs)
+	return __en.assets_missing_partial(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Missing {month} balance snapshot ({missing}/{total})." |
+*
+* @param {Assets_Missing_Partial_OneInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_missing_partial_one = /** @type {((inputs: Assets_Missing_Partial_OneInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Missing_Partial_OneInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_missing_partial_one(inputs)
+	return __en.assets_missing_partial_one(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Please fill in:" |
+*
+* @param {Assets_Missing_Please_FillInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_missing_please_fill = /** @type {((inputs?: Assets_Missing_Please_FillInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Missing_Please_FillInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_missing_please_fill(inputs)
+	return __en.assets_missing_please_fill(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Record a balance first to add a note" |
+*
+* @param {Assets_Note_Disabled_TitleInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_note_disabled_title = /** @type {((inputs?: Assets_Note_Disabled_TitleInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Note_Disabled_TitleInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_note_disabled_title(inputs)
+	return __en.assets_note_disabled_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Click to edit note" |
+*
+* @param {Assets_Note_Edit_TitleInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_note_edit_title = /** @type {((inputs?: Assets_Note_Edit_TitleInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Note_Edit_TitleInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_note_edit_title(inputs)
+	return __en.assets_note_edit_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Add note..." |
+*
+* @param {Assets_Note_PlaceholderInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_note_placeholder = /** @type {((inputs?: Assets_Note_PlaceholderInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Note_PlaceholderInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_note_placeholder(inputs)
+	return __en.assets_note_placeholder(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Failed to save balance" |
+*
+* @param {Assets_Save_Balance_ErrorInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_save_balance_error = /** @type {((inputs?: Assets_Save_Balance_ErrorInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Save_Balance_ErrorInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_save_balance_error(inputs)
+	return __en.assets_save_balance_error(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "({updated}/{total} recorded for {month})" |
+*
+* @param {Assets_Table_Recorded_CountInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_table_recorded_count = /** @type {((inputs: Assets_Table_Recorded_CountInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Table_Recorded_CountInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_table_recorded_count(inputs)
+	return __en.assets_table_recorded_count(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Savings Accounts" |
+*
+* @param {Assets_Table_TitleInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_table_title = /** @type {((inputs?: Assets_Table_TitleInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Table_TitleInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_table_title(inputs)
+	return __en.assets_table_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "(incl. {count} carried over)" |
+*
+* @param {Assets_Total_Carried_OverInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_total_carried_over = /** @type {((inputs: Assets_Total_Carried_OverInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Total_Carried_OverInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_total_carried_over(inputs)
+	return __en.assets_total_carried_over(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "(incl. 1 carried over)" |
+*
+* @param {Assets_Total_Carried_Over_OneInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const assets_total_carried_over_one = /** @type {((inputs?: Assets_Total_Carried_Over_OneInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Assets_Total_Carried_Over_OneInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.assets_total_carried_over_one(inputs)
+	return __en.assets_total_carried_over_one(inputs)
 });
 /**
 * | output |
@@ -3773,6 +5094,20 @@ export const month_target_label = /** @type {((inputs?: Month_Target_LabelInputs
 	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
 	if (locale === "fr") return __fr.month_target_label(inputs)
 	return __en.month_target_label(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Assets" |
+*
+* @param {Nav_AssetsInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const nav_assets = /** @type {((inputs?: Nav_AssetsInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Nav_AssetsInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.nav_assets(inputs)
+	return __en.nav_assets(inputs)
 });
 /**
 * | output |
