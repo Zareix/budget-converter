@@ -1,5 +1,11 @@
 import { Link, useRouterState } from "@tanstack/react-router"
-import { ArrowLeftRightIcon, DownloadIcon, PieChartIcon, SettingsIcon } from "lucide-react"
+import {
+  ArrowLeftRightIcon,
+  DownloadIcon,
+  EuroIcon,
+  PieChartIcon,
+  SettingsIcon,
+} from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -17,8 +23,8 @@ export const NavBar = () => {
     <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="mx-auto flex h-12 max-w-7xl items-center justify-between gap-4 px-4">
         <Link to="/" className="flex items-center gap-2 text-sm font-semibold tracking-tight">
-          <span className="flex size-6 items-center justify-center rounded-sm bg-primary text-xs font-bold text-primary-foreground">
-            €
+          <span className="flex size-7 items-center justify-center rounded-sm bg-primary text-primary-foreground">
+            <EuroIcon className="size-4.5" strokeWidth={2.5} />
           </span>
           <span>Budget</span>
         </Link>

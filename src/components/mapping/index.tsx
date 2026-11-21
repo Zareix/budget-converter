@@ -4,6 +4,7 @@ import { useNavigate, useSearch } from "@tanstack/react-router"
 import { CreateMappingButton } from "@/components/mapping/create"
 import { DeleteMappingButton } from "@/components/mapping/delete"
 import { EditMappingButton } from "@/components/mapping/edit"
+import { ExportMappingButton } from "@/components/mapping/export"
 import { ImportMappingButton } from "@/components/mapping/import"
 import { SharePill } from "@/components/share-pill"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -117,6 +118,7 @@ export const Mappings = () => {
       <CardFooter>
         <CreateMappingButton />
         <ImportMappingButton />
+        <ExportMappingButton />
       </CardFooter>
     </Card>
   )
