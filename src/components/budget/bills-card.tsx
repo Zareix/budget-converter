@@ -9,7 +9,6 @@ import { SharePill } from "@/components/share-pill"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   Dialog,
   DialogContent,
@@ -55,7 +54,6 @@ import {
   previewSubtrackerBillsSync,
   updateBill,
 } from "@/lib/server/budget"
-import { cn } from "@/lib/utils"
 import { m } from "@/paraglide/messages"
 
 const getSubtrackerMetricLabel = (metric: SubtrackerMetric): string => {
@@ -83,7 +81,6 @@ type BillItem = {
   fromAccountId: number | null
   sharePercent: number
   budgetCents: number
-  paid: boolean
   subtrackerRuleId: number | null
 }
 
@@ -534,7 +531,6 @@ export const BillsCard = ({ monthId, bills, accounts, summary }: BillsCardProps)
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-10">{m.bills_paid()}</TableHead>
               <TableHead>{m.common_name()}</TableHead>
               <TableHead className="w-14 text-center">{m.bills_due()}</TableHead>
               <TableHead>{m.bills_from()}</TableHead>
@@ -547,7 +543,7 @@ export const BillsCard = ({ monthId, bills, accounts, summary }: BillsCardProps)
           <TableBody>
             {bills.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="py-6 text-center text-xs text-muted-foreground">
+                <TableCell colSpan={7} className="py-6 text-center text-xs text-muted-foreground">
                   {m.bills_empty()}
                 </TableCell>
               </TableRow>
@@ -557,20 +553,8 @@ export const BillsCard = ({ monthId, bills, accounts, summary }: BillsCardProps)
                 const derivedActual = computeShareCents(bill.budgetCents, bill.sharePercent)
 
                 return (
-                  <TableRow key={bill.id} className={cn(bill.paid && "bg-muted/20")}>
-                    <TableCell>
-                      <Checkbox
-                        checked={bill.paid}
-                        aria-label={m.bills_mark_paid_aria({ name: bill.name })}
-                        onCheckedChange={(checked) => {
-                          updateMutation.mutate({
-                            id: bill.id,
-                            paid: Boolean(checked),
-                          })
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell className={cn("font-medium", bill.paid && "text-muted-foreground")}>
+                  <TableRow key={bill.id}>
+                    <TableCell className="font-medium">
                       <div className="flex items-center gap-1.5">
                         <span>{bill.name}</span>
                         {bill.subtrackerRuleId !== null && (
@@ -614,12 +598,7 @@ export const BillsCard = ({ monthId, bills, accounts, summary }: BillsCardProps)
                         }
                       />
                     </TableCell>
-                    <TableCell
-                      className={cn(
-                        "text-right text-xs font-medium tabular-nums",
-                        !bill.paid && "text-muted-foreground",
-                      )}
-                    >
+                    <TableCell className="text-right text-xs font-medium tabular-nums">
                       {formatCents(derivedActual)}
                     </TableCell>
                     <TableCell>
@@ -653,7 +632,7 @@ export const BillsCard = ({ monthId, bills, accounts, summary }: BillsCardProps)
           {bills.length > 0 && (
             <TableFooter>
               <TableRow>
-                <TableCell colSpan={5}>{m.common_total()}</TableCell>
+                <TableCell colSpan={4}>{m.common_total()}</TableCell>
                 <TableCell className="text-right tabular-nums">
                   {formatCents(summary.bills.grossBudgetCents)}
                 </TableCell>

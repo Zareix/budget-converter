@@ -115,7 +115,6 @@ export const formatMonthLabel = (monthId: string, locale?: string): string => {
 export type BillLike = {
   budgetCents: number
   sharePercent: number
-  paid: boolean
 }
 
 export type IncomeLike = {
@@ -190,10 +189,8 @@ export const computeMonthSummary = ({
     const shareCents = computeShareCents(bill.budgetCents, bill.sharePercent)
     billsGrossBudgetCents += bill.budgetCents
     billsBudgetCents += shareCents
-    if (bill.paid) {
-      billsGrossActualCents += bill.budgetCents
-      billsActualCents += shareCents
-    }
+    billsGrossActualCents += bill.budgetCents
+    billsActualCents += shareCents
   }
 
   let savingsBudgetCents = 0

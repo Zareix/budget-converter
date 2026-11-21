@@ -32,9 +32,7 @@ import { getLocale, experimentalStaticLocale } from "../runtime.js"
 /** @typedef {{}} Bills_Edit_AriaInputs */
 /** @typedef {{}} Bills_EmptyInputs */
 /** @typedef {{}} Bills_FromInputs */
-/** @typedef {{ name: NonNullable<unknown> }} Bills_Mark_Paid_AriaInputs */
 /** @typedef {{}} Bills_Name_PlaceholderInputs */
-/** @typedef {{}} Bills_PaidInputs */
 /** @typedef {{}} Bills_Save_ErrorInputs */
 /** @typedef {{}} Bills_TitleInputs */
 /** @typedef {{}} Bills_Update_ErrorInputs */
@@ -867,20 +865,6 @@ export const bills_from = /** @type {((inputs?: Bills_FromInputs, options?: { lo
 /**
 * | output |
 * | --- |
-* | "Mark {name} as paid" |
-*
-* @param {Bills_Mark_Paid_AriaInputs} inputs
-* @param {{ locale?: "en" | "fr" }} options
-* @returns {LocalizedString}
-*/
-export const bills_mark_paid_aria = /** @type {((inputs: Bills_Mark_Paid_AriaInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Bills_Mark_Paid_AriaInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs, options = {}) => {
-	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
-	if (locale === "fr") return __fr.bills_mark_paid_aria(inputs)
-	return __en.bills_mark_paid_aria(inputs)
-});
-/**
-* | output |
-* | --- |
 * | "Rent, Internet, Insurance..." |
 *
 * @param {Bills_Name_PlaceholderInputs} inputs
@@ -891,20 +875,6 @@ export const bills_name_placeholder = /** @type {((inputs?: Bills_Name_Placehold
 	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
 	if (locale === "fr") return __fr.bills_name_placeholder(inputs)
 	return __en.bills_name_placeholder(inputs)
-});
-/**
-* | output |
-* | --- |
-* | "Paid" |
-*
-* @param {Bills_PaidInputs} inputs
-* @param {{ locale?: "en" | "fr" }} options
-* @returns {LocalizedString}
-*/
-export const bills_paid = /** @type {((inputs?: Bills_PaidInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Bills_PaidInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
-	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
-	if (locale === "fr") return __fr.bills_paid(inputs)
-	return __en.bills_paid(inputs)
 });
 /**
 * | output |
@@ -3583,7 +3553,7 @@ export const mapping_validation_to_name_required = /** @type {((inputs?: Mapping
 /**
 * | output |
 * | --- |
-* | "Cloned bills start unpaid with empty actuals; incomes and savings copy their targets." |
+* | "Cloned bills copy their budgets; incomes and savings copy their targets with empty actuals." |
 *
 * @param {Month_Clone_DescriptionInputs} inputs
 * @param {{ locale?: "en" | "fr" }} options

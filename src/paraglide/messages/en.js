@@ -30,9 +30,7 @@
 /** @typedef {{}} Bills_Edit_AriaInputs */
 /** @typedef {{}} Bills_EmptyInputs */
 /** @typedef {{}} Bills_FromInputs */
-/** @typedef {{ name: NonNullable<unknown> }} Bills_Mark_Paid_AriaInputs */
 /** @typedef {{}} Bills_Name_PlaceholderInputs */
-/** @typedef {{}} Bills_PaidInputs */
 /** @typedef {{}} Bills_Save_ErrorInputs */
 /** @typedef {{}} Bills_TitleInputs */
 /** @typedef {{}} Bills_Update_ErrorInputs */
@@ -562,16 +560,8 @@ export const bills_from = /** @type {(inputs: Bills_FromInputs) => LocalizedStri
 	return /** @type {LocalizedString} */ (`From`)
 };
 
-export const bills_mark_paid_aria = /** @type {(inputs: Bills_Mark_Paid_AriaInputs) => LocalizedString} */ (i) => {
-	return /** @type {LocalizedString} */ (`Mark ${i?.name} as paid`)
-};
-
 export const bills_name_placeholder = /** @type {(inputs: Bills_Name_PlaceholderInputs) => LocalizedString} */ () => {
 	return /** @type {LocalizedString} */ (`Rent, Internet, Insurance...`)
-};
-
-export const bills_paid = /** @type {(inputs: Bills_PaidInputs) => LocalizedString} */ () => {
-	return /** @type {LocalizedString} */ (`Paid`)
 };
 
 export const bills_save_error = /** @type {(inputs: Bills_Save_ErrorInputs) => LocalizedString} */ () => {
@@ -1339,7 +1329,7 @@ export const mapping_validation_to_name_required = /** @type {(inputs: Mapping_V
 };
 
 export const month_clone_description = /** @type {(inputs: Month_Clone_DescriptionInputs) => LocalizedString} */ () => {
-	return /** @type {LocalizedString} */ (`Cloned bills start unpaid with empty actuals; incomes and savings copy their targets.`)
+	return /** @type {LocalizedString} */ (`Cloned bills copy their budgets; incomes and savings copy their targets with empty actuals.`)
 };
 
 export const month_clone_from_label = /** @type {(inputs: Month_Clone_From_LabelInputs) => LocalizedString} */ () => {
