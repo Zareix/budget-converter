@@ -2,15 +2,21 @@ import { eq, lt } from "drizzle-orm"
 import jwa from "jwa"
 
 import { env } from "@/env"
+import { eurosToCents } from "@/lib/budget/calculations"
 import { getDefaultCategory } from "@/lib/categories"
 import { db } from "@/lib/db"
 import { ebAccounts } from "@/lib/db/schema"
 import type { Account } from "@/lib/fetcher"
-import { findInMapping } from "@/lib/mapping"
+import { findInMapping, getMapping } from "@/lib/mapping"
 import type { Transaction } from "@/lib/parsers"
-import { toPaymentMethod } from "@/lib/parsers"
-import { getMapping } from "@/lib/server/functions"
-import { firstNonNullNorEmpty, getFormattedDate } from "@/lib/utils"
+import { resolvePaymentMethod } from "@/lib/payment-methods"
+import {
+  firstNonNullNorEmpty,
+  formatIsoDate,
+  getFormattedDate,
+  getMonthIdFromDate,
+  isCurrentOrPreviousMonth,
+} from "@/lib/utils"
 
 const BASE_URL = "https://api.enablebanking.com"
 
@@ -87,7 +93,7 @@ const getJWTHeader = () => {
   })
 }
 
-const encodeData = (data: any) => {
+const encodeData = (data: unknown) => {
   return Buffer.from(JSON.stringify(data)).toString("base64").replace("=", "")
 }
 
@@ -269,17 +275,14 @@ export const bulkAddAccounts = async (
 }
 
 export const fetchTransactions = async (accountId: Account["id"]): Promise<Array<Transaction>> => {
-  const paymentMethod = toPaymentMethod(
-    (await listAccounts()).find((acc) => acc.id === accountId)?.name,
-  )
-  if (!paymentMethod) {
+  const accountName = (await listAccounts()).find((acc) => acc.id === accountId)?.name
+  const pm = await resolvePaymentMethod(accountName)
+  if (!pm) {
     console.error(`Payment method for account ${accountId} not found, skipping it`)
     return []
   }
 
   const jwt = getJWT()
-  const oneMonthAgo = new Date()
-  oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
   const accountTransactionsResponse = await fetch(
     `${BASE_URL}/accounts/${accountId}/transactions?strategy=longest`,
     {
@@ -298,9 +301,10 @@ export const fetchTransactions = async (accountId: Account["id"]): Promise<Array
   const result = (await accountTransactionsResponse.json()) as EbTransactionsResponse
   console.log(`Fetched ${result.transactions.length} transactions for account ${accountId}`)
 
-  const mapping = await getMapping()
-  const defaultCategory = await getDefaultCategory()
+  const [mapping, defaultCategory] = await Promise.all([getMapping(), getDefaultCategory()])
   const now = new Date()
+  const isSgCard = pm.slug === "carte-sg" || pm.label === "Carte SG"
+
   return result.transactions
     .filter(
       (record) =>
@@ -309,13 +313,10 @@ export const fetchTransactions = async (accountId: Account["id"]): Promise<Array
     )
     .filter((record) => {
       const date = new Date(firstNonNullNorEmpty(record.transaction_date, record.booking_date)!)
-      return (
-        (date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) ||
-        (date.getMonth() === now.getMonth() - 1 && date.getFullYear() === now.getFullYear())
-      )
+      return isCurrentOrPreviousMonth(date, now)
     })
     .filter((record) => {
-      if (paymentMethod !== "Carte SG") {
+      if (!isSgCard) {
         return true
       }
       const name = firstNonNullNorEmpty(record.creditor?.name, record.remittance_information[0])!
@@ -324,43 +325,56 @@ export const fetchTransactions = async (accountId: Account["id"]): Promise<Array
     .map((record) => {
       const date = new Date(firstNonNullNorEmpty(record.transaction_date, record.booking_date)!)
       const formattedDate = getFormattedDate(date)
-      const amount = Number.parseFloat(record.transaction_amount.amount)
-        .toFixed(2)
-        .replace(".", ",")
+      const isoDate = formatIsoDate(date)
+      const monthId = getMonthIdFromDate(date)
+      const numericAmount = Number.parseFloat(record.transaction_amount.amount)
+      const amount = numericAmount.toFixed(2).replace(".", ",")
+      const amountCents = eurosToCents(numericAmount)
 
       let name: string =
         firstNonNullNorEmpty(record.creditor?.name, record.remittance_information[0])?.split(
           "   ",
         )[0] ?? ""
-      if (paymentMethod === "Carte SG") {
+      if (isSgCard) {
         // remittance is "CARTE X9448 06/11 MERCHANT": drop card + date, keeping the merchant only
         name = name.replace(/^CARTE\s+\S+\s+\d{1,2}\/\d{1,2}\s+/, "")
       }
       const sourceName = name
       const description =
         record.remittance_information.length > 1 ? record.remittance_information[0] : null
-      const price = Number.parseFloat(amount.replace(",", "."))
+      const price = amountCents / 100
       // mappings may target the merchant alone or the "merchant - description" shown in the table
       const mapped =
         findInMapping(mapping, name, price) ??
         (description ? findInMapping(mapping, `${name} - ${description}`, price) : null)
-      let category: string = defaultCategory
+      let category: string = defaultCategory.label
+      let categorySlug: string = defaultCategory.slug
       if (mapped) {
         name = mapped.name
         category = mapped.category
+        categorySlug = mapped.categorySlug
       } else {
         name = name.trim()
       }
 
+      const sharePercent = mapped?.defaultSharePercent ?? pm.defaultSharePercent
+
       return {
         date: formattedDate,
+        isoDate,
+        monthId,
         originalDate: date,
         name: name + (description && description.length > 0 ? ` - ${description}` : ""),
-        amount: amount,
+        amount,
+        amountCents,
+        sharePercent,
         category,
-        paymentMethod,
+        categorySlug,
+        paymentMethod: pm.label,
+        paymentMethodId: pm.id,
         sourceName,
         excluded: mapped?.exclude ?? false,
+        externalId: `eb:${record.entry_reference}`,
         raw: JSON.stringify(record, null, 2),
       } satisfies Transaction
     })

@@ -12,6 +12,10 @@ import { PROVIDERS } from "@/lib/parsers"
 import * as amexParser from "@/lib/parsers/amex"
 import * as revolutParser from "@/lib/parsers/revolut"
 
+const optionalSharePercentSchema = v.optional(
+  v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(100))),
+)
+
 export const getActiveFetchers = createServerFn().handler(() => {
   const activeFetchers: Array<Fetcher> = []
   if (lunchflow.isActive()) {
@@ -100,6 +104,8 @@ export const addCategory = createServerFn({
     v.object({
       slug: v.pipe(v.string(), v.regex(/^[\p{L}\p{N}/-]+$/u, "Invalid slug")),
       label: v.pipe(v.string(), v.minLength(1, "Label is required")),
+      color: v.optional(v.nullable(v.string())),
+      sortOrder: v.optional(v.pipe(v.number(), v.integer())),
     }),
   )
   .handler(({ data }) => categories.addCategory(data))
@@ -111,6 +117,8 @@ export const editCategory = createServerFn({
     v.object({
       id: v.number(),
       label: v.pipe(v.string(), v.minLength(1, "Label is required")),
+      color: v.optional(v.nullable(v.string())),
+      sortOrder: v.optional(v.pipe(v.number(), v.integer())),
     }),
   )
   .handler(({ data }) => categories.editCategory(data))
@@ -132,6 +140,7 @@ export const addMapping = createServerFn({
         toName: v.string("To name is required"),
         toCategory: v.string("Category is required"),
         exclude: v.optional(v.boolean()),
+        defaultSharePercent: optionalSharePercentSchema,
       }),
       v.object({
         mode: v.literal("exact-name-price"),
@@ -140,6 +149,7 @@ export const addMapping = createServerFn({
         toCategory: v.string("Category is required"),
         fromPrice: v.number(),
         exclude: v.optional(v.boolean()),
+        defaultSharePercent: optionalSharePercentSchema,
       }),
     ]),
   )
@@ -158,6 +168,7 @@ export const editMapping = createServerFn({
           toName: v.string("To name is required"),
           toCategory: v.string("Category is required"),
           exclude: v.optional(v.boolean()),
+          defaultSharePercent: optionalSharePercentSchema,
         }),
         v.object({
           mode: v.literal("exact-name-price"),
@@ -166,6 +177,7 @@ export const editMapping = createServerFn({
           toCategory: v.string("Category is required"),
           fromPrice: v.number(),
           exclude: v.optional(v.boolean()),
+          defaultSharePercent: optionalSharePercentSchema,
         }),
       ]),
     }),
@@ -193,6 +205,7 @@ export const importMappingsFromYaml = createServerFn({ method: "POST" })
         toCategory: v.string(),
         fromPrice: v.optional(v.number()),
         exclude: v.optional(v.boolean()),
+        defaultSharePercent: optionalSharePercentSchema,
       }),
       v.object({
         mode: v.literal("exact-name-price"),
@@ -201,6 +214,7 @@ export const importMappingsFromYaml = createServerFn({ method: "POST" })
         toCategory: v.string(),
         fromPrice: v.number(),
         exclude: v.optional(v.boolean()),
+        defaultSharePercent: optionalSharePercentSchema,
       }),
     ])
     const valid = v.parse(v.array(mappingSchema), parsed.mappings)

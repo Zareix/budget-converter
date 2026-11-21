@@ -10,7 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ImportRouteImport } from './routes/import'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as TransactionsRouteImport } from './routes/transactions'
 import { Route as ApiEnableBankingRouteImport } from './routes/api/enable-banking'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
 
@@ -19,9 +21,19 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ImportRoute = ImportRouteImport.update({
+  id: '/import',
+  path: '/import',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TransactionsRoute = TransactionsRouteImport.update({
+  id: '/transactions',
+  path: '/transactions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiEnableBankingRoute = ApiEnableBankingRouteImport.update({
@@ -37,34 +49,61 @@ const ApiHealthRoute = ApiHealthRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/import': typeof ImportRoute
   '/settings': typeof SettingsRoute
+  '/transactions': typeof TransactionsRoute
   '/api/enable-banking': typeof ApiEnableBankingRoute
   '/api/health': typeof ApiHealthRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/import': typeof ImportRoute
   '/settings': typeof SettingsRoute
+  '/transactions': typeof TransactionsRoute
   '/api/enable-banking': typeof ApiEnableBankingRoute
   '/api/health': typeof ApiHealthRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/import': typeof ImportRoute
   '/settings': typeof SettingsRoute
+  '/transactions': typeof TransactionsRoute
   '/api/enable-banking': typeof ApiEnableBankingRoute
   '/api/health': typeof ApiHealthRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/settings' | '/api/enable-banking' | '/api/health'
+  fullPaths:
+    | '/'
+    | '/import'
+    | '/settings'
+    | '/transactions'
+    | '/api/enable-banking'
+    | '/api/health'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/settings' | '/api/enable-banking' | '/api/health'
-  id: '__root__' | '/' | '/settings' | '/api/enable-banking' | '/api/health'
+  to:
+    | '/'
+    | '/import'
+    | '/settings'
+    | '/transactions'
+    | '/api/enable-banking'
+    | '/api/health'
+  id:
+    | '__root__'
+    | '/'
+    | '/import'
+    | '/settings'
+    | '/transactions'
+    | '/api/enable-banking'
+    | '/api/health'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ImportRoute: typeof ImportRoute
   SettingsRoute: typeof SettingsRoute
+  TransactionsRoute: typeof TransactionsRoute
   ApiEnableBankingRoute: typeof ApiEnableBankingRoute
   ApiHealthRoute: typeof ApiHealthRoute
 }
@@ -78,11 +117,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/import': {
+      id: '/import'
+      path: '/import'
+      fullPath: '/import'
+      preLoaderRoute: typeof ImportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings': {
       id: '/settings'
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/transactions': {
+      id: '/transactions'
+      path: '/transactions'
+      fullPath: '/transactions'
+      preLoaderRoute: typeof TransactionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/enable-banking': {
@@ -104,7 +157,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ImportRoute: ImportRoute,
   SettingsRoute: SettingsRoute,
+  TransactionsRoute: TransactionsRoute,
   ApiEnableBankingRoute: ApiEnableBankingRoute,
   ApiHealthRoute: ApiHealthRoute,
 }

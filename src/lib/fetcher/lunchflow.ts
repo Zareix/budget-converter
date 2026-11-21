@@ -1,10 +1,19 @@
+import crypto from "node:crypto"
+
 import { env } from "@/env"
+import { eurosToCents } from "@/lib/budget/calculations"
 import { getDefaultCategory } from "@/lib/categories"
 import type { Account } from "@/lib/fetcher"
 import { findInMapping, getMapping } from "@/lib/mapping"
 import type { Transaction } from "@/lib/parsers"
-import { isPaymentMethod } from "@/lib/parsers"
-import { firstNonNullNorEmpty, getFormattedDate } from "@/lib/utils"
+import { resolvePaymentMethod } from "@/lib/payment-methods"
+import {
+  firstNonNullNorEmpty,
+  formatIsoDate,
+  getFormattedDate,
+  getMonthIdFromDate,
+  isCurrentOrPreviousMonth,
+} from "@/lib/utils"
 
 export type ListAccountResponse = {
   accounts: Array<{
@@ -88,8 +97,9 @@ const fetchTransactionsForAccount = async ({
     throw new Error("LUNCH_FLOW_API_KEY is not set")
   }
 
-  const paymentMethod = accounts.find((acc) => acc.id === accountId)?.name ?? "Unknown"
-  if (!isPaymentMethod(paymentMethod)) {
+  const accountName = accounts.find((acc) => acc.id === accountId)?.name
+  const pm = await resolvePaymentMethod(accountName)
+  if (!pm) {
     return []
   }
 
@@ -106,36 +116,51 @@ const fetchTransactionsForAccount = async ({
 
   const result = (await res.json()) as ListAccountTransactionsResponse
 
-  const mapping = await getMapping()
-  const defaultCategory = await getDefaultCategory()
+  const [mapping, defaultCategory] = await Promise.all([getMapping(), getDefaultCategory()])
   const now = new Date()
   return result.transactions
     .filter((record) => !record.isPending)
     .filter((record) => {
       const date = new Date(record.date)
-      return (
-        (date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) ||
-        (date.getMonth() === now.getMonth() - 1 && date.getFullYear() === now.getFullYear())
-      )
+      return isCurrentOrPreviousMonth(date, now)
     })
     .map((record) => {
       const date = new Date(record.date)
       const formattedDate = getFormattedDate(date)
-      const amount = (record.amount * -1).toFixed(2).replace(".", ",")
+      const isoDate = formatIsoDate(date)
+      const monthId = getMonthIdFromDate(date)
+      const numericAmount = record.amount * -1
+      const amount = numericAmount.toFixed(2).replace(".", ",")
+      const amountCents = eurosToCents(numericAmount)
 
       let name: string = firstNonNullNorEmpty(record.merchant, record.description) ?? "Unknown"
       const sourceName = name
-      let category: string = defaultCategory
-      const mapped = findInMapping(mapping, name, Number.parseFloat(amount.replace(",", ".")))
+      let category: string = defaultCategory.label
+      let categorySlug: string = defaultCategory.slug
+      const mapped = findInMapping(mapping, name, amountCents / 100)
       if (mapped) {
         name = mapped.name
         category = mapped.category
+        categorySlug = mapped.categorySlug
       } else {
         name = name.trim()
       }
 
+      const sharePercent = mapped?.defaultSharePercent ?? pm.defaultSharePercent
+      const externalId = record.id
+        ? `lf:${record.id}`
+        : `lf:hash:${crypto
+            .createHash("sha256")
+            .update(
+              `${accountId}|${record.date}|${record.amount}|${record.merchant ?? ""}|${record.description ?? ""}`,
+            )
+            .digest("hex")
+            .slice(0, 24)}`
+
       return {
         date: formattedDate,
+        isoDate,
+        monthId,
         originalDate: date,
         name:
           name +
@@ -145,11 +170,16 @@ const fetchTransactionsForAccount = async ({
           record.description.length > 0
             ? ` - ${record.description}`
             : ""),
-        amount: amount,
+        amount,
+        amountCents,
+        sharePercent,
         category,
-        paymentMethod,
+        categorySlug,
+        paymentMethod: pm.label,
+        paymentMethodId: pm.id,
         sourceName,
         excluded: mapped?.exclude ?? false,
+        externalId,
         raw: JSON.stringify(record, null, 2),
       } satisfies Transaction
     })

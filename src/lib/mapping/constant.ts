@@ -13,4 +13,5 @@ export type Mapping = {
   toCategory: string
   fromPrice?: number
   exclude?: boolean
+  defaultSharePercent?: number | null
 }

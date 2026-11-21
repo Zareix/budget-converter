@@ -1,6 +1,5 @@
 import { useForm } from "@tanstack/react-form"
 import { useMutation, useQuery } from "@tanstack/react-query"
-import { Link } from "@tanstack/react-router"
 import { useEffect } from "react"
 import { toast } from "sonner"
 import * as v from "valibot"
@@ -213,9 +212,6 @@ export function FetcherFormCard() {
             disabled={fetchTransactionsMutation.isPending || !form.state.isValid}
           >
             {fetchTransactionsMutation.isPending ? "Processing..." : "Fetch"}
-          </Button>
-          <Button type="button" variant="link" className="ml-auto">
-            <Link to="/settings">Settings</Link>
           </Button>
         </Field>
       </CardFooter>

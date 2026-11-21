@@ -10,6 +10,8 @@ export const env = createEnv({
     LUNCH_FLOW_API_KEY: z.string().optional(),
     TRICOUNT_KEYS: z.string().optional(),
     TRICOUNT_FILTERED_USER_NAME: z.string().optional(),
+    SUBTRACKER_URL: z.url().optional(),
+    SUBTRACKER_API_KEY: z.string().optional(),
     DATABASE_PATH: z._default(z.string(), "./db.sqlite"),
     COUNTRY_CODE: z.string().optional(),
   },

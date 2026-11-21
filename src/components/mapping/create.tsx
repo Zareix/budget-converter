@@ -1,4 +1,5 @@
 import { useState } from "react"
+import type { ReactElement } from "react"
 
 import { CreateMappingForm } from "@/components/mapping/form"
 import { Button } from "@/components/ui/button"
@@ -14,14 +15,15 @@ import type { Mapping } from "@/lib/mapping/constant"
 
 type Props = {
   defaultValues?: Partial<Mapping>
+  trigger?: ReactElement
 }
 
-export const CreateMappingButton = ({ defaultValues }: Props) => {
+export const CreateMappingButton = ({ defaultValues, trigger }: Props) => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger render={<Button variant="outline">Create Mapping</Button>} />
+      <DialogTrigger render={trigger ?? <Button variant="outline">Create Mapping</Button>} />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create a new mapping</DialogTitle>

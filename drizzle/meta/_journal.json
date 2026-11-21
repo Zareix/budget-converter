@@ -22,6 +22,27 @@
       "when": 1794351722061,
       "tag": "0002_stiff_miss_america",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1795288516949,
+      "tag": "0003_happy_loa",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1795289705232,
+      "tag": "0004_glossy_ultragirl",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1795291452165,
+      "tag": "0005_plain_hellion",
+      "breakpoints": true
     }
   ]
 }

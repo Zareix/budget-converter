@@ -1,11 +1,18 @@
 import crypto from "node:crypto"
 
 import { env } from "@/env"
+import { eurosToCents } from "@/lib/budget/calculations"
 import { getDefaultCategory } from "@/lib/categories"
 import type { Account } from "@/lib/fetcher"
+import { findInMapping, getMapping } from "@/lib/mapping"
 import type { Transaction } from "@/lib/parsers"
-import { PAYMENT_METHODS } from "@/lib/parsers"
-import { getFormattedDate } from "@/lib/utils"
+import { resolvePaymentMethod } from "@/lib/payment-methods"
+import {
+  formatIsoDate,
+  getFormattedDate,
+  getMonthIdFromDate,
+  isCurrentOrPreviousMonth,
+} from "@/lib/utils"
 
 type TricountSessionResponse = {
   Response: Array<{
@@ -53,17 +60,17 @@ type TricountSessionResponse = {
         anchor_uuid: string
         style: string
       }
-      relations: Array<any>
-      alias: Array<any>
-      tax_resident: Array<any>
-      notification_filters: Array<any>
+      relations: Array<unknown>
+      alias: Array<unknown>
+      tax_resident: Array<unknown>
+      notification_filters: Array<unknown>
       user_onboarding: null
       address_main: null
       address_postal: null
       address_shipping: null
       freeze_user: null
       debt_collection: null
-      recovery_requirements: Array<any>
+      recovery_requirements: Array<unknown>
       deny_reason: null
       first_name: string
       middle_name: string
@@ -81,7 +88,7 @@ type TricountSessionResponse = {
       version_terms_of_service: string
       customer: null
       customer_limit: { [key: string]: number | null }
-      billing_contract: Array<any>
+      billing_contract: Array<unknown>
       pack_membership: null
       premium_trial: null
       fulfillments: Array<{
@@ -98,10 +105,10 @@ type TricountSessionResponse = {
       }>
     }
     RegistryOverview?: {
-      registry: Array<any>
+      registry: Array<unknown>
     }
     RegistryArchivedOverview?: {
-      registry: Array<any>
+      registry: Array<unknown>
     }
     TokenDevice?: {
       id: number
@@ -157,8 +164,8 @@ type TricountDataResponse = {
             auto_add_card_transaction: "INACTIVE"
             time_auto_add_card_transaction_end: null
             time_auto_add_card_transaction_start: null
-            card_ids: Array<any>
-            card_labels: Array<any>
+            card_ids: Array<unknown>
+            card_labels: Array<unknown>
           }
           auto_add_card_transaction: "NONE"
           remover: null
@@ -204,8 +211,8 @@ type TricountDataResponse = {
                 auto_add_card_transaction: "INACTIVE"
                 time_auto_add_card_transaction_end: null
                 time_auto_add_card_transaction_start: null
-                card_ids: Array<any>
-                card_labels: Array<any>
+                card_ids: Array<unknown>
+                card_labels: Array<unknown>
               }
               auto_add_card_transaction: "NONE"
               remover: null
@@ -239,13 +246,13 @@ type TricountDataResponse = {
             type: "RATIO" | "AMOUNT"
             share_ratio?: number
           }>
-          attachment: Array<any>
+          attachment: Array<unknown>
           category: string
           category_custom: null | string
           date: Date
         }
       }>
-      all_registry_gallery_attachment: Array<any>
+      all_registry_gallery_attachment: Array<unknown>
       setting: null
     }
   }>
@@ -369,15 +376,18 @@ export const listAccounts = async (): Promise<Array<Account>> => {
 export const isActive = () => !!env.TRICOUNT_KEYS
 
 export const fetchTransactions = async (accountId: Account["id"]): Promise<Array<Transaction>> => {
-  const data = await getTricountRegistryData(accountId)
+  const [data, pm, mapping, defaultCategory] = await Promise.all([
+    getTricountRegistryData(accountId),
+    resolvePaymentMethod("tricount"),
+    getMapping(),
+    getDefaultCategory(),
+  ])
 
-  const paymentMethod = PAYMENT_METHODS.find((pm) => pm.toLowerCase().includes("tricount"))
-  if (!paymentMethod) {
+  if (!pm) {
     throw new Error("Tricount payment method not found")
   }
 
   const now = new Date()
-  const defaultCategory = await getDefaultCategory()
   const filteredUserName = env.TRICOUNT_FILTERED_USER_NAME
   return data.entries
     .filter((entry) => {
@@ -402,30 +412,71 @@ export const fetchTransactions = async (accountId: Account["id"]): Promise<Array
         filteredUserName
       )
     })
+    .filter((entry) => {
+      const date = new Date(entry.RegistryEntry.date)
+      return isCurrentOrPreviousMonth(date, now)
+    })
     .map((entry) => {
       const originalDate = new Date(entry.RegistryEntry.date)
       const date = getFormattedDate(originalDate)
-      const amount = (Number.parseFloat(entry.RegistryEntry.amount.value) * -1)
-        .toFixed(2)
-        .replace(".", ",")
+      const isoDate = formatIsoDate(originalDate)
+      const monthId = getMonthIdFromDate(originalDate)
+      const numericAmount = Number.parseFloat(entry.RegistryEntry.amount.value) * -1
+      const amount = numericAmount.toFixed(2).replace(".", ",")
+      const amountCents = eurosToCents(numericAmount)
+
+      const sourceName = entry.RegistryEntry.description
+      let name = sourceName
+      let category = defaultCategory.label
+      let categorySlug = defaultCategory.slug
+      const mapped = findInMapping(mapping, sourceName, amountCents / 100)
+      if (mapped) {
+        name = mapped.name
+        category = mapped.category
+        categorySlug = mapped.categorySlug
+      } else {
+        name = name.trim()
+      }
+
+      // Derive sharePercent from Tricount allocations when available
+      let tricountAllocationShare: number | null = null
+      const totalAbs = Math.abs(Number.parseFloat(entry.RegistryEntry.amount.value))
+      if (filteredUserName && totalAbs > 0) {
+        const userAlloc = entry.RegistryEntry.allocations.find(
+          (alloc) =>
+            alloc.membership.RegistryMembershipNonUser.alias.pointer.name === filteredUserName,
+        )
+        if (userAlloc) {
+          const userAbs = Math.abs(Number.parseFloat(userAlloc.amount.value))
+          tricountAllocationShare = Math.min(
+            100,
+            Math.max(0, Math.round((userAbs / totalAbs) * 100)),
+          )
+        }
+      }
+
+      const sharePercent =
+        mapped?.defaultSharePercent ?? tricountAllocationShare ?? pm.defaultSharePercent
+
       return {
         amount,
-        category: defaultCategory,
-        name: entry.RegistryEntry.description,
-        originalDate: originalDate,
-        date: date,
-        paymentMethod,
-        sourceName: entry.RegistryEntry.description,
+        amountCents,
+        sharePercent,
+        category,
+        categorySlug,
+        name,
+        originalDate,
+        date,
+        isoDate,
+        monthId,
+        paymentMethod: pm.label,
+        paymentMethodId: pm.id,
+        sourceName,
+        excluded: mapped?.exclude ?? false,
+        externalId: `tricount:${entry.RegistryEntry.uuid}`,
         raw: JSON.stringify(entry, null, 2),
       } satisfies Transaction
     })
     .filter(Boolean)
-    .filter((transaction) => {
-      const date = new Date(transaction.originalDate)
-      return (
-        (date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) ||
-        (date.getMonth() === now.getMonth() - 1 && date.getFullYear() === now.getFullYear())
-      )
-    })
     .toSorted((a, b) => b.originalDate.getTime() - a.originalDate.getTime())
 }

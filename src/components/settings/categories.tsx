@@ -40,17 +40,42 @@ const CategoryForm = ({ category, onFinish }: { category?: Category; onFinish: (
   const queryClient = useQueryClient()
   const [label, setLabel] = useState(category?.label ?? "")
   const [slug, setSlug] = useState("")
+  const [color, setColor] = useState(category?.color ?? "#64748b")
+  const [sortOrder, setSortOrder] = useState(
+    category?.sortOrder !== undefined ? String(category.sortOrder) : "",
+  )
   const finalSlug = category ? category.slug : slug.trim() || toSlug(label)
 
   const mutation = useMutation({
     mutationKey: ["saveCategory"],
-    mutationFn: () =>
-      category
-        ? editCategory({ data: { id: category.id, label } })
-        : addCategory({ data: { slug: finalSlug, label } }),
+    mutationFn: () => {
+      const parsedOrder = sortOrder.trim() ? Number.parseInt(sortOrder, 10) : undefined
+      return category
+        ? editCategory({
+            data: {
+              id: category.id,
+              label,
+              color,
+              ...(parsedOrder !== undefined && Number.isFinite(parsedOrder)
+                ? { sortOrder: parsedOrder }
+                : {}),
+            },
+          })
+        : addCategory({
+            data: {
+              slug: finalSlug,
+              label,
+              color,
+              ...(parsedOrder !== undefined && Number.isFinite(parsedOrder)
+                ? { sortOrder: parsedOrder }
+                : {}),
+            },
+          })
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] })
       queryClient.invalidateQueries({ queryKey: ["mapping"] })
+      queryClient.invalidateQueries({ queryKey: ["budget"] })
       onFinish()
     },
   })
@@ -71,7 +96,7 @@ const CategoryForm = ({ category, onFinish }: { category?: Category; onFinish: (
             onChange={(e) => setLabel(e.target.value)}
             placeholder="🛒 Courses"
           />
-          <FieldDescription>Shown in the results and mapping lists</FieldDescription>
+          <FieldDescription>Shown in budget envelopes, transactions, and mappings</FieldDescription>
         </Field>
         {!category && (
           <Field>
@@ -87,6 +112,31 @@ const CategoryForm = ({ category, onFinish }: { category?: Category; onFinish: (
             </FieldDescription>
           </Field>
         )}
+        <div className="grid grid-cols-2 gap-3">
+          <Field>
+            <FieldLabel htmlFor="category-color">Chart Color</FieldLabel>
+            <div className="flex items-center gap-2">
+              <input
+                id="category-color"
+                type="color"
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+                className="h-8 w-10 cursor-pointer border bg-transparent p-0.5"
+              />
+              <Input value={color} onChange={(e) => setColor(e.target.value)} />
+            </div>
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="category-order">Sort Order</FieldLabel>
+            <Input
+              id="category-order"
+              type="number"
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              placeholder="Auto"
+            />
+          </Field>
+        </div>
         {mutation.isError && (
           <p className="text-xs text-destructive">
             {mutation.error instanceof Error ? mutation.error.message : "Failed to save category"}
@@ -134,6 +184,7 @@ const DeleteCategoryButton = ({ category }: { category: Category }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] })
       queryClient.invalidateQueries({ queryKey: ["mapping"] })
+      queryClient.invalidateQueries({ queryKey: ["budget"] })
       setIsOpen(false)
     },
   })
@@ -151,7 +202,7 @@ const DeleteCategoryButton = ({ category }: { category: Category }) => {
         <DialogHeader>
           <DialogTitle>Delete Category</DialogTitle>
           <DialogDescription>
-            Delete "{category.label}"? Mappings using it must be changed first.
+            Delete "{category.label}"? Mappings and transactions using it must be changed first.
           </DialogDescription>
         </DialogHeader>
         {mutation.isError && (
@@ -194,19 +245,37 @@ export const CategoriesSettings = () => {
       </CardHeader>
       <CardContent>
         <Table>
-          <TableCaption>A list of all categories available for mappings</TableCaption>
+          <TableCaption>
+            Categories available for envelopes, transactions, and mappings
+          </TableCaption>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-12">Order</TableHead>
               <TableHead>Label</TableHead>
               <TableHead>Slug</TableHead>
-              <TableHead className="w-16">Actions</TableHead>
+              <TableHead>Color</TableHead>
+              <TableHead className="w-24 text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {categoriesQuery.data.map((category) => (
               <TableRow key={category.id}>
+                <TableCell className="text-muted-foreground tabular-nums">
+                  {category.sortOrder}
+                </TableCell>
                 <TableCell>{category.label}</TableCell>
-                <TableCell>{category.slug}</TableCell>
+                <TableCell className="text-muted-foreground">{category.slug}</TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="inline-block size-3.5 rounded-full border"
+                      style={{ backgroundColor: category.color ?? "#64748b" }}
+                    />
+                    <span className="font-mono text-xs text-muted-foreground">
+                      {category.color ?? "—"}
+                    </span>
+                  </div>
+                </TableCell>
                 <TableCell>
                   <div className="flex justify-end">
                     <CategoryDialog

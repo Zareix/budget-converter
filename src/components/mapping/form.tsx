@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useSharePresets } from "@/hooks/use-share-presets"
 import type { Mapping } from "@/lib/mapping/constant"
 import { MODES } from "@/lib/mapping/constant"
 import { addMapping, editMapping, getCategories } from "@/lib/server/functions"
@@ -31,6 +32,7 @@ const mappingFormSchema = v.variant("mode", [
       v.minLength(1, "To category cannot be empty"),
     ),
     exclude: v.boolean(),
+    defaultShareOption: v.string(),
   }),
   v.object({
     mode: v.literal("exact-name-price"),
@@ -45,8 +47,20 @@ const mappingFormSchema = v.variant("mode", [
     ),
     fromPrice: v.number(),
     exclude: v.boolean(),
+    defaultShareOption: v.string(),
   }),
 ])
+
+const toShareOption = (val: number | null | undefined): string => {
+  if (val === null || val === undefined) return "auto"
+  return String(val)
+}
+
+const fromShareOption = (opt: string): number | null => {
+  if (opt === "auto" || opt === "") return null
+  const parsed = Number.parseInt(opt, 10)
+  return Number.isFinite(parsed) ? parsed : null
+}
 
 type Props = {
   previousValues?: Mapping
@@ -58,9 +72,39 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
   const queryClient = useQueryClient()
   const categoriesQuery = useQuery({ queryKey: ["categories"], queryFn: getCategories })
   const categories = categoriesQuery.data ?? []
+  const { presets: sharePresets } = useSharePresets()
+  const shareOptions = [
+    { value: "auto", label: "Auto (use payment method)" },
+    ...sharePresets.map((p) => ({ value: String(p.percent), label: `${p.label} (${p.percent}%)` })),
+  ]
+
+  const toPayload = (value: v.InferInput<typeof mappingFormSchema>) => {
+    const defaultSharePercent = fromShareOption(value.defaultShareOption)
+    if (value.mode === "exact-name-price") {
+      return {
+        mode: value.mode,
+        fromName: value.fromName,
+        toName: value.toName,
+        toCategory: value.toCategory,
+        fromPrice: value.fromPrice,
+        exclude: value.exclude,
+        defaultSharePercent,
+      }
+    }
+    return {
+      mode: value.mode,
+      fromName: value.fromName,
+      toName: value.toName,
+      toCategory: value.toCategory,
+      exclude: value.exclude,
+      defaultSharePercent,
+    }
+  }
+
   const addMappingMutation = useMutation({
     mutationKey: ["addMapping"],
-    mutationFn: async (data: v.InferInput<typeof mappingFormSchema>) => addMapping({ data }),
+    mutationFn: async (data: v.InferInput<typeof mappingFormSchema>) =>
+      addMapping({ data: toPayload(data) }),
     onSuccess: () => {
       toast.success("Mapping created successfully")
       queryClient.invalidateQueries({ queryKey: ["mapping"] })
@@ -71,13 +115,14 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
       toast.error(error instanceof Error ? error.message : "Failed to create mapping")
     },
   })
+
   const editMappingMutation = useMutation({
     mutationKey: ["editMapping"],
     mutationFn: async (data: v.InferInput<typeof mappingFormSchema>) =>
       editMapping({
         data: {
           id: previousValues!.id!,
-          new: data,
+          new: toPayload(data),
         },
       }),
     onSuccess: () => {
@@ -91,6 +136,8 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
     },
   })
 
+  const isPending = addMappingMutation.isPending || editMappingMutation.isPending
+
   const form = useForm({
     validators: {
       onSubmit: mappingFormSchema,
@@ -102,6 +149,9 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
       toCategory: defaultValues?.toCategory ?? previousValues?.toCategory ?? "",
       fromPrice: defaultValues?.fromPrice ?? previousValues?.fromPrice ?? 0,
       exclude: defaultValues?.exclude ?? previousValues?.exclude ?? false,
+      defaultShareOption: toShareOption(
+        defaultValues?.defaultSharePercent ?? previousValues?.defaultSharePercent,
+      ),
     } as v.InferInput<typeof mappingFormSchema>,
     onSubmit: ({ value }) => {
       if (previousValues) {
@@ -247,6 +297,38 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
           }}
         </form.Field>
 
+        <form.Field name="defaultShareOption">
+          {(field) => (
+            <Field>
+              <FieldLabel htmlFor="default-share-select">Default Share</FieldLabel>
+              <Select
+                name={field.name}
+                value={field.state.value}
+                onValueChange={(value) => {
+                  if (value) {
+                    field.handleChange(value)
+                  }
+                }}
+                items={shareOptions}
+              >
+                <SelectTrigger id="default-share-select">
+                  <SelectValue placeholder="Auto (use payment method)" />
+                </SelectTrigger>
+                <SelectContent>
+                  {shareOptions.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FieldDescription>
+                Optional share override applied when importing matching transactions
+              </FieldDescription>
+            </Field>
+          )}
+        </form.Field>
+
         <form.Field name="mode">
           {(modeField) => {
             if (modeField.state.value !== "exact-name-price") {
@@ -306,20 +388,11 @@ export const CreateMappingForm = ({ onFinish, previousValues, defaultValues }: P
         </form.Field>
 
         <div className="flex justify-end gap-2 pt-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => form.reset()}
-            disabled={addMappingMutation.isPending}
-          >
+          <Button type="button" variant="outline" onClick={() => form.reset()} disabled={isPending}>
             Reset
           </Button>
-          <Button type="submit" disabled={addMappingMutation.isPending}>
-            {addMappingMutation.isPending
-              ? "Saving..."
-              : previousValues
-                ? "Save Changes"
-                : "Create Mapping"}
+          <Button type="submit" disabled={isPending}>
+            {isPending ? "Saving..." : previousValues ? "Save Changes" : "Create Mapping"}
           </Button>
         </div>
       </FieldGroup>
