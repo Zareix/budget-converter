@@ -34,6 +34,7 @@ export const getMapping = async () => {
       toCategoryLabel: categoryLabel ?? row.toCategory,
       ...(row.fromPrice !== null && { fromPrice: row.fromPrice }),
       ...(row.exclude && { exclude: row.exclude }),
+      ...(row.defaultSharePercent !== null && { defaultSharePercent: row.defaultSharePercent }),
     }))
     .toSorted(compareMapping)
 }
@@ -60,6 +61,8 @@ export const findInMapping = (
         exclude: mapped.exclude ?? false,
         name: mapped.toName,
         category: mapped.toCategoryLabel,
+        categorySlug: mapped.toCategory,
+        defaultSharePercent: mapped.defaultSharePercent ?? null,
       }
     : null
 }
@@ -72,6 +75,7 @@ export const addMapping = async (mapping: Mapping) => {
     toCategory: mapping.toCategory,
     fromPrice: mapping.fromPrice ?? null,
     exclude: mapping.exclude ?? false,
+    defaultSharePercent: mapping.defaultSharePercent ?? null,
   })
 }
 
@@ -85,6 +89,7 @@ export const editMapping = async ({ id, new: newMapping }: { id: number; new: Ma
       toCategory: newMapping.toCategory,
       fromPrice: newMapping.fromPrice ?? null,
       exclude: newMapping.exclude ?? false,
+      defaultSharePercent: newMapping.defaultSharePercent ?? null,
     })
     .where(eq(mappings.id, id))
 }
@@ -103,6 +108,7 @@ export const bulkAddMappings = async (items: Array<Mapping>) => {
       toCategory: LEGACY_CATEGORY_SLUGS[m.toCategory] ?? m.toCategory,
       fromPrice: m.fromPrice ?? null,
       exclude: m.exclude ?? false,
+      defaultSharePercent: m.defaultSharePercent ?? null,
     })),
   )
 }

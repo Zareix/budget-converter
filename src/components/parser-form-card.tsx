@@ -1,6 +1,5 @@
 import { useForm } from "@tanstack/react-form"
 import { useMutation } from "@tanstack/react-query"
-import { Link } from "@tanstack/react-router"
 import { toast } from "sonner"
 import * as v from "valibot"
 
@@ -222,9 +221,6 @@ export const ParserFormCard = () => {
             disabled={parseFileWithProviderMutation.isPending || !form.state.isValid}
           >
             {parseFileWithProviderMutation.isPending ? "Processing..." : "Parse"}
-          </Button>
-          <Button type="button" variant="link" className="ml-auto">
-            <Link to="/settings">Settings</Link>
           </Button>
         </Field>
       </CardFooter>

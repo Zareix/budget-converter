@@ -5,6 +5,7 @@ import { CreateMappingButton } from "@/components/mapping/create"
 import { DeleteMappingButton } from "@/components/mapping/delete"
 import { EditMappingButton } from "@/components/mapping/edit"
 import { ImportMappingButton } from "@/components/mapping/import"
+import { SharePill } from "@/components/share-pill"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -81,18 +82,26 @@ export const Mappings = () => {
                 <TableHead>From Name</TableHead>
                 <TableHead>To Name</TableHead>
                 <TableHead>To Category</TableHead>
+                <TableHead>Default Share</TableHead>
                 <TableHead>From Price</TableHead>
                 <TableHead>Exclude</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mappingQuery.data.map((mapping, idx) => (
-                <TableRow key={idx}>
+              {mappingQuery.data.map((mapping) => (
+                <TableRow key={mapping.id}>
                   <TableCell>{getMappingModeName(mapping.mode)}</TableCell>
                   <TableCell>{mapping.fromName}</TableCell>
                   <TableCell>{mapping.toName}</TableCell>
                   <TableCell>{mapping.toCategoryLabel}</TableCell>
+                  <TableCell>
+                    {mapping.defaultSharePercent !== undefined ? (
+                      <SharePill sharePercent={mapping.defaultSharePercent} />
+                    ) : (
+                      <span className="text-muted-foreground">Auto</span>
+                    )}
+                  </TableCell>
                   <TableCell>{mapping.fromPrice ?? "-"}</TableCell>
                   <TableCell>{mapping.exclude ? "Yes" : "No"}</TableCell>
                   <TableCell>

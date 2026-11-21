@@ -32,9 +32,7 @@
       "indexes": {
         "categories_slug_unique": {
           "name": "categories_slug_unique",
-          "columns": [
-            "slug"
-          ],
+          "columns": ["slug"],
           "isUnique": true
         }
       },
@@ -148,12 +146,8 @@
           "name": "mappings_to_category_categories_slug_fk",
           "tableFrom": "mappings",
           "tableTo": "categories",
-          "columnsFrom": [
-            "to_category"
-          ],
-          "columnsTo": [
-            "slug"
-          ],
+          "columnsFrom": ["to_category"],
+          "columnsTo": ["slug"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

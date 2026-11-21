@@ -6,6 +6,7 @@ import type { Transaction } from "@/lib/parsers"
 type TransactionsContextValue = {
   transactions: Array<Transaction>
   setTransactions: (transactions: Array<Transaction>) => void
+  updateTransactionAt: (index: number, patch: Partial<Transaction>) => void
   resetTransactions: () => void
 }
 
@@ -22,6 +23,12 @@ export const TransactionsProvider = ({ children }: TransactionsProviderProps) =>
     setTransactionsState(next)
   }
 
+  const updateTransactionAt = (index: number, patch: Partial<Transaction>) => {
+    setTransactionsState((prev) =>
+      prev.map((item, i) => (i === index ? { ...item, ...patch } : item)),
+    )
+  }
+
   const resetTransactions = () => {
     setTransactionsState([])
   }
@@ -31,6 +38,7 @@ export const TransactionsProvider = ({ children }: TransactionsProviderProps) =>
       value={{
         transactions,
         setTransactions,
+        updateTransactionAt,
         resetTransactions,
       }}
     >

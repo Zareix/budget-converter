@@ -4,6 +4,7 @@ import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router"
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import { Toaster } from "sonner"
 
+import { NavBar } from "@/components/nav-bar"
 import { useFaviconTheme } from "@/hooks/use-favicon-theme"
 
 import appCss from "../styles.css?url"
@@ -19,7 +20,7 @@ export const Route = createRootRoute({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "Budget Converter",
+        title: "Budget",
       },
     ],
     links: [
@@ -34,7 +35,11 @@ export const Route = createRootRoute({
       },
     ],
   }),
-  notFoundComponent: () => <div>Not found</div>,
+  notFoundComponent: () => (
+    <div className="mx-auto max-w-4xl px-4 py-12 text-center text-sm text-muted-foreground">
+      Page not found
+    </div>
+  ),
   shellComponent: RootDocument,
 })
 
@@ -45,7 +50,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="min-h-screen">
+        <NavBar />
         <main>{children}</main>
         <Toaster richColors />
         <TanStackDevtools

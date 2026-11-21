@@ -1,10 +1,12 @@
-import { Link, createFileRoute } from "@tanstack/react-router"
-import { ChevronLeftIcon } from "lucide-react"
+import { createFileRoute } from "@tanstack/react-router"
 import * as v from "valibot"
 
 import { Mappings } from "@/components/mapping"
+import { AccountsSettings } from "@/components/settings/accounts"
 import { CategoriesSettings } from "@/components/settings/categories"
 import { EnableBankingSettings } from "@/components/settings/enable-banking"
+import { PaymentMethodsSettings } from "@/components/settings/payment-methods"
+import { SharePresetsSettings } from "@/components/settings/share-presets"
 
 export const Route = createFileRoute("/settings")({
   component: SettingsRouteComponent,
@@ -15,15 +17,13 @@ export const Route = createFileRoute("/settings")({
 
 function SettingsRouteComponent() {
   return (
-    <div className="mx-auto flex min-h-screen max-w-4xl flex-col gap-6 py-8">
-      <h1 className="flex items-center gap-2 text-2xl font-bold">
-        <Link to="/">
-          <ChevronLeftIcon />
-        </Link>
-        Settings
-      </h1>
+    <div className="mx-auto flex min-h-screen max-w-5xl flex-col gap-6 px-4 py-6">
+      <h1 className="text-xl font-semibold tracking-tight">Settings</h1>
       <Mappings />
       <CategoriesSettings />
+      <SharePresetsSettings />
+      <AccountsSettings />
+      <PaymentMethodsSettings />
       <EnableBankingSettings />
     </div>
   )
