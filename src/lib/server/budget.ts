@@ -4,8 +4,10 @@ import * as v from "valibot"
 import * as accounts from "@/lib/accounts"
 import * as budget from "@/lib/budget"
 import { ACCOUNT_TYPES } from "@/lib/db/schema"
+import { SUBTRACKER_METRICS } from "@/lib/fetcher/subtracker"
 import * as paymentMethods from "@/lib/payment-methods"
 import * as sharePresets from "@/lib/share-presets"
+import * as subtracker from "@/lib/subtracker"
 
 const monthIdSchema = v.pipe(
   v.string(),
@@ -325,3 +327,75 @@ export const importTransactions = createServerFn({ method: "POST" })
     }),
   )
   .handler(({ data }) => budget.importTransactions(data.items))
+
+// -------------------------------- SUBTRACKER SYNC -------------------------------- //
+
+export const getSubtrackerStatus = createServerFn().handler(subtracker.getSubtrackerStatus)
+
+export const getSubtrackerBillRules = createServerFn().handler(subtracker.getSubtrackerBillRules)
+
+export const addSubtrackerBillRule = createServerFn({ method: "POST" })
+  .validator(
+    v.object({
+      name: v.pipe(v.string(), v.minLength(1, "Name is required")),
+      fromAccountId: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
+      sharePercent: sharePercentSchema,
+      dueDay: v.optional(
+        v.nullable(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(31))),
+      ),
+      paymentMethodIds: v.optional(v.nullable(v.string())),
+      categoryIds: v.optional(v.nullable(v.string())),
+      enabled: v.optional(v.boolean()),
+      sortOrder: v.optional(v.pipe(v.number(), v.integer())),
+    }),
+  )
+  .handler(({ data }) => subtracker.addSubtrackerBillRule(data))
+
+export const editSubtrackerBillRule = createServerFn({ method: "POST" })
+  .validator(
+    v.object({
+      id: v.pipe(v.number(), v.integer()),
+      name: v.pipe(v.string(), v.minLength(1, "Name is required")),
+      fromAccountId: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
+      sharePercent: sharePercentSchema,
+      dueDay: v.optional(
+        v.nullable(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(31))),
+      ),
+      paymentMethodIds: v.optional(v.nullable(v.string())),
+      categoryIds: v.optional(v.nullable(v.string())),
+      enabled: v.boolean(),
+      sortOrder: v.optional(v.pipe(v.number(), v.integer())),
+    }),
+  )
+  .handler(({ data }) => subtracker.editSubtrackerBillRule(data))
+
+export const deleteSubtrackerBillRule = createServerFn({ method: "POST" })
+  .validator(v.object({ id: v.pipe(v.number(), v.integer()) }))
+  .handler(({ data }) => subtracker.deleteSubtrackerBillRule(data.id))
+
+export const testSubtrackerRule = createServerFn({ method: "POST" })
+  .validator(
+    v.object({
+      paymentMethodIds: v.optional(v.nullable(v.string())),
+      categoryIds: v.optional(v.nullable(v.string())),
+    }),
+  )
+  .handler(({ data }) => subtracker.testSubtrackerRule(data))
+
+export const previewSubtrackerBillsSync = createServerFn({ method: "POST" })
+  .validator(
+    v.object({
+      monthId: monthIdSchema,
+      metric: v.optional(v.picklist(SUBTRACKER_METRICS)),
+    }),
+  )
+  .handler(({ data }) => subtracker.previewSubtrackerBillsSync(data))
+
+export const applySubtrackerBillsSync = createServerFn({ method: "POST" })
+  .validator(
+    v.object({
+      monthId: monthIdSchema,
+      metric: v.optional(v.picklist(SUBTRACKER_METRICS)),
+    }),
+  )
+  .handler(({ data }) => subtracker.applySubtrackerBillsSync(data))

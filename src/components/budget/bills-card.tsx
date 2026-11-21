@@ -1,17 +1,19 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { EditIcon, PlusIcon, TrashIcon } from "lucide-react"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { ArrowRightIcon, EditIcon, PlusIcon, RefreshCwIcon, TrashIcon } from "lucide-react"
 import { useState } from "react"
 import type { ReactElement } from "react"
 import { toast } from "sonner"
 
 import { InlineAmountInput } from "@/components/budget/inline-amount-input"
 import { SharePill } from "@/components/share-pill"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -40,9 +42,23 @@ import {
   computeShareCents,
   formatCents,
   formatCentsPlain,
+  formatMonthLabel,
   parseAmountToCents,
 } from "@/lib/budget/calculations"
-import { addBill, deleteBill, updateBill } from "@/lib/server/budget"
+import type { SubtrackerMetric } from "@/lib/fetcher/subtracker"
+import {
+  SUBTRACKER_METRICS,
+  SUBTRACKER_METRIC_LABELS,
+  resolveMetricForMonth,
+} from "@/lib/fetcher/subtracker"
+import {
+  addBill,
+  applySubtrackerBillsSync,
+  deleteBill,
+  getSubtrackerStatus,
+  previewSubtrackerBillsSync,
+  updateBill,
+} from "@/lib/server/budget"
 import { cn } from "@/lib/utils"
 
 type AccountOption = {
@@ -60,6 +76,7 @@ type BillItem = {
   sharePercent: number
   budgetCents: number
   paid: boolean
+  subtrackerRuleId: number | null
 }
 
 type BillsCardProps = {
@@ -67,6 +84,194 @@ type BillsCardProps = {
   bills: Array<BillItem>
   accounts: Array<AccountOption>
   summary: MonthSummary
+}
+
+const SubtrackerSyncDialog = ({ monthId }: { monthId: string }) => {
+  const queryClient = useQueryClient()
+  const [open, setOpen] = useState(false)
+  const autoMetric = resolveMetricForMonth(monthId)
+  const [metric, setMetric] = useState<SubtrackerMetric>(autoMetric ?? "totalThisMonth")
+
+  const handleOpenChange = (next: boolean) => {
+    setOpen(next)
+    if (next) {
+      setMetric(resolveMetricForMonth(monthId) ?? "totalThisMonth")
+    }
+  }
+
+  const previewQuery = useQuery({
+    queryKey: ["subtrackerPreview", monthId, metric],
+    queryFn: () => previewSubtrackerBillsSync({ data: { monthId, metric } }),
+    enabled: open,
+    retry: false,
+  })
+
+  const applyMutation = useMutation({
+    mutationKey: ["applySubtrackerSync", monthId],
+    mutationFn: () => applySubtrackerBillsSync({ data: { monthId, metric } }),
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({ queryKey: ["budget", monthId] })
+      queryClient.invalidateQueries({ queryKey: ["months"] })
+      const parts: Array<string> = []
+      if (res.created > 0) parts.push(`${res.created} created`)
+      if (res.updated > 0) parts.push(`${res.updated} updated`)
+      if (res.unchanged > 0) parts.push(`${res.unchanged} unchanged`)
+      toast.success(`Subtracker sync complete (${parts.join(", ") || "no changes"})`)
+      setOpen(false)
+    },
+    onError: (err) => {
+      toast.error(err instanceof Error ? err.message : "Failed to sync from Subtracker")
+    },
+  })
+
+  const items = previewQuery.data?.items ?? []
+  const hasChanges = items.some((item) => item.action !== "unchanged")
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogTrigger
+        render={
+          <Button variant="outline" size="sm">
+            <RefreshCwIcon className="size-3.5" />
+            Sync Subtracker
+          </Button>
+        }
+      />
+      <DialogContent className="sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Sync Bills from Subtracker</DialogTitle>
+          <DialogDescription>
+            Preview subscription totals for {formatMonthLabel(monthId)} before updating Bills.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="flex flex-col gap-3">
+          <Field>
+            <FieldLabel htmlFor="st-sync-metric">Subtracker Metric</FieldLabel>
+            <Select
+              value={metric}
+              items={SUBTRACKER_METRICS.map((m) => ({
+                value: m,
+                label: SUBTRACKER_METRIC_LABELS[m],
+              }))}
+              onValueChange={(v) => {
+                if (v) setMetric(v)
+              }}
+            >
+              <SelectTrigger id="st-sync-metric">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {SUBTRACKER_METRICS.map((m) => (
+                  <SelectItem key={m} value={m}>
+                    {SUBTRACKER_METRIC_LABELS[m]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {!autoMetric && (
+              <p className="text-xs text-amber-600 dark:text-amber-400">
+                Subtracker&apos;s API only exposes the current and next calendar months — choose the
+                metric you want to apply to {formatMonthLabel(monthId)}.
+              </p>
+            )}
+          </Field>
+
+          {previewQuery.isLoading ? (
+            <div className="py-6 text-center text-xs text-muted-foreground">
+              Fetching stats from Subtracker...
+            </div>
+          ) : previewQuery.isError ? (
+            <div className="border border-destructive/30 bg-destructive/5 p-3 text-xs text-destructive">
+              {previewQuery.error instanceof Error
+                ? previewQuery.error.message
+                : "Failed to fetch Subtracker stats"}
+            </div>
+          ) : items.length === 0 ? (
+            <div className="py-6 text-center text-xs text-muted-foreground">
+              No active Subtracker sync rules found. Configure rules in Settings.
+            </div>
+          ) : (
+            <div className="border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Bill</TableHead>
+                    <TableHead className="text-right">Amount</TableHead>
+                    <TableHead className="w-24 text-right">Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {items.map((item) => (
+                    <TableRow key={item.ruleId}>
+                      <TableCell className="font-medium">{item.name}</TableCell>
+                      <TableCell className="text-right text-xs tabular-nums">
+                        {item.currentBudgetCents !== null &&
+                        item.currentBudgetCents !== item.newBudgetCents ? (
+                          <span className="inline-flex items-center gap-1">
+                            <span className="text-muted-foreground line-through">
+                              {formatCents(item.currentBudgetCents)}
+                            </span>
+                            <ArrowRightIcon className="size-3 text-muted-foreground" />
+                            <span className="font-semibold">
+                              {formatCents(item.newBudgetCents)}
+                            </span>
+                          </span>
+                        ) : (
+                          <span className="font-semibold">{formatCents(item.newBudgetCents)}</span>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Badge
+                          variant={
+                            item.action === "create"
+                              ? "default"
+                              : item.action === "update"
+                                ? "secondary"
+                                : "outline"
+                          }
+                        >
+                          {item.action === "create"
+                            ? "New"
+                            : item.action === "update"
+                              ? "Update"
+                              : "Same"}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+
+          <div className="flex justify-end gap-2 pt-1">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+              disabled={applyMutation.isPending}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              onClick={() => applyMutation.mutate()}
+              disabled={
+                previewQuery.isLoading ||
+                previewQuery.isError ||
+                items.length === 0 ||
+                !hasChanges ||
+                applyMutation.isPending
+              }
+            >
+              {applyMutation.isPending ? "Syncing..." : "Apply Sync"}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
 }
 
 const BillDialog = ({
@@ -266,6 +471,16 @@ export const BillsCard = ({ monthId, bills, accounts, summary }: BillsCardProps)
   const queryClient = useQueryClient()
   const accountsById = new Map(accounts.map((a) => [a.id, a]))
 
+  const subtrackerStatusQuery = useQuery({
+    queryKey: ["subtrackerStatus"],
+    queryFn: getSubtrackerStatus,
+    staleTime: 60_000,
+  })
+
+  const canSyncSubtracker =
+    (subtrackerStatusQuery.data?.configured ?? false) &&
+    (subtrackerStatusQuery.data?.activeRulesCount ?? 0) > 0
+
   const updateMutation = useMutation({
     mutationKey: ["updateBillInline", monthId],
     mutationFn: (data: Parameters<typeof updateBill>[0]["data"]) => updateBill({ data }),
@@ -290,16 +505,19 @@ export const BillsCard = ({ monthId, bills, accounts, summary }: BillsCardProps)
     <Card>
       <CardHeader className="flex flex-row items-center justify-between gap-2">
         <CardTitle>Bills</CardTitle>
-        <BillDialog
-          monthId={monthId}
-          accounts={accounts}
-          trigger={
-            <Button variant="outline" size="sm">
-              <PlusIcon className="size-3.5" />
-              Add Bill
-            </Button>
-          }
-        />
+        <div className="flex items-center gap-2">
+          {canSyncSubtracker && <SubtrackerSyncDialog monthId={monthId} />}
+          <BillDialog
+            monthId={monthId}
+            accounts={accounts}
+            trigger={
+              <Button variant="outline" size="sm">
+                <PlusIcon className="size-3.5" />
+                Add Bill
+              </Button>
+            }
+          />
+        </div>
       </CardHeader>
       <CardContent>
         <Table>
@@ -342,7 +560,14 @@ export const BillsCard = ({ monthId, bills, accounts, summary }: BillsCardProps)
                       />
                     </TableCell>
                     <TableCell className={cn("font-medium", bill.paid && "text-muted-foreground")}>
-                      {bill.name}
+                      <div className="flex items-center gap-1.5">
+                        <span>{bill.name}</span>
+                        {bill.subtrackerRuleId !== null && (
+                          <Badge variant="outline" className="text-[10px] font-normal">
+                            Subtracker
+                          </Badge>
+                        )}
+                      </div>
                     </TableCell>
                     <TableCell className="text-center text-xs text-muted-foreground tabular-nums">
                       {bill.dueDay ?? "—"}

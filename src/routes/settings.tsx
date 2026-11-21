@@ -7,6 +7,7 @@ import { CategoriesSettings } from "@/components/settings/categories"
 import { EnableBankingSettings } from "@/components/settings/enable-banking"
 import { PaymentMethodsSettings } from "@/components/settings/payment-methods"
 import { SharePresetsSettings } from "@/components/settings/share-presets"
+import { SubtrackerSettings } from "@/components/settings/subtracker"
 
 export const Route = createFileRoute("/settings")({
   component: SettingsRouteComponent,
@@ -24,6 +25,7 @@ function SettingsRouteComponent() {
       <SharePresetsSettings />
       <AccountsSettings />
       <PaymentMethodsSettings />
+      <SubtrackerSettings />
       <EnableBankingSettings />
     </div>
   )

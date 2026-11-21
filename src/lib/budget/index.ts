@@ -93,6 +93,7 @@ export const cloneMonth = async ({
           budgetCents: b.budgetCents,
           actualCents: null,
           paid: false,
+          subtrackerRuleId: b.subtrackerRuleId,
           sortOrder: b.sortOrder,
         })),
       )

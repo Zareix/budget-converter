@@ -111,6 +111,20 @@ export const categoryBudgets = sqliteTable(
   ],
 )
 
+export const subtrackerBillRules = sqliteTable("subtracker_bill_rules", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  fromAccountId: integer("from_account_id").references(() => accounts.id, {
+    onDelete: "set null",
+  }),
+  sharePercent: integer("share_percent").notNull().default(100),
+  dueDay: integer("due_day"),
+  paymentMethodIds: text("payment_method_ids"),
+  categoryIds: text("category_ids"),
+  enabled: integer("enabled", { mode: "boolean" }).notNull().default(true),
+  sortOrder: integer("sort_order").notNull().default(0),
+})
+
 export const bills = sqliteTable(
   "bills",
   {
@@ -127,9 +141,15 @@ export const bills = sqliteTable(
     budgetCents: integer("budget_cents").notNull().default(0),
     actualCents: integer("actual_cents"),
     paid: integer("paid", { mode: "boolean" }).notNull().default(false),
+    subtrackerRuleId: integer("subtracker_rule_id").references(() => subtrackerBillRules.id, {
+      onDelete: "set null",
+    }),
     sortOrder: integer("sort_order").notNull().default(0),
   },
-  (table) => [index("bills_month_idx").on(table.monthId)],
+  (table) => [
+    index("bills_month_idx").on(table.monthId),
+    index("bills_month_subtracker_rule_idx").on(table.monthId, table.subtrackerRuleId),
+  ],
 )
 
 export const incomes = sqliteTable(
