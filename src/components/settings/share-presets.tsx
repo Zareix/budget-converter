@@ -32,6 +32,7 @@ import {
   editSharePreset,
   getSharePresets,
 } from "@/lib/server/budget"
+import { m } from "@/paraglide/messages"
 
 type SharePresetRow = Awaited<ReturnType<typeof getSharePresets>>[number]
 
@@ -83,7 +84,7 @@ const SharePresetForm = ({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["sharePresets"] })
-      toast.success(preset ? "Share preset updated" : "Share preset created")
+      toast.success(preset ? m.share_presets_updated_toast() : m.share_presets_created_toast())
       onFinish()
     },
   })
@@ -97,21 +98,21 @@ const SharePresetForm = ({
     >
       <FieldGroup>
         <Field>
-          <FieldLabel htmlFor="share-preset-label">Label</FieldLabel>
+          <FieldLabel htmlFor="share-preset-label">{m.common_label()}</FieldLabel>
           <Input
             id="share-preset-label"
             value={label}
             onChange={(e) => setLabel(e.target.value)}
-            placeholder="Personal, Shared, Partner, 60/40..."
+            placeholder={m.share_presets_label_placeholder()}
             required
           />
-          <FieldDescription>
-            Displayed in Import, Transactions, Bills, and Mapping rules.
-          </FieldDescription>
+          <FieldDescription>{m.share_presets_label_desc()}</FieldDescription>
         </Field>
         <div className="grid grid-cols-2 gap-3">
           <Field>
-            <FieldLabel htmlFor="share-preset-percent">Percentage (0–100%)</FieldLabel>
+            <FieldLabel htmlFor="share-preset-percent">
+              {m.share_presets_percent_label()}
+            </FieldLabel>
             <Input
               id="share-preset-percent"
               type="number"
@@ -121,22 +122,22 @@ const SharePresetForm = ({
               onChange={(e) => setPercent(e.target.value)}
               required
             />
-            <FieldDescription>Your share of the expense (must be unique).</FieldDescription>
+            <FieldDescription>{m.share_presets_percent_desc()}</FieldDescription>
           </Field>
           <Field>
-            <FieldLabel htmlFor="share-preset-order">Sort Order</FieldLabel>
+            <FieldLabel htmlFor="share-preset-order">{m.common_sort_order()}</FieldLabel>
             <Input
               id="share-preset-order"
               type="number"
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value)}
-              placeholder="Auto"
+              placeholder={m.common_auto()}
             />
-            <FieldDescription>Order used when clicking to cycle shares.</FieldDescription>
+            <FieldDescription>{m.share_presets_order_desc()}</FieldDescription>
           </Field>
         </div>
         <Field>
-          <FieldLabel htmlFor="share-preset-color">Color</FieldLabel>
+          <FieldLabel htmlFor="share-preset-color">{m.common_color()}</FieldLabel>
           <div className="flex items-center gap-2">
             <input
               id="share-preset-color"
@@ -152,7 +153,7 @@ const SharePresetForm = ({
           <p className="text-xs text-destructive">
             {mutation.error instanceof Error
               ? mutation.error.message
-              : "Failed to save share preset"}
+              : m.share_presets_save_error()}
           </p>
         )}
         <Button
@@ -160,7 +161,7 @@ const SharePresetForm = ({
           disabled={!label.trim() || !isPercentValid || mutation.isPending}
           className="self-end"
         >
-          {mutation.isPending ? "Saving..." : "Save"}
+          {mutation.isPending ? m.common_saving() : m.common_save()}
         </Button>
       </FieldGroup>
     </form>
@@ -180,10 +181,10 @@ const SharePresetDialog = ({
       <DialogTrigger render={trigger} />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{preset ? "Edit share preset" : "Create share preset"}</DialogTitle>
-          <DialogDescription>
-            Customize available share percentages, labels, colors, and click-cycle order.
-          </DialogDescription>
+          <DialogTitle>
+            {preset ? m.share_presets_edit_title() : m.share_presets_create_title()}
+          </DialogTitle>
+          <DialogDescription>{m.share_presets_dialog_desc()}</DialogDescription>
         </DialogHeader>
         <SharePresetForm preset={preset} onFinish={() => setIsOpen(false)} />
       </DialogContent>
@@ -205,7 +206,7 @@ const DeleteSharePresetButton = ({
     mutationFn: () => deleteSharePreset({ data: { id: preset.id } }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["sharePresets"] })
-      toast.success("Share preset deleted")
+      toast.success(m.share_presets_deleted_toast())
       setIsOpen(false)
     },
   })
@@ -221,10 +222,9 @@ const DeleteSharePresetButton = ({
       />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete Share Preset</DialogTitle>
+          <DialogTitle>{m.share_presets_delete_title()}</DialogTitle>
           <DialogDescription>
-            Delete "{preset.label} ({preset.percent}%)"? Existing transactions and bills keep their
-            stored percentage.
+            {m.share_presets_delete_desc({ label: preset.label, percent: preset.percent })}
           </DialogDescription>
         </DialogHeader>
         <Button
@@ -232,7 +232,7 @@ const DeleteSharePresetButton = ({
           onClick={() => mutation.mutate()}
           disabled={mutation.isPending}
         >
-          {mutation.isPending ? "Deleting..." : "Delete"}
+          {mutation.isPending ? m.common_deleting() : m.common_delete()}
         </Button>
       </DialogContent>
     </Dialog>
@@ -242,28 +242,26 @@ const DeleteSharePresetButton = ({
 export const SharePresetsSettings = () => {
   const presetsQuery = useQuery({ queryKey: ["sharePresets"], queryFn: getSharePresets })
 
-  if (presetsQuery.isLoading) return <div>Loading share presets...</div>
+  if (presetsQuery.isLoading) return <div>{m.share_presets_loading()}</div>
   if (presetsQuery.isError || !presetsQuery.data) {
-    return <div>Error loading share presets.</div>
+    return <div>{m.share_presets_load_error()}</div>
   }
 
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Share Presets</CardTitle>
+        <CardTitle>{m.share_presets_title()}</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
-          <TableCaption>
-            Available shares shown in Import, Transactions, Bills, Mappings, and Payment Methods
-          </TableCaption>
+          <TableCaption>{m.share_presets_caption()}</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-14">Order</TableHead>
-              <TableHead>Preview</TableHead>
-              <TableHead>Percentage</TableHead>
-              <TableHead>Color</TableHead>
-              <TableHead className="w-24 text-right">Actions</TableHead>
+              <TableHead className="w-14">{m.common_order()}</TableHead>
+              <TableHead>{m.share_presets_col_preview()}</TableHead>
+              <TableHead>{m.share_presets_col_percentage()}</TableHead>
+              <TableHead>{m.common_color()}</TableHead>
+              <TableHead className="w-24 text-right">{m.common_actions()}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -313,7 +311,7 @@ export const SharePresetsSettings = () => {
           trigger={
             <Button variant="outline">
               <PlusIcon />
-              Create Share Preset
+              {m.share_presets_create_button()}
             </Button>
           }
         />

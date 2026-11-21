@@ -19,6 +19,7 @@ import { useTransactions } from "@/context/transactions-context"
 import type { Fetcher } from "@/lib/fetcher"
 import { FETCHERS } from "@/lib/fetcher"
 import { fetchTransactions, listAccounts } from "@/lib/server/functions"
+import { m } from "@/paraglide/messages"
 
 type FetchTransactionsInput = {
   accounts: Array<{
@@ -55,17 +56,17 @@ export function FetcherFormCard() {
     onSuccess: (data) => {
       setTransactions(data)
       if (data.length === 0) {
-        toast.warning("No transactions found for the selected accounts.", {
+        toast.warning(m.fetcher_empty_toast(), {
           position: "bottom-right",
         })
         return
       }
-      toast.success("Transactions fetched successfully!", {
+      toast.success(m.fetcher_success_toast(), {
         position: "bottom-right",
       })
     },
     onError: (error) => {
-      toast.error("Unable to fetch transactions", {
+      toast.error(m.fetcher_error_toast(), {
         description: error.message,
         position: "bottom-right",
       })
@@ -111,17 +112,17 @@ export function FetcherFormCard() {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Fetcher</CardTitle>
-        <CardDescription>Select accounts, then submit to fetch transactions.</CardDescription>
+        <CardTitle>{m.fetcher_title()}</CardTitle>
+        <CardDescription>{m.fetcher_description()}</CardDescription>
       </CardHeader>
 
       <CardContent>
         {listAccountsQuery.isPending ? (
-          <div className="text-sm text-muted-foreground">Loading accounts...</div>
+          <div className="text-sm text-muted-foreground">{m.fetcher_loading_accounts()}</div>
         ) : listAccountsQuery.isError ? (
           <div className="text-sm text-red-500">{listAccountsQuery.error.message}</div>
         ) : accounts.length === 0 ? (
-          <div className="text-sm text-muted-foreground">No accounts available.</div>
+          <div className="text-sm text-muted-foreground">{m.fetcher_no_accounts()}</div>
         ) : (
           <form
             onSubmit={(e) => {
@@ -204,14 +205,14 @@ export function FetcherFormCard() {
             onClick={resetForm}
             disabled={fetchTransactionsMutation.isPending}
           >
-            Reset
+            {m.common_reset()}
           </Button>
           <Button
             type="submit"
             form="fetcher-form"
             disabled={fetchTransactionsMutation.isPending || !form.state.isValid}
           >
-            {fetchTransactionsMutation.isPending ? "Processing..." : "Fetch"}
+            {fetchTransactionsMutation.isPending ? m.common_processing() : m.fetcher_submit()}
           </Button>
         </Field>
       </CardFooter>

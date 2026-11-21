@@ -6,6 +6,8 @@ import { Toaster } from "sonner"
 
 import { NavBar } from "@/components/nav-bar"
 import { useFaviconTheme } from "@/hooks/use-favicon-theme"
+import { m } from "@/paraglide/messages"
+import { getLocale } from "@/paraglide/runtime"
 
 import appCss from "../styles.css?url"
 
@@ -20,7 +22,7 @@ export const Route = createRootRoute({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "Budget",
+        title: m.app_title(),
       },
     ],
     links: [
@@ -37,7 +39,7 @@ export const Route = createRootRoute({
   }),
   notFoundComponent: () => (
     <div className="mx-auto max-w-4xl px-4 py-12 text-center text-sm text-muted-foreground">
-      Page not found
+      {m.app_not_found()}
     </div>
   ),
   shellComponent: RootDocument,
@@ -46,7 +48,7 @@ export const Route = createRootRoute({
 function RootDocument({ children }: { children: React.ReactNode }) {
   useFaviconTheme()
   return (
-    <html lang="en">
+    <html lang={getLocale()}>
       <head>
         <HeadContent />
       </head>

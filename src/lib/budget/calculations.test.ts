@@ -4,6 +4,8 @@ import {
   computeMonthSummary,
   computeShareCents,
   cycleSharePercent,
+  formatCents,
+  formatMonthLabel,
   getShareLabel,
   parseAmountToCents,
   shiftMonthId,
@@ -58,6 +60,12 @@ describe("helpers", () => {
     expect(getShareLabel(60, custom)).toBe("60/40")
     expect(getShareLabel(33, custom)).toBe("33%")
   })
+  test("formatMonthLabel and formatCents respect locale", () => {
+    expect(formatMonthLabel("2026-11", "en")).toBe("November 2026")
+    expect(formatMonthLabel("2026-11", "fr")).toBe("Novembre 2026")
+    expect(formatCents(1250, { locale: "en" })).toBe("€12.50")
+    expect(formatCents(1250, { locale: "fr" }).replace(/\s/g, " ")).toBe("12,50 €")
+  })
 })
 
 describe("computeMonthSummary", () => {
@@ -68,12 +76,12 @@ describe("computeMonthSummary", () => {
         { expectedCents: 10000, actualCents: null },
       ],
       bills: [
-        // Rent 1401.33 shared 50% -> 700.67 (paid)
-        { budgetCents: 140133, sharePercent: 50, paid: true },
-        // Personal bill 107.31, not yet paid
-        { budgetCents: 10731, sharePercent: 100, paid: false },
+        // Rent 1401.33 shared 50% -> 700.67
+        { budgetCents: 140133, sharePercent: 50 },
+        // Personal bill 107.31
+        { budgetCents: 10731, sharePercent: 100 },
         // Other (0%) bill ignored in personal share
-        { budgetCents: 5000, sharePercent: 0, paid: true },
+        { budgetCents: 5000, sharePercent: 0 },
       ],
       savings: [
         { budgetCents: 5000, actualCents: null },
@@ -103,9 +111,9 @@ describe("computeMonthSummary", () => {
     expect(summary.income).toEqual({ budgetCents: 294216, actualCents: 284216 })
     expect(summary.bills).toEqual({
       grossBudgetCents: 155864,
-      grossActualCents: 145133,
+      grossActualCents: 155864,
       budgetCents: 80798, // 70067 + 10731 + 0
-      actualCents: 70067, // 70067 + 0 + 0
+      actualCents: 80798, // 70067 + 10731 + 0
     })
     expect(summary.savings).toEqual({ budgetCents: 15000, actualCents: 10000 })
     expect(summary.expenses).toEqual({
@@ -114,7 +122,7 @@ describe("computeMonthSummary", () => {
     })
     expect(summary.remaining).toEqual({
       budgetCents: 294216 - (80798 + 30000 + 15000),
-      actualCents: 284216 - (70067 + 18600 + 10000),
+      actualCents: 284216 - (80798 + 18600 + 10000),
     })
 
     expect(summary.byCategory["courses"]).toEqual({

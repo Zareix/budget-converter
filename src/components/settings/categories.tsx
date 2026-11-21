@@ -25,6 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { addCategory, deleteCategory, editCategory, getCategories } from "@/lib/server/functions"
+import { m } from "@/paraglide/messages"
 
 type Category = Awaited<ReturnType<typeof getCategories>>[number]
 
@@ -89,32 +90,30 @@ const CategoryForm = ({ category, onFinish }: { category?: Category; onFinish: (
     >
       <FieldGroup>
         <Field>
-          <FieldLabel htmlFor="category-label">Label</FieldLabel>
+          <FieldLabel htmlFor="category-label">{m.common_label()}</FieldLabel>
           <Input
             id="category-label"
             value={label}
             onChange={(e) => setLabel(e.target.value)}
             placeholder="🛒 Courses"
           />
-          <FieldDescription>Shown in budget envelopes, transactions, and mappings</FieldDescription>
+          <FieldDescription>{m.categories_label_desc()}</FieldDescription>
         </Field>
         {!category && (
           <Field>
-            <FieldLabel htmlFor="category-slug">Slug</FieldLabel>
+            <FieldLabel htmlFor="category-slug">{m.common_slug()}</FieldLabel>
             <Input
               id="category-slug"
               value={slug}
               onChange={(e) => setSlug(e.target.value)}
               placeholder={toSlug(label) || "courses"}
             />
-            <FieldDescription>
-              Stable key used by mappings and YAML imports. Defaults to the label.
-            </FieldDescription>
+            <FieldDescription>{m.categories_slug_desc()}</FieldDescription>
           </Field>
         )}
         <div className="grid grid-cols-2 gap-3">
           <Field>
-            <FieldLabel htmlFor="category-color">Chart Color</FieldLabel>
+            <FieldLabel htmlFor="category-color">{m.categories_chart_color()}</FieldLabel>
             <div className="flex items-center gap-2">
               <input
                 id="category-color"
@@ -127,19 +126,19 @@ const CategoryForm = ({ category, onFinish }: { category?: Category; onFinish: (
             </div>
           </Field>
           <Field>
-            <FieldLabel htmlFor="category-order">Sort Order</FieldLabel>
+            <FieldLabel htmlFor="category-order">{m.common_sort_order()}</FieldLabel>
             <Input
               id="category-order"
               type="number"
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value)}
-              placeholder="Auto"
+              placeholder={m.common_auto()}
             />
           </Field>
         </div>
         {mutation.isError && (
           <p className="text-xs text-destructive">
-            {mutation.error instanceof Error ? mutation.error.message : "Failed to save category"}
+            {mutation.error instanceof Error ? mutation.error.message : m.categories_save_error()}
           </p>
         )}
         <Button
@@ -147,7 +146,7 @@ const CategoryForm = ({ category, onFinish }: { category?: Category; onFinish: (
           disabled={!label.trim() || !finalSlug || mutation.isPending}
           className="self-end"
         >
-          {mutation.isPending ? "Saving..." : "Save"}
+          {mutation.isPending ? m.common_saving() : m.common_save()}
         </Button>
       </FieldGroup>
     </form>
@@ -162,11 +161,11 @@ const CategoryDialog = ({ category, trigger }: { category?: Category; trigger: R
       <DialogTrigger render={trigger} />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{category ? "Edit category" : "Create category"}</DialogTitle>
+          <DialogTitle>
+            {category ? m.categories_edit_title() : m.categories_create_title()}
+          </DialogTitle>
           <DialogDescription>
-            {category
-              ? "The slug stays unchanged so existing mappings keep working."
-              : "Add a category to assign to your transactions."}
+            {category ? m.categories_edit_desc() : m.categories_create_desc()}
           </DialogDescription>
         </DialogHeader>
         <CategoryForm category={category} onFinish={() => setIsOpen(false)} />
@@ -200,14 +199,14 @@ const DeleteCategoryButton = ({ category }: { category: Category }) => {
       />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete Category</DialogTitle>
+          <DialogTitle>{m.categories_delete_title()}</DialogTitle>
           <DialogDescription>
-            Delete "{category.label}"? Mappings and transactions using it must be changed first.
+            {m.categories_delete_desc({ label: category.label })}
           </DialogDescription>
         </DialogHeader>
         {mutation.isError && (
           <p className="text-xs text-destructive">
-            {mutation.error instanceof Error ? mutation.error.message : "Failed to delete category"}
+            {mutation.error instanceof Error ? mutation.error.message : m.categories_delete_error()}
           </p>
         )}
         <Button
@@ -215,7 +214,7 @@ const DeleteCategoryButton = ({ category }: { category: Category }) => {
           onClick={() => mutation.mutate()}
           disabled={mutation.isPending}
         >
-          {mutation.isPending ? "Deleting..." : "Delete"}
+          {mutation.isPending ? m.common_deleting() : m.common_delete()}
         </Button>
       </DialogContent>
     </Dialog>
@@ -226,14 +225,18 @@ export const CategoriesSettings = () => {
   const categoriesQuery = useQuery({ queryKey: ["categories"], queryFn: getCategories })
 
   if (categoriesQuery.isLoading) {
-    return <div>Loading categories...</div>
+    return <div>{m.categories_loading()}</div>
   }
 
   if (categoriesQuery.isError || !categoriesQuery.data) {
     return (
       <div>
-        Error loading categories:{" "}
-        {categoriesQuery.error instanceof Error ? categoriesQuery.error.message : "Unknown error"}
+        {m.categories_load_error({
+          message:
+            categoriesQuery.error instanceof Error
+              ? categoriesQuery.error.message
+              : m.common_unknown_error(),
+        })}
       </div>
     )
   }
@@ -241,20 +244,18 @@ export const CategoriesSettings = () => {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Categories</CardTitle>
+        <CardTitle>{m.categories_title()}</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
-          <TableCaption>
-            Categories available for envelopes, transactions, and mappings
-          </TableCaption>
+          <TableCaption>{m.categories_caption()}</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-12">Order</TableHead>
-              <TableHead>Label</TableHead>
-              <TableHead>Slug</TableHead>
-              <TableHead>Color</TableHead>
-              <TableHead className="w-24 text-right">Actions</TableHead>
+              <TableHead className="w-12">{m.common_order()}</TableHead>
+              <TableHead>{m.common_label()}</TableHead>
+              <TableHead>{m.common_slug()}</TableHead>
+              <TableHead>{m.common_color()}</TableHead>
+              <TableHead className="w-24 text-right">{m.common_actions()}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -299,7 +300,7 @@ export const CategoriesSettings = () => {
           trigger={
             <Button variant="outline">
               <PlusIcon />
-              Create Category
+              {m.categories_create_button()}
             </Button>
           }
         />

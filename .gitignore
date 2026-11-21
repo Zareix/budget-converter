@@ -15,3 +15,4 @@ todos.json
 compose.yml
 .data
 db.sqlite*
+project.inlang/cache

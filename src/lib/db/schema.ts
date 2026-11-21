@@ -140,7 +140,6 @@ export const bills = sqliteTable(
     sharePercent: integer("share_percent").notNull().default(100),
     budgetCents: integer("budget_cents").notNull().default(0),
     actualCents: integer("actual_cents"),
-    paid: integer("paid", { mode: "boolean" }).notNull().default(false),
     subtrackerRuleId: integer("subtracker_rule_id").references(() => subtrackerBillRules.id, {
       onDelete: "set null",
     }),

@@ -235,7 +235,6 @@ export const applySubtrackerBillsSync = async ({
           sharePercent: item.sharePercent,
           budgetCents: item.newBudgetCents,
           actualCents: null,
-          paid: false,
           subtrackerRuleId: item.ruleId,
           sortOrder: nextSortOrder,
         })

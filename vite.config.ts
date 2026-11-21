@@ -1,3 +1,4 @@
+import { paraglideVitePlugin } from "@inlang/paraglide-js"
 import tailwindcss from "@tailwindcss/vite"
 import { devtools } from "@tanstack/devtools-vite"
 import { tanstackStart } from "@tanstack/react-start/plugin/vite"
@@ -7,6 +8,14 @@ import { defineConfig } from "vite"
 
 const config = defineConfig({
   plugins: [
+    paraglideVitePlugin({
+      project: "./project.inlang",
+      outdir: "./src/paraglide",
+      outputStructure: "locale-modules",
+      strategy: ["cookie", "preferredLanguage", "baseLocale"],
+      emitGitIgnore: false,
+      emitReadme: false,
+    }),
     devtools(),
     // Workaround for rolldown#9993: the __commonJSMin runtime helper gets
     // hoisted into a chunk that is part of an import cycle, breaking SSR at

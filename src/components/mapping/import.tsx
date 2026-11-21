@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { importMappingsFromYaml } from "@/lib/server/functions"
+import { m } from "@/paraglide/messages"
 
 export const ImportMappingButton = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -33,14 +34,14 @@ export const ImportMappingButton = () => {
       <DialogTrigger
         render={
           <Button variant="outline" className="ml-2">
-            Import YAML
+            {m.mapping_import_button()}
           </Button>
         }
       />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Import from YAML</DialogTitle>
-          <DialogDescription>Paste the contents of your mapping.yaml file.</DialogDescription>
+          <DialogTitle>{m.mapping_import_title()}</DialogTitle>
+          <DialogDescription>{m.mapping_import_desc()}</DialogDescription>
         </DialogHeader>
         <Textarea
           rows={14}
@@ -53,11 +54,11 @@ export const ImportMappingButton = () => {
         />
         {mutation.isError && (
           <p className="text-xs text-destructive">
-            {mutation.error instanceof Error ? mutation.error.message : "Import failed"}
+            {mutation.error instanceof Error ? mutation.error.message : m.common_import_failed()}
           </p>
         )}
         <Button onClick={() => mutation.mutate()} disabled={!yaml.trim() || mutation.isPending}>
-          {mutation.isPending ? "Importing..." : "Import"}
+          {mutation.isPending ? m.common_importing() : m.common_import()}
         </Button>
       </DialogContent>
     </Dialog>

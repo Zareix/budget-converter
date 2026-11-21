@@ -64,6 +64,8 @@ import {
 } from "@/lib/server/budget"
 import { getCategories } from "@/lib/server/functions"
 import { cn } from "@/lib/utils"
+import { m } from "@/paraglide/messages"
+import { getLocale } from "@/paraglide/runtime"
 
 export const Route = createFileRoute("/transactions")({
   component: TransactionsPage,
@@ -76,7 +78,16 @@ export const Route = createFileRoute("/transactions")({
 const formatShortDate = (isoDate: string): string => {
   const parts = isoDate.split("-")
   if (parts.length !== 3) return isoDate
-  return `${parts[2]}/${parts[1]}`
+  const year = Number.parseInt(parts[0] ?? "", 10)
+  const month = Number.parseInt(parts[1] ?? "", 10)
+  const day = Number.parseInt(parts[2] ?? "", 10)
+  if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) return isoDate
+  const date = new Date(Date.UTC(year, month - 1, day))
+  return new Intl.DateTimeFormat(getLocale() === "fr" ? "fr-FR" : "en-US", {
+    day: "2-digit",
+    month: "2-digit",
+    timeZone: "UTC",
+  }).format(date)
 }
 
 function TransactionsPage() {
@@ -128,7 +139,7 @@ function TransactionsPage() {
       queryClient.invalidateQueries({ queryKey: ["budget", monthId] })
     },
     onError: (err) => {
-      toast.error(err instanceof Error ? err.message : "Failed to update transaction")
+      toast.error(err instanceof Error ? err.message : m.tx_update_error())
     },
   })
 
@@ -138,10 +149,10 @@ function TransactionsPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions", monthId] })
       queryClient.invalidateQueries({ queryKey: ["budget", monthId] })
-      toast.success("Transaction deleted")
+      toast.success(m.tx_deleted_toast())
     },
     onError: (err) => {
-      toast.error(err instanceof Error ? err.message : "Failed to delete transaction")
+      toast.error(err instanceof Error ? err.message : m.tx_delete_error())
     },
   })
 
@@ -207,7 +218,7 @@ function TransactionsPage() {
             className="-ml-2"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Date
+            {m.common_date()}
             {column.getIsSorted() === "asc" ? (
               <ArrowUpIcon className="ml-1 size-3.5" />
             ) : column.getIsSorted() === "desc" ? (
@@ -223,7 +234,7 @@ function TransactionsPage() {
       },
       {
         accessorKey: "name",
-        header: "Name",
+        header: m.common_name(),
         enableSorting: false,
         cell: ({ row }) => (
           <div className="flex max-w-64 items-center gap-1.5">
@@ -235,7 +246,7 @@ function TransactionsPage() {
             </span>
             {row.original.excluded && (
               <Badge variant="outline" className="shrink-0 text-[10px]">
-                Excluded
+                {m.tx_excluded_badge()}
               </Badge>
             )}
           </div>
@@ -253,7 +264,7 @@ function TransactionsPage() {
               className="-mr-2"
               onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
-              Amount
+              {m.common_amount()}
               {column.getIsSorted() === "asc" ? (
                 <ArrowUpIcon className="ml-1 size-3.5" />
               ) : column.getIsSorted() === "desc" ? (
@@ -275,7 +286,7 @@ function TransactionsPage() {
       },
       {
         id: "category",
-        header: "Category",
+        header: m.common_category(),
         enableSorting: false,
         cell: ({ row }) => (
           <Select
@@ -301,7 +312,7 @@ function TransactionsPage() {
       },
       {
         id: "paymentMethod",
-        header: "Payment Method",
+        header: m.common_payment_method(),
         enableSorting: false,
         cell: ({ row }) => {
           const pm = row.original.paymentMethodId ? pmById.get(row.original.paymentMethodId) : null
@@ -314,7 +325,7 @@ function TransactionsPage() {
       },
       {
         id: "share",
-        header: "Share",
+        header: m.common_share(),
         enableSorting: false,
         cell: ({ row }) => (
           <SharePill
@@ -325,7 +336,7 @@ function TransactionsPage() {
       },
       {
         id: "yourShare",
-        header: () => <div className="text-right">Your Share</div>,
+        header: () => <div className="text-right">{m.common_your_share()}</div>,
         enableSorting: false,
         cell: ({ row }) => {
           const shareCents = computeShareCents(row.original.amountCents, row.original.sharePercent)
@@ -346,7 +357,7 @@ function TransactionsPage() {
       },
       {
         id: "actions",
-        header: () => <div className="text-right">Actions</div>,
+        header: () => <div className="text-right">{m.common_actions()}</div>,
         enableSorting: false,
         cell: ({ row }) => {
           const tx = row.original
@@ -355,8 +366,8 @@ function TransactionsPage() {
               <Button
                 variant="ghost"
                 size="icon-sm"
-                title={tx.excluded ? "Include in budget" : "Exclude from budget"}
-                aria-label={tx.excluded ? "Include in budget" : "Exclude from budget"}
+                title={tx.excluded ? m.tx_include_action() : m.tx_exclude_action()}
+                aria-label={tx.excluded ? m.tx_include_action() : m.tx_exclude_action()}
                 onClick={() => updateMutation.mutate({ id: tx.id, excluded: !tx.excluded })}
               >
                 {tx.excluded ? (
@@ -374,7 +385,7 @@ function TransactionsPage() {
                   defaultSharePercent: tx.sharePercent,
                 }}
                 trigger={
-                  <Button variant="ghost" size="icon-sm" title="Create mapping rule">
+                  <Button variant="ghost" size="icon-sm" title={m.tx_create_mapping_title()}>
                     <SparklesIcon className="size-3.5 text-muted-foreground" />
                   </Button>
                 }
@@ -385,7 +396,7 @@ function TransactionsPage() {
                 categories={categories}
                 paymentMethods={paymentMethods}
                 trigger={
-                  <Button variant="ghost" size="icon-sm" title="Edit transaction">
+                  <Button variant="ghost" size="icon-sm" title={m.tx_edit_title()}>
                     <EditIcon className="size-3.5" />
                   </Button>
                 }
@@ -393,25 +404,28 @@ function TransactionsPage() {
               <AlertDialog>
                 <AlertDialogTrigger
                   render={
-                    <Button variant="ghost" size="icon-sm" title="Delete transaction">
+                    <Button variant="ghost" size="icon-sm" title={m.tx_delete_title()}>
                       <TrashIcon className="size-3.5 text-destructive" />
                     </Button>
                   }
                 />
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Delete transaction?</AlertDialogTitle>
+                    <AlertDialogTitle>{m.tx_delete_confirm_title()}</AlertDialogTitle>
                     <AlertDialogDescription>
-                      Remove "{tx.name}" ({formatCents(tx.amountCents)}) from this month?
+                      {m.tx_delete_confirm_desc({
+                        name: tx.name,
+                        amount: formatCents(tx.amountCents),
+                      })}
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogCancel>{m.common_cancel()}</AlertDialogCancel>
                     <AlertDialogAction
                       variant="destructive"
                       onClick={() => deleteMutation.mutate(tx.id)}
                     >
-                      Delete
+                      {m.common_delete()}
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
@@ -454,7 +468,7 @@ function TransactionsPage() {
             trigger={
               <Button size="sm">
                 <PlusIcon className="size-3.5" />
-                Add Transaction
+                {m.tx_add()}
               </Button>
             }
           />
@@ -468,14 +482,14 @@ function TransactionsPage() {
             <Input
               value={queryText}
               onChange={(e) => setQueryText(e.target.value)}
-              placeholder="Search name..."
+              placeholder={m.tx_search_placeholder()}
               className="w-52"
             />
 
             <Select
               value={categoryFilter}
               items={[
-                { value: "all", label: "All categories" },
+                { value: "all", label: m.tx_filter_all_categories() },
                 ...categories.map((c) => ({ value: c.slug, label: c.label })),
               ]}
               onValueChange={(val) => {
@@ -489,10 +503,10 @@ function TransactionsPage() {
               }}
             >
               <SelectTrigger className="w-44">
-                <SelectValue placeholder="All categories" />
+                <SelectValue placeholder={m.tx_filter_all_categories()} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All categories</SelectItem>
+                <SelectItem value="all">{m.tx_filter_all_categories()}</SelectItem>
                 {categories.map((cat) => (
                   <SelectItem key={cat.slug} value={cat.slug}>
                     {cat.label}
@@ -504,53 +518,53 @@ function TransactionsPage() {
             <Select
               value={paymentMethodFilter}
               items={[
-                { value: "all", label: "All methods" },
+                { value: "all", label: m.tx_filter_all_methods() },
                 ...paymentMethods.map((pm) => ({ value: String(pm.id), label: pm.label })),
-                { value: "none", label: "No method" },
+                { value: "none", label: m.tx_filter_no_method() },
               ]}
               onValueChange={(val) => {
                 if (val) setPaymentMethodFilter(val)
               }}
             >
               <SelectTrigger className="w-44">
-                <SelectValue placeholder="All methods" />
+                <SelectValue placeholder={m.tx_filter_all_methods()} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All methods</SelectItem>
+                <SelectItem value="all">{m.tx_filter_all_methods()}</SelectItem>
                 {paymentMethods.map((pm) => (
                   <SelectItem key={pm.id} value={String(pm.id)}>
                     {pm.label}
                   </SelectItem>
                 ))}
-                <SelectItem value="none">No method</SelectItem>
+                <SelectItem value="none">{m.tx_filter_no_method()}</SelectItem>
               </SelectContent>
             </Select>
 
             <Select
               value={shareFilter}
               items={[
-                { value: "all", label: "All shares" },
+                { value: "all", label: m.tx_filter_all_shares() },
                 ...sharePresets.map((p) => ({
                   value: String(p.percent),
                   label: `${p.label} (${p.percent}%)`,
                 })),
-                { value: "custom", label: "Custom %" },
+                { value: "custom", label: m.tx_filter_custom_share() },
               ]}
               onValueChange={(val) => {
                 if (val) setShareFilter(val)
               }}
             >
               <SelectTrigger className="w-40">
-                <SelectValue placeholder="All shares" />
+                <SelectValue placeholder={m.tx_filter_all_shares()} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All shares</SelectItem>
+                <SelectItem value="all">{m.tx_filter_all_shares()}</SelectItem>
                 {sharePresets.map((p) => (
                   <SelectItem key={p.percent} value={String(p.percent)}>
                     {p.label} ({p.percent}%)
                   </SelectItem>
                 ))}
-                <SelectItem value="custom">Custom %</SelectItem>
+                <SelectItem value="custom">{m.tx_filter_custom_share()}</SelectItem>
               </SelectContent>
             </Select>
 
@@ -559,7 +573,7 @@ function TransactionsPage() {
                 checked={showExcluded}
                 onCheckedChange={(checked) => setShowExcluded(Boolean(checked))}
               />
-              <span>Show excluded</span>
+              <span>{m.tx_show_excluded()}</span>
             </label>
 
             {(queryText ||
@@ -577,24 +591,26 @@ function TransactionsPage() {
                   navigate({ search: (prev) => ({ ...prev, category: undefined }) })
                 }}
               >
-                Clear filters
+                {m.tx_clear_filters()}
               </Button>
             )}
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-3 text-xs">
             <span className="text-muted-foreground">
-              {totals.count} transaction{totals.count !== 1 ? "s" : ""}
+              {totals.count === 1
+                ? m.tx_count_singular({ count: totals.count })
+                : m.tx_count_plural({ count: totals.count })}
             </span>
             <div className="flex items-center gap-4">
               <span className="text-muted-foreground">
-                Gross:{" "}
+                {m.tx_gross_label()}{" "}
                 <strong className="font-medium text-foreground tabular-nums">
                   {formatCents(totals.grossCents)}
                 </strong>
               </span>
               <span>
-                Your Share:{" "}
+                {m.tx_your_share_label()}{" "}
                 <strong className="font-semibold tabular-nums">
                   {formatCents(totals.yourShareCents)}
                 </strong>
@@ -608,13 +624,9 @@ function TransactionsPage() {
       <Card>
         <CardContent className="p-0">
           {transactionsQuery.isLoading ? (
-            <div className="py-12 text-center text-sm text-muted-foreground">
-              Loading transactions...
-            </div>
+            <div className="py-12 text-center text-sm text-muted-foreground">{m.tx_loading()}</div>
           ) : transactionsQuery.isError ? (
-            <div className="py-12 text-center text-sm text-destructive">
-              Failed to load transactions.
-            </div>
+            <div className="py-12 text-center text-sm text-destructive">{m.tx_load_error()}</div>
           ) : (
             <div className="overflow-auto">
               <Table>
@@ -651,7 +663,7 @@ function TransactionsPage() {
                         colSpan={columns.length}
                         className="h-28 text-center text-xs text-muted-foreground"
                       >
-                        No transactions found for this month. Add one manually or import from{" "}
+                        {m.tx_empty_before()}{" "}
                         <span className="font-medium text-foreground">/import</span>.
                       </TableCell>
                     </TableRow>

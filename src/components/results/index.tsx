@@ -10,6 +10,7 @@ import { useTransactions } from "@/context/transactions-context"
 import type { Transaction } from "@/lib/parsers"
 import { getExistingExternalIds, importTransactions } from "@/lib/server/budget"
 import { getCategories } from "@/lib/server/functions"
+import { m } from "@/paraglide/messages"
 
 export const Results = () => {
   const queryClient = useQueryClient()
@@ -61,16 +62,16 @@ export const Results = () => {
       queryClient.invalidateQueries({ queryKey: ["budget"] })
       queryClient.invalidateQueries({ queryKey: ["months"] })
       queryClient.invalidateQueries({ queryKey: ["transactions"] })
-      toast.success(
-        `Imported ${res.imported} transaction${res.imported !== 1 ? "s" : ""}${
-          res.skipped > 0 ? ` (${res.skipped} skipped)` : ""
-        }`,
-        { position: "bottom-right" },
-      )
+      const importedLabel =
+        res.imported === 1
+          ? m.results_imported_singular({ count: res.imported })
+          : m.results_imported_plural({ count: res.imported })
+      const skippedSuffix = res.skipped > 0 ? m.results_skipped_suffix({ count: res.skipped }) : ""
+      toast.success(`${importedLabel}${skippedSuffix}`, { position: "bottom-right" })
     },
     onError: (error) => {
-      toast.error("Failed to import transactions", {
-        description: error instanceof Error ? error.message : "Unknown error",
+      toast.error(m.results_import_error(), {
+        description: error instanceof Error ? error.message : m.common_unknown_error(),
         position: "bottom-right",
       })
     },
@@ -79,8 +80,8 @@ export const Results = () => {
   const handleCopyAsCSV = (selectedTransactions: Array<Transaction>) => {
     const exportable = selectedTransactions.filter((transaction) => !transaction.excluded)
     if (exportable.length === 0) {
-      toast.error("No transactions selected", {
-        description: "Please select at least one transaction to copy.",
+      toast.error(m.results_no_selection_title(), {
+        description: m.results_no_selection_desc(),
         position: "bottom-right",
       })
       return
@@ -96,13 +97,16 @@ export const Results = () => {
       })
 
       navigator.clipboard.writeText(csv)
-      toast.success("Copied to clipboard!", {
-        description: `${exportable.length} transaction${exportable.length !== 1 ? "s" : ""} copied to your clipboard.`,
+      toast.success(m.results_copied_title(), {
+        description:
+          exportable.length === 1
+            ? m.results_copied_singular({ count: exportable.length })
+            : m.results_copied_plural({ count: exportable.length }),
         position: "bottom-right",
       })
     } catch {
-      toast.error("Failed to copy", {
-        description: "Could not copy CSV to clipboard.",
+      toast.error(m.results_copy_error_title(), {
+        description: m.results_copy_error_desc(),
         position: "bottom-right",
       })
     }
@@ -122,11 +126,8 @@ export const Results = () => {
     return (
       <Card className="w-full">
         <CardHeader>
-          <CardTitle>Preview & Import</CardTitle>
-          <CardDescription>
-            Upload a CSV or fetch from connected accounts to review, adjust shares & categories, and
-            import directly into your monthly budget.
-          </CardDescription>
+          <CardTitle>{m.results_empty_title()}</CardTitle>
+          <CardDescription>{m.results_empty_desc()}</CardDescription>
         </CardHeader>
       </Card>
     )
@@ -134,16 +135,18 @@ export const Results = () => {
 
   const disabledCount = transactions.filter((transaction) => transaction.excluded).length
   const importedCount = transactions.filter((tx) => existingExternalIds.has(tx.externalId)).length
+  const activeCount = transactions.length - disabledCount
 
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Results</CardTitle>
+        <CardTitle>{m.results_title()}</CardTitle>
         <CardDescription>
-          {transactions.length - disabledCount} transaction
-          {transactions.length - disabledCount !== 1 ? "s" : ""}
-          {disabledCount > 0 ? ` • ${disabledCount} disabled` : ""}
-          {importedCount > 0 ? ` • ${importedCount} already imported` : ""}
+          {activeCount === 1
+            ? m.tx_count_singular({ count: activeCount })
+            : m.tx_count_plural({ count: activeCount })}
+          {disabledCount > 0 ? m.results_disabled_suffix({ count: disabledCount }) : ""}
+          {importedCount > 0 ? m.results_already_imported_suffix({ count: importedCount }) : ""}
         </CardDescription>
       </CardHeader>
       <DataTable

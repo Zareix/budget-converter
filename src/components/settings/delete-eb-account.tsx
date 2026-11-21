@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog"
 import type { Account } from "@/lib/fetcher"
 import { deleteEbAccount } from "@/lib/server/functions"
+import { m } from "@/paraglide/messages"
 
 type Props = {
   account: Pick<Account, "id" | "name">
@@ -41,17 +42,15 @@ export const DeleteEbAccountButton = ({ account }: Props) => {
       />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete Account</DialogTitle>
-          <DialogDescription>
-            Are you sure you want to delete the account "{account.name}"?
-          </DialogDescription>
+          <DialogTitle>{m.eb_delete_title()}</DialogTitle>
+          <DialogDescription>{m.eb_delete_desc({ name: account.name })}</DialogDescription>
         </DialogHeader>
         <Button
           variant="destructive"
           onClick={() => deleteEbAccountMutation.mutate()}
           disabled={deleteEbAccountMutation.isPending}
         >
-          {deleteEbAccountMutation.isPending ? "Deleting..." : "Delete"}
+          {deleteEbAccountMutation.isPending ? m.common_deleting() : m.common_delete()}
         </Button>
       </DialogContent>
     </Dialog>

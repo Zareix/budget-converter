@@ -11,6 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import type { Mapping } from "@/lib/mapping/constant"
+import { m } from "@/paraglide/messages"
 
 type Props = {
   mapping?: Mapping
@@ -30,7 +31,7 @@ export const EditMappingButton = ({ mapping }: Props) => {
       />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit mapping</DialogTitle>
+          <DialogTitle>{m.mapping_edit_title()}</DialogTitle>
         </DialogHeader>
         <CreateMappingForm onFinish={() => setIsOpen(false)} previousValues={mapping} />
       </DialogContent>

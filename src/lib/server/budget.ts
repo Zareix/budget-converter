@@ -159,7 +159,6 @@ export const addBill = createServerFn({ method: "POST" })
       sharePercent: sharePercentSchema,
       budgetCents: v.pipe(v.number(), v.integer()),
       actualCents: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
-      paid: v.optional(v.boolean()),
     }),
   )
   .handler(({ data }) => budget.addBill(data))
@@ -176,7 +175,6 @@ export const updateBill = createServerFn({ method: "POST" })
       sharePercent: v.optional(sharePercentSchema),
       budgetCents: v.optional(v.pipe(v.number(), v.integer())),
       actualCents: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
-      paid: v.optional(v.boolean()),
       sortOrder: v.optional(v.pipe(v.number(), v.integer())),
     }),
   )

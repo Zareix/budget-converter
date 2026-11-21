@@ -10,6 +10,7 @@ import {
 import type { MonthSummary } from "@/lib/budget/calculations"
 import { formatCents } from "@/lib/budget/calculations"
 import { cn } from "@/lib/utils"
+import { m } from "@/paraglide/messages"
 
 type SummaryCardProps = {
   summary: MonthSummary
@@ -18,25 +19,29 @@ type SummaryCardProps = {
 export const SummaryCard = ({ summary }: SummaryCardProps) => {
   const rows = [
     {
-      label: "Income",
+      key: "income",
+      label: m.summary_income(),
       budget: summary.income.budgetCents,
       actual: summary.income.actualCents,
       isPositiveGood: true,
     },
     {
-      label: "Bills (Your share)",
+      key: "bills",
+      label: m.summary_bills_share(),
       budget: summary.bills.budgetCents,
       actual: summary.bills.actualCents,
       isPositiveGood: false,
     },
     {
-      label: "Expenses (Your share)",
+      key: "expenses",
+      label: m.summary_expenses_share(),
       budget: summary.expenses.budgetCents,
       actual: summary.expenses.actualCents,
       isPositiveGood: false,
     },
     {
-      label: "Savings",
+      key: "savings",
+      label: m.summary_savings(),
       budget: summary.savings.budgetCents,
       actual: summary.savings.actualCents,
       isPositiveGood: true,
@@ -49,22 +54,22 @@ export const SummaryCard = ({ summary }: SummaryCardProps) => {
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle>Summary</CardTitle>
+        <CardTitle>{m.summary_title()}</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Section</TableHead>
-              <TableHead className="text-right">Budget</TableHead>
-              <TableHead className="text-right">Actual</TableHead>
+              <TableHead>{m.summary_section()}</TableHead>
+              <TableHead className="text-right">{m.common_budget()}</TableHead>
+              <TableHead className="text-right">{m.common_actual()}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {rows.map((row) => {
               const over = !row.isPositiveGood && row.actual > row.budget && row.budget > 0
               return (
-                <TableRow key={row.label}>
+                <TableRow key={row.key}>
                   <TableCell className="font-medium">{row.label}</TableCell>
                   <TableCell className="text-right text-muted-foreground tabular-nums">
                     {formatCents(row.budget)}
@@ -81,7 +86,7 @@ export const SummaryCard = ({ summary }: SummaryCardProps) => {
               )
             })}
             <TableRow className="border-t-2 font-semibold">
-              <TableCell>Remaining</TableCell>
+              <TableCell>{m.summary_remaining()}</TableCell>
               <TableCell
                 className={cn(
                   "text-right tabular-nums",

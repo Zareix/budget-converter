@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { Input } from "@/components/ui/input"
 import { formatCents, formatCentsPlain, parseAmountToCents } from "@/lib/budget/calculations"
 import { cn } from "@/lib/utils"
+import { m } from "@/paraglide/messages"
 
 type InlineAmountInputProps = {
   cents: number | null
@@ -84,7 +85,7 @@ export const InlineAmountInput = ({
         textClassName,
         className,
       )}
-      title="Click to edit amount"
+      title={m.common_click_to_edit_amount()}
     >
       {cents === null ? placeholder : formatCents(cents)}
     </button>

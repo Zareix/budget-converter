@@ -92,7 +92,6 @@ export const cloneMonth = async ({
           sharePercent: b.sharePercent,
           budgetCents: b.budgetCents,
           actualCents: null,
-          paid: false,
           subtrackerRuleId: b.subtrackerRuleId,
           sortOrder: b.sortOrder,
         })),
@@ -209,7 +208,6 @@ export const addBill = async (data: {
   sharePercent: number
   budgetCents: number
   actualCents?: number | null
-  paid?: boolean
 }) => {
   await createMonth(data.monthId)
   const existing = await db.select().from(bills).where(eq(bills.monthId, data.monthId))
@@ -224,7 +222,6 @@ export const addBill = async (data: {
       sharePercent: data.sharePercent,
       budgetCents: data.budgetCents,
       actualCents: data.actualCents ?? null,
-      paid: data.paid ?? false,
       sortOrder: nextSortOrder,
     })
     .returning()
@@ -239,7 +236,6 @@ export const updateBill = async (data: {
   sharePercent?: number
   budgetCents?: number
   actualCents?: number | null
-  paid?: boolean
   sortOrder?: number
 }) => {
   const { id, ...fields } = data
@@ -252,7 +248,6 @@ export const updateBill = async (data: {
       ...(fields.sharePercent !== undefined && { sharePercent: fields.sharePercent }),
       ...(fields.budgetCents !== undefined && { budgetCents: fields.budgetCents }),
       ...(fields.actualCents !== undefined && { actualCents: fields.actualCents }),
-      ...(fields.paid !== undefined && { paid: fields.paid }),
       ...(fields.sortOrder !== undefined && { sortOrder: fields.sortOrder }),
     })
     .where(eq(bills.id, id))

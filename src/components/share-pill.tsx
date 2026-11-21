@@ -3,6 +3,7 @@ import { useSharePresets } from "@/hooks/use-share-presets"
 import type { SharePresetLike } from "@/lib/budget/calculations"
 import { cycleSharePercent, getShareLabel } from "@/lib/budget/calculations"
 import { cn } from "@/lib/utils"
+import { m } from "@/paraglide/messages"
 
 type SharePillProps = {
   sharePercent: number
@@ -49,7 +50,7 @@ export const SharePill = ({
       type="button"
       disabled={disabled}
       onClick={() => onChange(cycleSharePercent(sharePercent, presets))}
-      title={`Click to cycle: ${cycleHint}`}
+      title={m.common_click_to_cycle({ hint: cycleHint })}
       style={style}
       className={cn(
         "inline-flex cursor-pointer items-center gap-1.5 border px-2 py-0.5 text-xs font-medium transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50",

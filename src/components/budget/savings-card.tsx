@@ -28,6 +28,7 @@ import {
 import type { MonthSummary } from "@/lib/budget/calculations"
 import { formatCents, formatCentsPlain, parseAmountToCents } from "@/lib/budget/calculations"
 import { addSaving, deleteSaving, updateSaving } from "@/lib/server/budget"
+import { m } from "@/paraglide/messages"
 
 type SavingItem = {
   id: number
@@ -88,11 +89,11 @@ const SavingDialog = ({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["budget", monthId] })
       queryClient.invalidateQueries({ queryKey: ["months"] })
-      toast.success(saving ? "Saving updated" : "Saving added")
+      toast.success(saving ? m.savings_updated_toast() : m.savings_added_toast())
       setOpen(false)
     },
     onError: (err) => {
-      toast.error(err instanceof Error ? err.message : "Failed to save saving")
+      toast.error(err instanceof Error ? err.message : m.savings_save_error())
     },
   })
 
@@ -101,7 +102,7 @@ const SavingDialog = ({
       <DialogTrigger render={trigger} />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{saving ? "Edit Saving" : "Add Saving"}</DialogTitle>
+          <DialogTitle>{saving ? m.savings_edit() : m.savings_add()}</DialogTitle>
         </DialogHeader>
         <form
           onSubmit={(e) => {
@@ -111,18 +112,18 @@ const SavingDialog = ({
         >
           <FieldGroup>
             <Field>
-              <FieldLabel htmlFor="saving-name">Name</FieldLabel>
+              <FieldLabel htmlFor="saving-name">{m.common_name()}</FieldLabel>
               <Input
                 id="saving-name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Livret A, PEA, Assurance-Vie..."
+                placeholder={m.savings_name_placeholder()}
                 required
               />
             </Field>
             <div className="grid grid-cols-2 gap-3">
               <Field>
-                <FieldLabel htmlFor="saving-budget">Budget (€)</FieldLabel>
+                <FieldLabel htmlFor="saving-budget">{m.common_budget_eur()}</FieldLabel>
                 <Input
                   id="saving-budget"
                   inputMode="decimal"
@@ -133,13 +134,13 @@ const SavingDialog = ({
                 />
               </Field>
               <Field>
-                <FieldLabel htmlFor="saving-actual">Actual (€)</FieldLabel>
+                <FieldLabel htmlFor="saving-actual">{m.common_actual_eur()}</FieldLabel>
                 <Input
                   id="saving-actual"
                   inputMode="decimal"
                   value={actual}
                   onChange={(e) => setActual(e.target.value)}
-                  placeholder="Leave empty if pending"
+                  placeholder={m.common_leave_empty_if_pending()}
                 />
               </Field>
             </div>
@@ -150,10 +151,10 @@ const SavingDialog = ({
                 onClick={() => setOpen(false)}
                 disabled={mutation.isPending}
               >
-                Cancel
+                {m.common_cancel()}
               </Button>
               <Button type="submit" disabled={!name.trim() || mutation.isPending}>
-                {mutation.isPending ? "Saving..." : "Save"}
+                {mutation.isPending ? m.common_saving() : m.common_save()}
               </Button>
             </div>
           </FieldGroup>
@@ -179,20 +180,20 @@ export const SavingsCard = ({ monthId, savings, summary }: SavingsCardProps) => 
     mutationFn: (id: number) => deleteSaving({ data: { id } }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["budget", monthId] })
-      toast.success("Saving deleted")
+      toast.success(m.savings_deleted_toast())
     },
   })
 
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between gap-2">
-        <CardTitle>Savings</CardTitle>
+        <CardTitle>{m.savings_title()}</CardTitle>
         <SavingDialog
           monthId={monthId}
           trigger={
             <Button variant="outline" size="sm">
               <PlusIcon className="size-3.5" />
-              Add Saving
+              {m.savings_add()}
             </Button>
           }
         />
@@ -201,17 +202,17 @@ export const SavingsCard = ({ monthId, savings, summary }: SavingsCardProps) => 
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead className="text-right">Budget</TableHead>
-              <TableHead className="text-right">Actual</TableHead>
-              <TableHead className="w-16 text-right">Actions</TableHead>
+              <TableHead>{m.common_name()}</TableHead>
+              <TableHead className="text-right">{m.common_budget()}</TableHead>
+              <TableHead className="text-right">{m.common_actual()}</TableHead>
+              <TableHead className="w-16 text-right">{m.common_actions()}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {savings.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={4} className="py-6 text-center text-xs text-muted-foreground">
-                  No savings targets for this month yet.
+                  {m.savings_empty()}
                 </TableCell>
               </TableRow>
             ) : (
@@ -239,7 +240,7 @@ export const SavingsCard = ({ monthId, savings, summary }: SavingsCardProps) => 
                         monthId={monthId}
                         saving={item}
                         trigger={
-                          <Button variant="ghost" size="icon-sm" aria-label="Edit saving">
+                          <Button variant="ghost" size="icon-sm" aria-label={m.savings_edit_aria()}>
                             <EditIcon className="size-3.5" />
                           </Button>
                         }
@@ -247,7 +248,7 @@ export const SavingsCard = ({ monthId, savings, summary }: SavingsCardProps) => 
                       <Button
                         variant="ghost"
                         size="icon-sm"
-                        aria-label="Delete saving"
+                        aria-label={m.savings_delete_aria()}
                         onClick={() => deleteMutation.mutate(item.id)}
                         disabled={deleteMutation.isPending}
                       >
@@ -262,7 +263,7 @@ export const SavingsCard = ({ monthId, savings, summary }: SavingsCardProps) => 
           {savings.length > 0 && (
             <TableFooter>
               <TableRow>
-                <TableCell>Total</TableCell>
+                <TableCell>{m.common_total()}</TableCell>
                 <TableCell className="text-right tabular-nums">
                   {formatCents(summary.savings.budgetCents)}
                 </TableCell>

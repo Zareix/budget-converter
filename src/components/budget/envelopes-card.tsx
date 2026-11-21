@@ -17,6 +17,7 @@ import type { MonthSummary } from "@/lib/budget/calculations"
 import { formatCents } from "@/lib/budget/calculations"
 import { upsertCategoryBudget } from "@/lib/server/budget"
 import { cn } from "@/lib/utils"
+import { m } from "@/paraglide/messages"
 
 type CategoryItem = {
   id: number
@@ -45,7 +46,7 @@ export const EnvelopesCard = ({ monthId, categories, summary }: EnvelopesCardPro
       queryClient.invalidateQueries({ queryKey: ["months"] })
     },
     onError: (err) => {
-      toast.error(err instanceof Error ? err.message : "Failed to update budget")
+      toast.error(err instanceof Error ? err.message : m.envelopes_update_error())
     },
   })
 
@@ -54,16 +55,16 @@ export const EnvelopesCard = ({ monthId, categories, summary }: EnvelopesCardPro
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle>Budgeted Expenses</CardTitle>
+        <CardTitle>{m.envelopes_title()}</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Category</TableHead>
-              <TableHead className="text-right">Budget</TableHead>
-              <TableHead className="text-right">Actual</TableHead>
-              <TableHead className="text-right">Left</TableHead>
+              <TableHead>{m.common_category()}</TableHead>
+              <TableHead className="text-right">{m.common_budget()}</TableHead>
+              <TableHead className="text-right">{m.common_actual()}</TableHead>
+              <TableHead className="text-right">{m.envelopes_left()}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -147,7 +148,7 @@ export const EnvelopesCard = ({ monthId, categories, summary }: EnvelopesCardPro
           </TableBody>
           <TableFooter>
             <TableRow>
-              <TableCell>Total</TableCell>
+              <TableCell>{m.common_total()}</TableCell>
               <TableCell className="text-right tabular-nums">
                 {formatCents(summary.expenses.budgetCents)}
               </TableCell>

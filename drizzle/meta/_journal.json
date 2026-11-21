@@ -43,6 +43,13 @@
       "when": 1795291452165,
       "tag": "0005_plain_hellion",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1795296890755,
+      "tag": "0006_curious_whizzer",
+      "breakpoints": true
     }
   ]
 }

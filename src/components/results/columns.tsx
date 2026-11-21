@@ -27,6 +27,8 @@ import {
 } from "@/components/ui/select"
 import { computeShareCents, formatCents, isValidMonthId } from "@/lib/budget/calculations"
 import type { Transaction } from "@/lib/parsers"
+import { m } from "@/paraglide/messages"
+import { getLocale } from "@/paraglide/runtime"
 
 export type ImportCategoryOption = {
   slug: string
@@ -91,7 +93,7 @@ const InlineNameInput = ({
         setDraft(value)
         setEditing(true)
       }}
-      title={`${value} (click to edit)`}
+      title={m.common_click_to_edit_value({ value })}
       className="max-w-72 cursor-pointer truncate px-1.5 py-1 text-left text-xs font-medium transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:hover:bg-transparent"
     >
       {value}
@@ -118,7 +120,7 @@ export const createImportColumns = ({
           checked={allPageRowsSelected}
           indeterminate={!allPageRowsSelected && somePageRowsSelected}
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
+          aria-label={m.results_col_select_all()}
         />
       )
     },
@@ -127,7 +129,7 @@ export const createImportColumns = ({
         checked={row.getIsSelected()}
         disabled={!row.getCanSelect()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
+        aria-label={m.results_col_select_row()}
       />
     ),
     enableSorting: false,
@@ -137,7 +139,7 @@ export const createImportColumns = ({
     sortFn: (rowA, rowB) =>
       rowA.original.originalDate.getTime() - rowB.original.originalDate.getTime(),
     accessorFn: (row) =>
-      row.originalDate.toLocaleDateString(undefined, {
+      row.originalDate.toLocaleDateString(getLocale() === "fr" ? "fr-FR" : "en-US", {
         day: "2-digit",
         month: "2-digit",
         year: undefined,
@@ -154,7 +156,7 @@ export const createImportColumns = ({
           className="-ml-2"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Date
+          {m.common_date()}
           {column.getIsSorted() === "asc" ? (
             <ArrowUpIcon className="ml-1 size-3.5" />
           ) : column.getIsSorted() === "desc" ? (
@@ -166,7 +168,7 @@ export const createImportColumns = ({
   },
   {
     accessorKey: "name",
-    header: "Name",
+    header: m.common_name(),
     enableSorting: false,
     cell: ({ row }) => {
       const isImported = existingExternalIds.has(row.original.externalId)
@@ -177,10 +179,10 @@ export const createImportColumns = ({
             disabled={isImported}
             onSave={(nextName) => onUpdateRow(row.index, { name: nextName })}
           />
-          {row.original.excluded && <Badge variant="outline">Disabled</Badge>}
+          {row.original.excluded && <Badge variant="outline">{m.results_badge_disabled()}</Badge>}
           {isImported && (
             <Badge variant="secondary" className="shrink-0">
-              Imported
+              {m.results_badge_imported()}
             </Badge>
           )}
         </div>
@@ -189,7 +191,7 @@ export const createImportColumns = ({
   },
   {
     id: "amount",
-    header: () => <div className="text-right">Amount</div>,
+    header: () => <div className="text-right">{m.common_amount()}</div>,
     cell: ({ row }) => {
       const isImported = existingExternalIds.has(row.original.externalId)
       return (
@@ -211,7 +213,7 @@ export const createImportColumns = ({
   },
   {
     id: "category",
-    header: "Category",
+    header: m.common_category(),
     cell: ({ row }) => {
       const isImported = existingExternalIds.has(row.original.externalId)
       return (
@@ -244,7 +246,7 @@ export const createImportColumns = ({
   },
   {
     accessorKey: "paymentMethod",
-    header: "Method",
+    header: m.results_col_method(),
     enableSorting: false,
     cell: ({ row }) => (
       <span className="text-xs whitespace-nowrap text-muted-foreground">
@@ -254,7 +256,7 @@ export const createImportColumns = ({
   },
   {
     id: "share",
-    header: "Share",
+    header: m.common_share(),
     cell: ({ row }) => {
       const isImported = existingExternalIds.has(row.original.externalId)
       return (
@@ -268,7 +270,7 @@ export const createImportColumns = ({
   },
   {
     id: "yourShare",
-    header: () => <div className="text-right">Your Share</div>,
+    header: () => <div className="text-right">{m.common_your_share()}</div>,
     cell: ({ row }) => {
       const shareCents = computeShareCents(row.original.amountCents, row.original.sharePercent)
       return (
@@ -280,7 +282,7 @@ export const createImportColumns = ({
   },
   {
     id: "monthId",
-    header: "Month",
+    header: m.common_month(),
     cell: ({ row }) => {
       const isImported = existingExternalIds.has(row.original.externalId)
       return (
@@ -315,14 +317,18 @@ export const createImportColumns = ({
             }}
           />
           <Dialog>
-            <DialogTrigger render={<Button variant="ghost" size="icon-sm" aria-label="Raw data" />}>
+            <DialogTrigger
+              render={
+                <Button variant="ghost" size="icon-sm" aria-label={m.results_raw_data_aria()} />
+              }
+            >
               <InfoIcon />
             </DialogTrigger>
             <DialogContent className="sm:max-w-2xl">
               <DialogHeader>
                 <DialogTitle>{row.original.name}</DialogTitle>
                 <DialogDescription>
-                  Raw transaction data ({row.original.externalId})
+                  {m.results_raw_data_desc({ externalId: row.original.externalId })}
                 </DialogDescription>
               </DialogHeader>
               <pre className="max-h-[60vh] overflow-auto rounded-none border p-2 text-xs">

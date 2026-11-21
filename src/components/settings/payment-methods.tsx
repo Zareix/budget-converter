@@ -40,6 +40,7 @@ import {
   editPaymentMethod,
   getPaymentMethods,
 } from "@/lib/server/budget"
+import { m } from "@/paraglide/messages"
 
 type PaymentMethodRow = Awaited<ReturnType<typeof getPaymentMethods>>[number]
 
@@ -83,7 +84,7 @@ const PaymentMethodForm = ({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["paymentMethods"] })
       queryClient.invalidateQueries({ queryKey: ["budget"] })
-      toast.success(paymentMethod ? "Payment method updated" : "Payment method created")
+      toast.success(paymentMethod ? m.pm_updated_toast() : m.pm_created_toast())
       onFinish()
     },
   })
@@ -97,7 +98,7 @@ const PaymentMethodForm = ({
     >
       <FieldGroup>
         <Field>
-          <FieldLabel htmlFor="pm-label">Label</FieldLabel>
+          <FieldLabel htmlFor="pm-label">{m.common_label()}</FieldLabel>
           <Input
             id="pm-label"
             value={label}
@@ -107,19 +108,19 @@ const PaymentMethodForm = ({
         </Field>
         {!paymentMethod && (
           <Field>
-            <FieldLabel htmlFor="pm-slug">Slug</FieldLabel>
+            <FieldLabel htmlFor="pm-slug">{m.common_slug()}</FieldLabel>
             <Input
               id="pm-slug"
               value={slug}
               onChange={(e) => setSlug(e.target.value)}
               placeholder={toSlug(label) || "carte-amex"}
             />
-            <FieldDescription>Stable key used to match imported accounts.</FieldDescription>
+            <FieldDescription>{m.pm_slug_desc()}</FieldDescription>
           </Field>
         )}
         <div className="grid grid-cols-2 gap-3">
           <Field>
-            <FieldLabel htmlFor="pm-share">Default Share</FieldLabel>
+            <FieldLabel htmlFor="pm-share">{m.common_default_share()}</FieldLabel>
             <Select
               value={defaultSharePercent}
               items={sharePresets.map((p) => ({
@@ -143,7 +144,7 @@ const PaymentMethodForm = ({
             </Select>
           </Field>
           <Field>
-            <FieldLabel htmlFor="pm-color">Color</FieldLabel>
+            <FieldLabel htmlFor="pm-color">{m.common_color()}</FieldLabel>
             <div className="flex items-center gap-2">
               <input
                 id="pm-color"
@@ -158,9 +159,7 @@ const PaymentMethodForm = ({
         </div>
         {mutation.isError && (
           <p className="text-xs text-destructive">
-            {mutation.error instanceof Error
-              ? mutation.error.message
-              : "Failed to save payment method"}
+            {mutation.error instanceof Error ? mutation.error.message : m.pm_save_error()}
           </p>
         )}
         <Button
@@ -168,7 +167,7 @@ const PaymentMethodForm = ({
           disabled={!label.trim() || !finalSlug || mutation.isPending}
           className="self-end"
         >
-          {mutation.isPending ? "Saving..." : "Save"}
+          {mutation.isPending ? m.common_saving() : m.common_save()}
         </Button>
       </FieldGroup>
     </form>
@@ -188,12 +187,8 @@ const PaymentMethodDialog = ({
       <DialogTrigger render={trigger} />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>
-            {paymentMethod ? "Edit payment method" : "Create payment method"}
-          </DialogTitle>
-          <DialogDescription>
-            Payment methods used for transactions and default share attribution.
-          </DialogDescription>
+          <DialogTitle>{paymentMethod ? m.pm_edit_title() : m.pm_create_title()}</DialogTitle>
+          <DialogDescription>{m.pm_dialog_desc()}</DialogDescription>
         </DialogHeader>
         <PaymentMethodForm paymentMethod={paymentMethod} onFinish={() => setIsOpen(false)} />
       </DialogContent>
@@ -225,18 +220,15 @@ const DeletePaymentMethodButton = ({ paymentMethod }: { paymentMethod: PaymentMe
       />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete Payment Method</DialogTitle>
-          <DialogDescription>
-            Delete "{paymentMethod.label}"? Existing transactions will keep their data with an empty
-            payment method.
-          </DialogDescription>
+          <DialogTitle>{m.pm_delete_title()}</DialogTitle>
+          <DialogDescription>{m.pm_delete_desc({ label: paymentMethod.label })}</DialogDescription>
         </DialogHeader>
         <Button
           variant="destructive"
           onClick={() => mutation.mutate()}
           disabled={mutation.isPending}
         >
-          {mutation.isPending ? "Deleting..." : "Delete"}
+          {mutation.isPending ? m.common_deleting() : m.common_delete()}
         </Button>
       </DialogContent>
     </Dialog>
@@ -246,28 +238,26 @@ const DeletePaymentMethodButton = ({ paymentMethod }: { paymentMethod: PaymentMe
 export const PaymentMethodsSettings = () => {
   const pmQuery = useQuery({ queryKey: ["paymentMethods"], queryFn: getPaymentMethods })
 
-  if (pmQuery.isLoading) return <div>Loading payment methods...</div>
+  if (pmQuery.isLoading) return <div>{m.pm_loading()}</div>
   if (pmQuery.isError || !pmQuery.data) {
-    return <div>Error loading payment methods.</div>
+    return <div>{m.pm_load_error()}</div>
   }
 
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Payment Methods</CardTitle>
+        <CardTitle>{m.pm_title()}</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
-          <TableCaption>
-            Cards & payment methods used when importing or adding expenses
-          </TableCaption>
+          <TableCaption>{m.pm_caption()}</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead>Label</TableHead>
-              <TableHead>Slug</TableHead>
-              <TableHead>Default Share</TableHead>
-              <TableHead>Color</TableHead>
-              <TableHead className="w-24 text-right">Actions</TableHead>
+              <TableHead>{m.common_label()}</TableHead>
+              <TableHead>{m.common_slug()}</TableHead>
+              <TableHead>{m.common_default_share()}</TableHead>
+              <TableHead>{m.common_color()}</TableHead>
+              <TableHead className="w-24 text-right">{m.common_actions()}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -312,7 +302,7 @@ export const PaymentMethodsSettings = () => {
           trigger={
             <Button variant="outline">
               <PlusIcon />
-              Create Payment Method
+              {m.pm_create_button()}
             </Button>
           }
         />

@@ -16,6 +16,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { getDefaultMonthId, usePersistActiveMonth } from "@/hooks/use-active-month"
 import { formatMonthLabel, isValidMonthId } from "@/lib/budget/calculations"
 import { cloneMonth, getMonthDashboard, listMonths } from "@/lib/server/budget"
+import { m } from "@/paraglide/messages"
 
 export const Route = createFileRoute("/")({
   component: BudgetDashboard,
@@ -46,7 +47,7 @@ function BudgetDashboard() {
     queryFn: listMonths,
   })
 
-  const latestOtherMonth = (monthsQuery.data ?? []).find((m) => m.id !== monthId)
+  const latestOtherMonth = (monthsQuery.data ?? []).find((item) => item.id !== monthId)
 
   const quickCloneMutation = useMutation({
     mutationKey: ["quickCloneMonth", monthId],
@@ -55,10 +56,15 @@ function BudgetDashboard() {
     onSuccess: (_res, sourceMonthId) => {
       queryClient.invalidateQueries({ queryKey: ["budget", monthId] })
       queryClient.invalidateQueries({ queryKey: ["months"] })
-      toast.success(`Cloned ${formatMonthLabel(sourceMonthId)} into ${formatMonthLabel(monthId)}`)
+      toast.success(
+        m.dashboard_cloned_toast({
+          source: formatMonthLabel(sourceMonthId),
+          target: formatMonthLabel(monthId),
+        }),
+      )
     },
     onError: (err) => {
-      toast.error(err instanceof Error ? err.message : "Failed to clone month")
+      toast.error(err instanceof Error ? err.message : m.dashboard_clone_error())
     },
   })
 
@@ -76,18 +82,28 @@ function BudgetDashboard() {
             nativeButton={false}
             render={<Link to="/transactions" search={{ month: monthId }} />}
           >
-            <span>Transactions{data ? ` (${data.transactionsCount})` : ""}</span>
+            <span>
+              {data
+                ? m.dashboard_transactions_button_count({ count: data.transactionsCount })
+                : m.dashboard_transactions_button()}
+            </span>
             <ArrowRightIcon className="size-3.5" />
           </Button>
         }
       />
 
       {dashboardQuery.isLoading ? (
-        <div className="py-16 text-center text-sm text-muted-foreground">Loading budget...</div>
+        <div className="py-16 text-center text-sm text-muted-foreground">
+          {m.dashboard_loading()}
+        </div>
       ) : dashboardQuery.isError || !data ? (
         <div className="py-16 text-center text-sm text-destructive">
-          Failed to load budget:{" "}
-          {dashboardQuery.error instanceof Error ? dashboardQuery.error.message : "Unknown error"}
+          {m.dashboard_load_error({
+            message:
+              dashboardQuery.error instanceof Error
+                ? dashboardQuery.error.message
+                : m.common_unknown_error(),
+          })}
         </div>
       ) : (
         <>
@@ -96,11 +112,11 @@ function BudgetDashboard() {
               <CardContent className="flex flex-wrap items-center justify-between gap-3 py-3">
                 <p className="text-xs text-muted-foreground">
                   <span className="font-medium text-foreground">{formatMonthLabel(monthId)}</span>{" "}
-                  is empty. Clone your bills, incomes, savings, and envelopes from{" "}
+                  {m.dashboard_empty_banner_part1()}{" "}
                   <span className="font-medium text-foreground">
                     {formatMonthLabel(latestOtherMonth.id)}
                   </span>{" "}
-                  or start editing directly below.
+                  {m.dashboard_empty_banner_part2()}
                 </p>
                 <Button
                   size="sm"
@@ -109,8 +125,8 @@ function BudgetDashboard() {
                 >
                   <CopyPlusIcon className="size-3.5" />
                   {quickCloneMutation.isPending
-                    ? "Cloning..."
-                    : `Clone from ${formatMonthLabel(latestOtherMonth.id)}`}
+                    ? m.dashboard_cloning()
+                    : m.dashboard_clone_from({ source: formatMonthLabel(latestOtherMonth.id) })}
                 </Button>
               </CardContent>
             </Card>
