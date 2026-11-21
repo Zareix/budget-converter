@@ -104,27 +104,6 @@ export const MonthHeader = ({ monthId, onSelectMonth, rightSlot }: MonthHeaderPr
           </Button>
         </div>
 
-        {existingMonths.length > 0 && (
-          <Select
-            value={existingMonths.some((m) => m.id === monthId) ? monthId : ""}
-            items={existingMonths.map((m) => ({ value: m.id, label: formatMonthLabel(m.id) }))}
-            onValueChange={(val) => {
-              if (val) onSelectMonth(val)
-            }}
-          >
-            <SelectTrigger className="w-40">
-              <SelectValue placeholder="Jump to month" />
-            </SelectTrigger>
-            <SelectContent>
-              {existingMonths.map((m) => (
-                <SelectItem key={m.id} value={m.id}>
-                  {formatMonthLabel(m.id)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        )}
-
         <Dialog open={dialogOpen} onOpenChange={handleOpenDialog}>
           <DialogTrigger
             render={
