@@ -7,9 +7,11 @@
     "dev": "bun run --bun vite dev --port 3000",
     "build": "bun run --bun vite build",
     "preview": "bun run --bun vite preview",
+    "test": "bun test",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "format": "oxfmt",
+    "format:check": "oxfmt --check",
     "check": "bun run format && bun run lint:fix",
     "db:generate": "bunx drizzle-kit generate"
   },
