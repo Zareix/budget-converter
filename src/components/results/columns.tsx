@@ -167,6 +167,7 @@ export const createImportColumns = ({
   {
     accessorKey: "name",
     header: "Name",
+    enableSorting: false,
     cell: ({ row }) => {
       const isImported = existingExternalIds.has(row.original.externalId)
       return (
@@ -244,6 +245,7 @@ export const createImportColumns = ({
   {
     accessorKey: "paymentMethod",
     header: "Method",
+    enableSorting: false,
     cell: ({ row }) => (
       <span className="text-xs whitespace-nowrap text-muted-foreground">
         {row.original.paymentMethod}

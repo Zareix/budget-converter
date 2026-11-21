@@ -199,6 +199,7 @@ function TransactionsPage() {
       {
         id: "date",
         accessorKey: "date",
+        sortFn: (rowA, rowB) => rowA.original.date.localeCompare(rowB.original.date),
         header: ({ column }) => (
           <Button
             variant="ghost"
@@ -223,6 +224,7 @@ function TransactionsPage() {
       {
         accessorKey: "name",
         header: "Name",
+        enableSorting: false,
         cell: ({ row }) => (
           <div className="flex max-w-64 items-center gap-1.5">
             <span
@@ -242,6 +244,7 @@ function TransactionsPage() {
       {
         id: "amount",
         accessorKey: "amountCents",
+        sortFn: (rowA, rowB) => rowA.original.amountCents - rowB.original.amountCents,
         header: ({ column }) => (
           <div className="flex justify-end">
             <Button

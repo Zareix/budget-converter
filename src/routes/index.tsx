@@ -73,6 +73,7 @@ function BudgetDashboard() {
           <Button
             variant="outline"
             size="sm"
+            nativeButton={false}
             render={<Link to="/transactions" search={{ month: monthId }} />}
           >
             <span>Transactions{data ? ` (${data.transactionsCount})` : ""}</span>
