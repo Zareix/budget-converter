@@ -462,6 +462,7 @@
 /** @typedef {{}} Overview_Allocation_EmptyInputs */
 /** @typedef {{}} Overview_Allocation_TitleInputs */
 /** @typedef {{}} Overview_Class_CashInputs */
+/** @typedef {{}} Overview_Evolution_12mInputs */
 /** @typedef {{}} Overview_Evolution_EmptyInputs */
 /** @typedef {{}} Overview_Evolution_TitleInputs */
 /** @typedef {{}} Overview_Go_To_SavingsInputs */
@@ -2518,6 +2519,10 @@ export const overview_allocation_title = /** @type {(inputs: Overview_Allocation
 
 export const overview_class_cash = /** @type {(inputs: Overview_Class_CashInputs) => LocalizedString} */ () => {
 	return /** @type {LocalizedString} */ (`Livrets & Cash`)
+};
+
+export const overview_evolution_12m = /** @type {(inputs: Overview_Evolution_12mInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`12 derniers mois`)
 };
 
 export const overview_evolution_empty = /** @type {(inputs: Overview_Evolution_EmptyInputs) => LocalizedString} */ () => {

@@ -464,6 +464,7 @@ import { getLocale, experimentalStaticLocale } from "../runtime.js"
 /** @typedef {{}} Overview_Allocation_EmptyInputs */
 /** @typedef {{}} Overview_Allocation_TitleInputs */
 /** @typedef {{}} Overview_Class_CashInputs */
+/** @typedef {{}} Overview_Evolution_12mInputs */
 /** @typedef {{}} Overview_Evolution_EmptyInputs */
 /** @typedef {{}} Overview_Evolution_TitleInputs */
 /** @typedef {{}} Overview_Go_To_SavingsInputs */
@@ -7141,6 +7142,20 @@ export const overview_class_cash = /** @type {((inputs?: Overview_Class_CashInpu
 	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
 	if (locale === "fr") return __fr.overview_class_cash(inputs)
 	return __en.overview_class_cash(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Last 12 months" |
+*
+* @param {Overview_Evolution_12mInputs} inputs
+* @param {{ locale?: "en" | "fr" }} options
+* @returns {LocalizedString}
+*/
+export const overview_evolution_12m = /** @type {((inputs?: Overview_Evolution_12mInputs, options?: { locale?: "en" | "fr" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Overview_Evolution_12mInputs, { locale?: "en" | "fr" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "fr") return __fr.overview_evolution_12m(inputs)
+	return __en.overview_evolution_12m(inputs)
 });
 /**
 * | output |

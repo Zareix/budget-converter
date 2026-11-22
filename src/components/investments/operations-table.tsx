@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { EditIcon, TrashIcon } from "lucide-react"
+import { ChevronDownIcon, EditIcon, TrashIcon } from "lucide-react"
+import { useState } from "react"
 import { toast } from "sonner"
 
 import {
@@ -39,6 +40,7 @@ export const OperationsTable = ({
   onEdit,
 }: OperationsTableProps) => {
   const queryClient = useQueryClient()
+  const [expanded, setExpanded] = useState(false)
   const accountById = new Map(accounts.map((a) => [a.id, a]))
   const securityById = new Map(securities.map((s) => [s.id, s]))
 
@@ -55,127 +57,150 @@ export const OperationsTable = ({
   })
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{m.inv_tx_title()}</CardTitle>
+    <Card className={cn("pt-0", !expanded && "pb-0")}>
+      <CardHeader className="p-0">
+        <button
+          type="button"
+          onClick={() => setExpanded((prev) => !prev)}
+          aria-expanded={expanded}
+          className="flex w-full cursor-pointer items-center justify-between gap-2 px-4 py-3.5 text-left transition-colors hover:bg-muted/40"
+        >
+          <div className="flex items-center gap-2">
+            <ChevronDownIcon
+              className={cn(
+                "size-4 text-muted-foreground transition-transform",
+                !expanded && "-rotate-90",
+              )}
+            />
+            <CardTitle>{m.inv_tx_title()}</CardTitle>
+            <span className="text-xs text-muted-foreground tabular-nums">
+              ({transactions.length})
+            </span>
+          </div>
+        </button>
       </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>{m.inv_tx_col_date()}</TableHead>
-              <TableHead>{m.inv_col_account()}</TableHead>
-              <TableHead>{m.inv_col_security()}</TableHead>
-              <TableHead>{m.inv_tx_col_type()}</TableHead>
-              <TableHead className="text-right">{m.inv_col_quantity()}</TableHead>
-              <TableHead className="text-right">{m.inv_tx_col_unit_price()}</TableHead>
-              <TableHead className="text-right">{m.inv_tx_col_fees()}</TableHead>
-              <TableHead className="text-right">{m.inv_tx_col_total_eur()}</TableHead>
-              <TableHead>{m.inv_tx_col_note()}</TableHead>
-              <TableHead className="w-20 text-right">{m.common_actions()}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {transactions.length === 0 ? (
+      {expanded && (
+        <CardContent>
+          <Table>
+            <TableHeader>
               <TableRow>
-                <TableCell colSpan={10} className="py-6 text-center text-xs text-muted-foreground">
-                  {m.inv_tx_empty()}
-                </TableCell>
+                <TableHead>{m.inv_tx_col_date()}</TableHead>
+                <TableHead>{m.inv_col_account()}</TableHead>
+                <TableHead>{m.inv_col_security()}</TableHead>
+                <TableHead>{m.inv_tx_col_type()}</TableHead>
+                <TableHead className="text-right">{m.inv_col_quantity()}</TableHead>
+                <TableHead className="text-right">{m.inv_tx_col_unit_price()}</TableHead>
+                <TableHead className="text-right">{m.inv_tx_col_fees()}</TableHead>
+                <TableHead className="text-right">{m.inv_tx_col_total_eur()}</TableHead>
+                <TableHead>{m.inv_tx_col_note()}</TableHead>
+                <TableHead className="w-20 text-right">{m.common_actions()}</TableHead>
               </TableRow>
-            ) : (
-              transactions.map((tx) => {
-                const account = accountById.get(tx.accountId)
-                const security = securityById.get(tx.securityId)
-                return (
-                  <TableRow key={tx.id}>
-                    <TableCell className="text-xs text-muted-foreground tabular-nums">
-                      {tx.date}
-                    </TableCell>
-                    <TableCell className="text-xs">
-                      <div className="flex items-center gap-1.5">
-                        <span
-                          className="inline-block size-2 shrink-0 rounded-full"
-                          style={{ backgroundColor: account?.color ?? "#64748b" }}
-                        />
-                        <span>{account?.name ?? `#${tx.accountId}`}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-xs font-medium">
-                      {security
-                        ? security.pricingMode === "manual"
-                          ? security.name
-                          : security.symbol
-                        : `#${tx.securityId}`}
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant="outline"
-                        className={cn(
-                          "text-[10px]",
-                          tx.type === "buy" &&
-                            "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
-                          tx.type === "sell" &&
-                            "border-orange-500/40 bg-orange-500/10 text-orange-700 dark:text-orange-300",
-                          tx.type === "dividend" &&
-                            "border-sky-500/40 bg-sky-500/10 text-sky-700 dark:text-sky-300",
-                          tx.type === "interest" &&
-                            "border-teal-500/40 bg-teal-500/10 text-teal-700 dark:text-teal-300",
+            </TableHeader>
+            <TableBody>
+              {transactions.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={10}
+                    className="py-6 text-center text-xs text-muted-foreground"
+                  >
+                    {m.inv_tx_empty()}
+                  </TableCell>
+                </TableRow>
+              ) : (
+                transactions.map((tx) => {
+                  const account = accountById.get(tx.accountId)
+                  const security = securityById.get(tx.securityId)
+                  return (
+                    <TableRow key={tx.id}>
+                      <TableCell className="text-xs text-muted-foreground tabular-nums">
+                        {tx.date}
+                      </TableCell>
+                      <TableCell className="text-xs">
+                        <div className="flex items-center gap-1.5">
+                          <span
+                            className="inline-block size-2 shrink-0 rounded-full"
+                            style={{ backgroundColor: account?.color ?? "#64748b" }}
+                          />
+                          <span>{account?.name ?? `#${tx.accountId}`}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-xs font-medium">
+                        {security
+                          ? security.pricingMode === "manual"
+                            ? security.name
+                            : security.symbol
+                          : `#${tx.securityId}`}
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant="outline"
+                          className={cn(
+                            "text-[10px]",
+                            tx.type === "buy" &&
+                              "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+                            tx.type === "sell" &&
+                              "border-orange-500/40 bg-orange-500/10 text-orange-700 dark:text-orange-300",
+                            tx.type === "dividend" &&
+                              "border-sky-500/40 bg-sky-500/10 text-sky-700 dark:text-sky-300",
+                            tx.type === "interest" &&
+                              "border-teal-500/40 bg-teal-500/10 text-teal-700 dark:text-teal-300",
+                          )}
+                        >
+                          {getInvestmentTxTypeLabel(tx.type)}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right text-xs tabular-nums">
+                        {security?.assetClass === "euro_fund" || tx.type === "interest" ? (
+                          <span className="text-muted-foreground">—</span>
+                        ) : (
+                          formatQuantity(tx.quantity)
                         )}
-                      >
-                        {getInvestmentTxTypeLabel(tx.type)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right text-xs tabular-nums">
-                      {security?.assetClass === "euro_fund" || tx.type === "interest" ? (
-                        <span className="text-muted-foreground">—</span>
-                      ) : (
-                        formatQuantity(tx.quantity)
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right text-xs text-muted-foreground tabular-nums">
-                      {security?.assetClass === "euro_fund" || tx.type === "interest"
-                        ? "—"
-                        : security
-                          ? formatNativePrice(tx.unitPriceCents / 100, security.currency)
-                          : formatCents(tx.unitPriceCents)}
-                    </TableCell>
-                    <TableCell className="text-right text-xs text-muted-foreground tabular-nums">
-                      {tx.feesCents > 0 ? formatCents(tx.feesCents) : "—"}
-                    </TableCell>
-                    <TableCell className="text-right text-xs font-medium tabular-nums">
-                      {formatCents(tx.totalEurCents)}
-                    </TableCell>
-                    <TableCell className="max-w-36 truncate text-xs text-muted-foreground">
-                      {tx.note || "—"}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex justify-end gap-1">
-                        <Button
-                          variant="ghost"
-                          size="icon-sm"
-                          aria-label={m.inv_edit_operation()}
-                          onClick={() => onEdit(tx)}
-                        >
-                          <EditIcon className="size-3.5" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon-sm"
-                          aria-label={m.common_delete()}
-                          onClick={() => deleteMutation.mutate(tx.id)}
-                          disabled={deleteMutation.isPending}
-                        >
-                          <TrashIcon className="size-3.5 text-destructive" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                )
-              })
-            )}
-          </TableBody>
-        </Table>
-      </CardContent>
+                      </TableCell>
+                      <TableCell className="text-right text-xs text-muted-foreground tabular-nums">
+                        {security?.assetClass === "euro_fund" || tx.type === "interest"
+                          ? "—"
+                          : security
+                            ? formatNativePrice(tx.unitPriceCents / 100, security.currency)
+                            : formatCents(tx.unitPriceCents)}
+                      </TableCell>
+                      <TableCell className="text-right text-xs text-muted-foreground tabular-nums">
+                        {tx.feesCents > 0 ? formatCents(tx.feesCents) : "—"}
+                      </TableCell>
+                      <TableCell className="text-right text-xs font-medium tabular-nums">
+                        {formatCents(tx.totalEurCents)}
+                      </TableCell>
+                      <TableCell className="max-w-36 truncate text-xs text-muted-foreground">
+                        {tx.note || "—"}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex justify-end gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            aria-label={m.inv_edit_operation()}
+                            onClick={() => onEdit(tx)}
+                          >
+                            <EditIcon className="size-3.5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            aria-label={m.common_delete()}
+                            onClick={() => deleteMutation.mutate(tx.id)}
+                            disabled={deleteMutation.isPending}
+                          >
+                            <TrashIcon className="size-3.5 text-destructive" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      )}
     </Card>
   )
 }

@@ -571,6 +571,7 @@
   "overview_unrealized_gain": "Plus-value latente",
   "overview_invested_sub": "Investi : {amount}",
   "overview_evolution_title": "Évolution du patrimoine",
+  "overview_evolution_12m": "12 derniers mois",
   "overview_evolution_empty": "Enregistrez des relevés d'épargne ou des opérations boursières pour suivre l'évolution de votre patrimoine.",
   "overview_allocation_title": "Répartition globale",
   "overview_allocation_empty": "Ajoutez des soldes d'épargne ou des positions pour voir la répartition.",

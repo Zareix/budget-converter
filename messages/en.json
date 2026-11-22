@@ -571,6 +571,7 @@
   "overview_unrealized_gain": "Unrealized Gain",
   "overview_invested_sub": "Invested: {amount}",
   "overview_evolution_title": "Net Worth Evolution",
+  "overview_evolution_12m": "Last 12 months",
   "overview_evolution_empty": "Record savings snapshots or investment orders to see your net worth over time.",
   "overview_allocation_title": "Global Allocation",
   "overview_allocation_empty": "Add savings balances or investment positions to see your allocation.",

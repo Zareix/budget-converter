@@ -73,7 +73,7 @@ export const OverviewTab = ({
   const netWorthTimeline = computeNetWorthTimeline({
     savingsTimeline,
     investmentsTimeline,
-  })
+  }).slice(-12)
 
   const invAccountById = new Map(investmentAccounts.map((a) => [a.id, a]))
 
@@ -224,8 +224,9 @@ export const OverviewTab = ({
       {/* Charts */}
       <div className="grid gap-5 lg:grid-cols-[1.45fr_1fr]">
         <Card className="h-full">
-          <CardHeader className="pb-2">
+          <CardHeader className="flex flex-row items-center justify-between gap-2 pb-2">
             <CardTitle>{m.overview_evolution_title()}</CardTitle>
+            <span className="text-xs text-muted-foreground">{m.overview_evolution_12m()}</span>
           </CardHeader>
           <CardContent>
             {netWorthTimeline.length > 0 ? (
